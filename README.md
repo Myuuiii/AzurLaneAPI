@@ -1,5 +1,4 @@
-# Azur Lane API
-
+![AzurLaneAPI](https://repository-images.githubusercontent.com/375938899/4f53bc00-d2ea-11eb-9af4-1934f305293c)
 This is a base for a new Azur Lane API. I retrieved all of the information by manually scraping wikis
 
 
