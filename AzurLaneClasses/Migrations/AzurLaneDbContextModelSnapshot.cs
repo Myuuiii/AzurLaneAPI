@@ -50,48 +50,53 @@ namespace AzurLaneClasses.Migrations
                         .HasColumnType("char(36)");
 
                     b.Property<string>("Artist")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<Guid>("BaseStatsId")
+                    b.Property<Guid?>("BaseStatsIdId")
                         .HasColumnType("char(36)");
 
                     b.Property<Guid>("ClassId")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("DefaultChibiImage")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("DefaultFullImage")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("EquippableTypeSlot1")
+                    b.Property<int>("EquippableTypeSlot1")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EquippableTypeSlot2")
+                    b.Property<int>("EquippableTypeSlot2")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EquippableTypeSlot3")
+                    b.Property<int>("EquippableTypeSlot3")
                         .HasColumnType("int");
 
                     b.Property<bool>("HasLive2DModel")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("IconImage")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<Guid>("Level100RetrofitStatsId")
+                    b.Property<Guid?>("Level100RetrofitStatsIdId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("Level100StatsId")
+                    b.Property<Guid?>("Level100StatsIdId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("Level120RetrofitStatsId")
+                    b.Property<Guid?>("Level120RetrofitStatsIdId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("Level120StatsId")
+                    b.Property<Guid?>("Level120StatsIdId")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int>("Nation")
@@ -101,18 +106,31 @@ namespace AzurLaneClasses.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ShipId")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("ThumbnailImage")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.Property<string>("VoiceActor")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BaseStatsIdId");
+
+                    b.HasIndex("Level100RetrofitStatsIdId");
+
+                    b.HasIndex("Level100StatsIdId");
+
+                    b.HasIndex("Level120RetrofitStatsIdId");
+
+                    b.HasIndex("Level120StatsIdId");
 
                     b.ToTable("Ships");
                 });
@@ -155,10 +173,12 @@ namespace AzurLaneClasses.Migrations
                     b.Property<string>("Name_Japanese")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("ShipId")
-                        .HasColumnType("longtext");
+                    b.Property<Guid?>("ShipId")
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ShipId");
 
                     b.ToTable("ShipSkins");
                 });
@@ -208,9 +228,6 @@ namespace AzurLaneClasses.Migrations
                     b.Property<int>("Reload")
                         .HasColumnType("int");
 
-                    b.Property<string>("ShipId")
-                        .HasColumnType("longtext");
-
                     b.Property<int>("Speed")
                         .HasColumnType("int");
 
@@ -220,6 +237,51 @@ namespace AzurLaneClasses.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ShipStats");
+                });
+
+            modelBuilder.Entity("AzurLaneClasses.Ship.Ship", b =>
+                {
+                    b.HasOne("AzurLaneClasses.Ship.ShipStats", "BaseStatsId")
+                        .WithMany()
+                        .HasForeignKey("BaseStatsIdId");
+
+                    b.HasOne("AzurLaneClasses.Ship.ShipStats", "Level100RetrofitStatsId")
+                        .WithMany()
+                        .HasForeignKey("Level100RetrofitStatsIdId");
+
+                    b.HasOne("AzurLaneClasses.Ship.ShipStats", "Level100StatsId")
+                        .WithMany()
+                        .HasForeignKey("Level100StatsIdId");
+
+                    b.HasOne("AzurLaneClasses.Ship.ShipStats", "Level120RetrofitStatsId")
+                        .WithMany()
+                        .HasForeignKey("Level120RetrofitStatsIdId");
+
+                    b.HasOne("AzurLaneClasses.Ship.ShipStats", "Level120StatsId")
+                        .WithMany()
+                        .HasForeignKey("Level120StatsIdId");
+
+                    b.Navigation("BaseStatsId");
+
+                    b.Navigation("Level100RetrofitStatsId");
+
+                    b.Navigation("Level100StatsId");
+
+                    b.Navigation("Level120RetrofitStatsId");
+
+                    b.Navigation("Level120StatsId");
+                });
+
+            modelBuilder.Entity("AzurLaneClasses.Ship.ShipSkin", b =>
+                {
+                    b.HasOne("AzurLaneClasses.Ship.Ship", null)
+                        .WithMany("Skins")
+                        .HasForeignKey("ShipId");
+                });
+
+            modelBuilder.Entity("AzurLaneClasses.Ship.Ship", b =>
+                {
+                    b.Navigation("Skins");
                 });
 #pragma warning restore 612, 618
         }

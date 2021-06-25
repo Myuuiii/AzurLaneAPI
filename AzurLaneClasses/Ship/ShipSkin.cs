@@ -10,7 +10,6 @@ namespace AzurLaneClasses.Ship
     {
         // * Identity Properties
         [Key] public Guid Id { get; set; }
-        public String ShipId { get; set; }
 
         // * Properties
         public String Name_English { get; set; }
