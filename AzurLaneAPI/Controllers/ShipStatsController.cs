@@ -8,7 +8,7 @@ namespace AzurLaneAPI.Controllers
 {
     public class ShipStatsController : ControllerBase
     {
-        [HttpGet(Routes.V1.Routes.Ships.ShipStats.GetStats)]
+        [HttpGet(Routes.V1.Routes.Ships.ShipStats.GetAll)]
         public async Task<ActionResult<List<ShipStats>>> GetShipStats()
         {
             try
@@ -21,8 +21,8 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
-        [HttpGet(Routes.V1.Routes.Ships.ShipStats.GetStatsById)]
-        public async Task<ActionResult<ShipStats>> GetShipStatsById(Guid statsId)
+        [HttpGet(Routes.V1.Routes.Ships.ShipStats.GetId)]
+        public async Task<ActionResult<ShipStats>> GetShipStat(Guid statsId)
         {
             try
             {
@@ -34,8 +34,8 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
-        [HttpPost(Routes.V1.Routes.Ships.ShipStats.CreateStats)]
-        public async Task<ActionResult<ShipStats>> CreateShipStats(string shipId)
+        [HttpPost(Routes.V1.Routes.Ships.ShipStats.Create)]
+        public async Task<ActionResult<ShipStats>> CreateShipStat(string shipId)
         {
             try
             {
@@ -47,8 +47,8 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
-        [HttpPatch(Routes.V1.Routes.Ships.ShipStats.UpdateStats)]
-        public async Task<ActionResult<ShipStats>> UpdateShipStats(Guid statsId, [FromBody] ShipStats shipStats)
+        [HttpPatch(Routes.V1.Routes.Ships.ShipStats.Update)]
+        public async Task<ActionResult<ShipStats>> UpdateShipStat(Guid statsId, [FromBody] ShipStats shipStats)
         {
             try
             {
@@ -60,8 +60,8 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
-        [HttpDelete(Routes.V1.Routes.Ships.ShipStats.DeleteStats)]
-        public async Task<ActionResult<ShipStats>> DeleteShipStats(Guid statsId)
+        [HttpDelete(Routes.V1.Routes.Ships.ShipStats.Delete)]
+        public async Task<ActionResult<ShipStats>> DeleteShipStat(Guid statsId)
         {
             try
             {

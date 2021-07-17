@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AzurLaneClasses.Migrations
 {
     [DbContext(typeof(AzurLaneDbContext))]
-    [Migration("20210625084446_Init")]
+    [Migration("20210717185738_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -43,6 +43,32 @@ namespace AzurLaneClasses.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Events");
+                });
+
+            modelBuilder.Entity("AzurLaneClasses.CampaignLevel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("CN_Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Chapter")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EN_Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("JP_Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CampaignLevels");
                 });
 
             modelBuilder.Entity("AzurLaneClasses.Ship.Ship", b =>

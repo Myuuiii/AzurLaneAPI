@@ -43,6 +43,32 @@ namespace AzurLaneClasses.Migrations
                     b.ToTable("Events");
                 });
 
+            modelBuilder.Entity("AzurLaneClasses.CampaignLevel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("CN_Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Chapter")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EN_Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("JP_Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CampaignLevels");
+                });
+
             modelBuilder.Entity("AzurLaneClasses.Ship.Ship", b =>
                 {
                     b.Property<Guid>("Id")

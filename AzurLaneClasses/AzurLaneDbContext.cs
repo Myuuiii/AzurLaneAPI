@@ -33,12 +33,15 @@ namespace AzurLaneClasses
         // * Ships
         public DbSet<Ship.Ship> Ships { get; set; }
         public DbSet<Ship.ShipStats> ShipStats { get; set; }
-        
+
         public DbSet<Ship.ShipClass> ShipClasses { get; set; }
         public DbSet<Ship.ShipSkin> ShipSkins { get; set; }
 
         // * Events
         public DbSet<ALEvent> Events { get; set; }
+
+        // * Campaign
+        public DbSet<CampaignLevel> CampaignLevels { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

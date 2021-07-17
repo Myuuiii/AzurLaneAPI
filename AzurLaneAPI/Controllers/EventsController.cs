@@ -10,8 +10,8 @@ namespace AzurLaneAPI.Controllers
 {
     public class EventsController : ControllerBase
     {
-        [HttpGet(Routes.V1.Routes.Events.GetEvents)]
-        public async Task<ActionResult<List<ALEvent>>> GetAlLEvents()
+        [HttpGet(Routes.V1.Routes.Events.GetAll)]
+        public async Task<ActionResult<List<ALEvent>>> GetEvents()
         {
             try
             {
@@ -24,8 +24,8 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
-        [HttpGet(Routes.V1.Routes.Events.GetEventById)]
-        public async Task<ActionResult<ALEvent>> GetEventById(Guid eventId)
+        [HttpGet(Routes.V1.Routes.Events.GetId)]
+        public async Task<ActionResult<ALEvent>> GetEvent(Guid eventId)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
-        [HttpPost(Routes.V1.Routes.Events.CreateEvent)]
+        [HttpPost(Routes.V1.Routes.Events.Create)]
         public async Task<ActionResult<ALEvent>> CreateEvent([FromBody] ALEvent aLEvent)
         {
             try
@@ -62,7 +62,7 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
-        [HttpPatch(Routes.V1.Routes.Events.UpdateEvent)]
+        [HttpPatch(Routes.V1.Routes.Events.Update)]
         public async Task<ActionResult<ALEvent>> UpdateEvent(Guid eventId, [FromBody] ALEvent aLEvent)
         {
             try
@@ -75,7 +75,7 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
-        [HttpDelete(Routes.V1.Routes.Events.DeleteEvent)]
+        [HttpDelete(Routes.V1.Routes.Events.Delete)]
         public async Task<ActionResult<ALEvent>> DeleteEvent(Guid eventId)
         {
             try

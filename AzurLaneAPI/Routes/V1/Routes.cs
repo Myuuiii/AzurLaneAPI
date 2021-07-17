@@ -8,29 +8,35 @@ namespace AzurLaneAPI.Routes.V1
 
         public static class Ships
         {
-            public const String GetShips = "/ships";
-            public const String GetShipById = "/ships/{shipId}";
-            public const String CreateShip = "/ships";
-            public const String UpdateShip = "/ships/{id}";
-            public const String DeleteShip = "/ships/{id}";
+            public const String GetAll = "/ships";
+            public const String GetId = "/ships/{shipId}";
+            public const String Create = "/ships";
+            public const String Update = "/ships/{id}";
+            public const String Delete = "/ships/{id}";
 
             public static class ShipStats 
             {
-                public const String GetStats = "/ships/stats";
-                public const String GetStatsById = "/ships/stats/{statsId}";
-                public const String CreateStats = "/ships/stats/{shipId}";
-                public const String UpdateStats = "/ships/stats/{statsId}";
-                public const String DeleteStats = "/ships/stats/{statsId}";
+                public const String GetAll = "/ships/stats";
+                public const String GetId = "/ships/stats/{statsId}";
+                public const String Create = "/ships/stats/{shipId}";
+                public const String Update = "/ships/stats/{statsId}";
+                public const String Delete = "/ships/stats/{statsId}";
             }
         }
 
         public static class Events 
         {
-            public const String GetEvents = "/events";
-            public const String GetEventById = "/events/{eventId}";
-            public const String CreateEvent = "/events";
-            public const String UpdateEvent = "/events/{eventId}";
-            public const String DeleteEvent = "/events/{eventId}";
+            public const String GetAll = "/events";
+            public const String GetId = "/events/{eventId}";
+            public const String Create = "/events";
+            public const String Update = "/events/{eventId}";
+            public const String Delete = "/events/{eventId}";
+        }
+
+        public static class Campaign {
+            public const String GetAll = "/campaign";
+            public const String GetId = "/campaign/{id}";
+            public const String GetSelect = "/campaign/{chapter}/{level}";
         }
     }
 }

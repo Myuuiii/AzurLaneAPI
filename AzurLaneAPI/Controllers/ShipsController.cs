@@ -11,7 +11,7 @@ namespace AzurLaneAPI.Controllers
 {
     public class ShipsController : Controller
     {
-        [HttpGet(Routes.V1.Routes.Ships.GetShips)]
+        [HttpGet(Routes.V1.Routes.Ships.GetAll)]
         public async Task<ActionResult<List<Ship>>> GetShips()
         {
             try
@@ -25,7 +25,7 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
-        [HttpGet(Routes.V1.Routes.Ships.GetShipById)]
+        [HttpGet(Routes.V1.Routes.Ships.GetId)]
         public async Task<ActionResult<Ship>> GetShipById(String shipId)
         {
             try
@@ -46,7 +46,7 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
-        [HttpPost(Routes.V1.Routes.Ships.CreateShip)]
+        [HttpPost(Routes.V1.Routes.Ships.Create)]
         public async Task<ActionResult<Ship>> CreateShip([FromBody] Ship ship)
         {
             try
@@ -62,7 +62,7 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
-        [HttpPatch(Routes.V1.Routes.Ships.UpdateShip)]
+        [HttpPatch(Routes.V1.Routes.Ships.Update)]
         public async Task<ActionResult<ALEvent>> UpdateShip(String shipId, [FromBody] Ship ship)
         {
             try
@@ -75,7 +75,7 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
-        [HttpDelete(Routes.V1.Routes.Ships.DeleteShip)]
+        [HttpDelete(Routes.V1.Routes.Ships.Delete)]
         public async Task<ActionResult<Ship>> DeleteShip(String shipId)
         {
             try
