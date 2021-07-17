@@ -29,14 +29,14 @@ namespace AzurLaneClasses.Ship
         [Required] public String DefaultChibiImage { get; set; }
 
         // * Not Mapped Properties
-        [NotMapped] public List<ShipSkin> Skins { get; }
+        public List<ShipSkin> Skins { get; set; }
 
         // ? Ship Statistics
-        [Required] public Guid BaseStatsId { get; set; }
-        [Required] public Guid Level100StatsId { get; set; }
-        public Guid Level100RetrofitStatsId { get; set; }
-        [Required] public Guid Level120StatsId { get; set; }
-        public Guid Level120RetrofitStatsId { get; set; }
+        [Required] public ShipStats BaseStatsId { get; set; }
+        [Required] public ShipStats Level100StatsId { get; set; }
+        public ShipStats Level100RetrofitStatsId { get; set; }
+        [Required] public ShipStats Level120StatsId { get; set; }
+        public ShipStats Level120RetrofitStatsId { get; set; }
 
         // ? Ship Equippables
         [Required] public ShipEquippable? EquippableTypeSlot1 { get; set; }

@@ -33,9 +33,10 @@ namespace AzurLaneClasses
 
         // * Ships
         public DbSet<Ship.Ship> Ships { get; set; }
+        public DbSet<Ship.ShipStats> ShipStats { get; set; }
+        
         public DbSet<Ship.ShipClass> ShipClasses { get; set; }
         public DbSet<Ship.ShipSkin> ShipSkins { get; set; }
-        public DbSet<Ship.ShipStats> ShipStats { get; set; }
 
         // * Events
         public DbSet<ALEvent> Events { get; set; }
