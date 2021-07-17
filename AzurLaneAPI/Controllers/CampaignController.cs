@@ -16,7 +16,7 @@ namespace AzurLaneAPI.Controllers
             try
             {
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
-                return await ctx.CampaignLevels.ToListAsync();
+                return await ctx.CampaignLevels.OrderBy(cl => cl.Chapter).ThenBy(cl => cl.Level).ToListAsync();
             }
             catch
             {
@@ -50,7 +50,7 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
-                if (chapter <= 14 && chapter > 0)
+                if (chapter <= 13 && chapter > 0)
                 {
                     if (level <= 4 && level > 0)
                     {
@@ -71,7 +71,7 @@ namespace AzurLaneAPI.Controllers
                 }
                 else
                 {
-                    return BadRequest("There are 14 chapters");
+                    return BadRequest("There are 13 chapters");
                 }
 
             }
