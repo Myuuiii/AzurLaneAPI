@@ -19,6 +19,9 @@ namespace AzurLaneAPI.Routes.V1
         {
             public const String GetEvents = "/events";
             public const String GetEventById = "/events/{eventId}";
+            public const String CreateEvent = "/events";
+            public const String UpdateEvent = "/events/{eventId}";
+            public const String DeleteEvent = "/events/{eventId}";
         }
     }
 }

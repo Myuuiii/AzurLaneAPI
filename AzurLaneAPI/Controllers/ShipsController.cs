@@ -21,7 +21,7 @@ namespace AzurLaneAPI.Controllers
             }
             catch
             {
-                return StatusCode(500);
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
             }
         }
 
@@ -37,12 +37,12 @@ namespace AzurLaneAPI.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return NotFound(Errors.V1.Errors.X400.ResourceWithIdDoesNotExist);
                 }
             }
             catch
             {
-                return StatusCode(500);
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
             }
         }
 
@@ -58,7 +58,44 @@ namespace AzurLaneAPI.Controllers
             }
             catch
             {
-                return StatusCode(500);
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+            }
+        }
+
+        [HttpPatch(Routes.V1.Routes.Ships.UpdateShip)]
+        public async Task<ActionResult<ALEvent>> UpdateShip(String shipId, [FromBody] Ship ship)
+        {
+            try
+            {
+                return StatusCode(501);
+            }
+            catch
+            {
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+            }
+        }
+
+        [HttpDelete(Routes.V1.Routes.Ships.DeleteShip)]
+        public async Task<ActionResult<Ship>> DeleteShip(String shipId)
+        {
+            try
+            {
+                AzurLaneDbContext ctx = new AzurLaneDbContext();
+                if (await ctx.Ships.AnyAsync(ship => ship.ShipId == shipId))
+                {
+                    Ship selectedShip = ctx.Ships.Single(ship => ship.ShipId == shipId);
+                    ctx.Ships.Remove(selectedShip);
+                    await ctx.SaveChangesAsync();
+                    return selectedShip;
+                }
+                else
+                {
+                    return NotFound(Errors.V1.Errors.X400.ResourceWithIdDoesNotExist);
+                }
+            }
+            catch
+            {
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
             }
         }
     }

@@ -4,7 +4,7 @@ namespace AzurLaneClasses
 {
     public class ALEvent
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public String Name { get; set; }
         public DateTime? JP_Period { get; set; }
         public DateTime? CN_Period { get; set; }
