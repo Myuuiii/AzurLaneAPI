@@ -46,6 +46,9 @@ namespace AzurLaneClasses
         // * Construction pool
         public DbSet<ConstructionPool> ConstructionPools { get; set; }
 
+        // ! Authentication
+        public DbSet<ALToken> ALTokens { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!String.IsNullOrEmpty(ConnString))

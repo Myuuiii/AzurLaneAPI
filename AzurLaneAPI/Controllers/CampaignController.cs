@@ -15,6 +15,7 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
+                Helpers.WriteGrantCheck.Check(this.HttpContext);
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 return await ctx.CampaignLevels.OrderBy(cl => cl.Chapter).ThenBy(cl => cl.Level).ToListAsync();
             }
