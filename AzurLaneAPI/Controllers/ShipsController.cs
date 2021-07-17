@@ -26,7 +26,7 @@ namespace AzurLaneAPI.Controllers
         }
 
         [HttpGet(Routes.V1.Routes.Ships.GetId)]
-        public async Task<ActionResult<Ship>> GetShipById(String shipId)
+        public async Task<ActionResult<Ship>> GetShip(String shipId)
         {
             try
             {

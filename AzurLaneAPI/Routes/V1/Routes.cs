@@ -14,7 +14,7 @@ namespace AzurLaneAPI.Routes.V1
             public const String Update = "/ships/{id}";
             public const String Delete = "/ships/{id}";
 
-            public static class ShipStats 
+            public static class ShipStats
             {
                 public const String GetAll = "/ships/stats";
                 public const String GetId = "/ships/stats/{statsId}";
@@ -24,7 +24,7 @@ namespace AzurLaneAPI.Routes.V1
             }
         }
 
-        public static class Events 
+        public static class Events
         {
             public const String GetAll = "/events";
             public const String GetId = "/events/{eventId}";
@@ -33,10 +33,19 @@ namespace AzurLaneAPI.Routes.V1
             public const String Delete = "/events/{eventId}";
         }
 
-        public static class Campaign {
+        public static class Campaign
+        {
             public const String GetAll = "/campaign";
             public const String GetId = "/campaign/{id}";
             public const String GetSelect = "/campaign/{chapter}/{level}";
+        }
+
+        public static class Construction
+        {
+            public const String GetLightPool = "/construction/light";
+            public const String GetHeavyPool = "/construction/heavy";
+            public const String GetSpecialPool = "/construction/special";
+            public const String GetLimitedPool = "/construction/limited";
         }
     }
 }
