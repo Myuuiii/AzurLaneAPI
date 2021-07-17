@@ -52,7 +52,7 @@ namespace AzurLaneAPI.Controllers
             {
                 if (chapter <= 13 && chapter > 0)
                 {
-                    if (level <= 4 && level > 0)
+                    if (level <= 4 && level >= 0)
                     {
                         AzurLaneDbContext ctx = new AzurLaneDbContext();
                         if (await ctx.CampaignLevels.AnyAsync(cl => cl.Chapter == chapter && cl.Level == level))
@@ -66,7 +66,7 @@ namespace AzurLaneAPI.Controllers
                     }
                     else
                     {
-                        return BadRequest("You can only select level 1 through 4 in a chapter");
+                        return BadRequest("You can only select level 0 through 4 in a chapter");
                     }
                 }
                 else
