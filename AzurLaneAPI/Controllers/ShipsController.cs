@@ -21,7 +21,7 @@ namespace AzurLaneAPI.Controllers
             }
             catch
             {
-                return Unauthorized();
+                return StatusCode(500);
             }
         }
 
@@ -42,7 +42,7 @@ namespace AzurLaneAPI.Controllers
             }
             catch
             {
-                return Unauthorized();
+                return StatusCode(500);
             }
         }
 
@@ -58,7 +58,7 @@ namespace AzurLaneAPI.Controllers
             }
             catch
             {
-                return Unauthorized();
+                return StatusCode(500);
             }
         }
     }
