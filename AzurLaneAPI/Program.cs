@@ -14,6 +14,8 @@ namespace AzurLaneAPI
         public static void Main(string[] args)
         {
             Seeders.CampaignSeeder.Seed();
+            Seeders.ConstructionPoolSeeder.Seed();
+            
             CreateHostBuilder(args).Build().Run();
         }
 

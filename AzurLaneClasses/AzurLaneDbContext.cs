@@ -43,6 +43,9 @@ namespace AzurLaneClasses
         // * Campaign
         public DbSet<CampaignLevel> CampaignLevels { get; set; }
 
+        // * Construction pool
+        public DbSet<ConstructionPool> ConstructionPools { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!String.IsNullOrEmpty(ConnString))

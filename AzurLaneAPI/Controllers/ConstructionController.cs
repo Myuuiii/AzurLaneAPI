@@ -1,30 +1,21 @@
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using AzurLaneClasses;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AzurLaneAPI.Controllers
 {
     public class ConstructionController : ControllerBase
     {
-        [HttpGet(Routes.V1.Routes.Construction.GetLightPool)]
-        public ActionResult<ConstructionPool> GetLightPool()
+        [HttpGet(Routes.V1.Routes.Construction.GetPools)]
+        public async Task<ActionResult<List<ConstructionPool>>> GetPools()
         {
             try
             {
-                return new ConstructionPool(
-                    coins: 600,
-                    wisdomCubes: 1,
-                    cV: false,
-                    cVL: true,
-                    dD: true,
-                    cL: true,
-                    cA: false,
-                    bM: false,
-                    bC: false,
-                    bB: false,
-                    aR: true,
-                    sS: false
-                );
+                AzurLaneDbContext ctx = new AzurLaneDbContext();
+                return await ctx.ConstructionPools.ToListAsync();
             }
             catch
             {
@@ -32,64 +23,20 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
-        [HttpGet(Routes.V1.Routes.Construction.GetHeavyPool)]
-        public ActionResult<ConstructionPool> GetHeavypool()
+        [HttpGet(Routes.V1.Routes.Construction.GetPool)]
+        public async Task<ActionResult<ConstructionPool>> GetLightPool(String id)
         {
             try
             {
-                return new ConstructionPool(
-                    coins: 1500,
-                    wisdomCubes: 2,
-                    cV: false,
-                    cVL: false,
-                    dD: false,
-                    cL: true,
-                    cA: true,
-                    bM: true,
-                    bC: true,
-                    bB: true,
-                    aR: false,
-                    sS: false
-                );
-            }
-            catch
-            {
-                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
-            }
-        }
-
-        [HttpGet(Routes.V1.Routes.Construction.GetSpecialPool)]
-        public ActionResult<ConstructionPool> GetSpecialPool()
-        {
-            try
-            {
-                return new ConstructionPool(
-                    coins: 1500,
-                    wisdomCubes: 2,
-                    cV: true,
-                    cVL: true,
-                    dD: false,
-                    cL: true,
-                    cA: true,
-                    bM: false,
-                    bC: false,
-                    bB: false,
-                    aR: true,
-                    sS: true
-                );
-            }
-            catch
-            {
-                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
-            }
-        }
-
-        [HttpGet(Routes.V1.Routes.Construction.GetLimitedPool)]
-        public ActionResult<String> GetLimitedPool()
-        {
-            try
-            {
-                return "This pool is based on one of the 3 other pools: light, heavy and special";
+                AzurLaneDbContext ctx = new AzurLaneDbContext();
+                if (await ctx.ConstructionPools.AnyAsync(p => p.Name.ToLower() == id.ToLower()))
+                {
+                    return await ctx.ConstructionPools.SingleAsync(p => p.Name.ToLower() == id.ToLower());
+                }
+                else 
+                {
+                    return NotFound(Errors.V1.Errors.X400.ResourceWithIdDoesNotExist);
+                }
             }
             catch
             {

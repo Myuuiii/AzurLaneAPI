@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace AzurLaneClasses
 {
@@ -20,6 +21,7 @@ namespace AzurLaneClasses
             this.SS = sS;
         }
 
+        [Key] public String Name { get; set; }
         public Int32 Coins { get; set; } = 600;
         public Int32 WisdomCubes { get; set; } = 1;
 

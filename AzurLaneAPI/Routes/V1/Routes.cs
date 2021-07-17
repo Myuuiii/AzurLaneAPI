@@ -42,10 +42,8 @@ namespace AzurLaneAPI.Routes.V1
 
         public static class Construction
         {
-            public const String GetLightPool = "/construction/light";
-            public const String GetHeavyPool = "/construction/heavy";
-            public const String GetSpecialPool = "/construction/special";
-            public const String GetLimitedPool = "/construction/limited";
+            public const String GetPools = "/construction";
+            public const String GetPool = "/construction/{id}";
         }
     }
 }
