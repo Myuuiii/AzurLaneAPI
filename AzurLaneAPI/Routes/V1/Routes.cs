@@ -14,5 +14,11 @@ namespace AzurLaneAPI.Routes.V1
             public const String UpdateShip = "/ships/{id}";
             public const String DeleteShip = "/ships/{id}";
         }
+
+        public static class Events 
+        {
+            public const String GetEvents = "/events";
+            public const String GetEventById = "/events/{eventId}";
+        }
     }
 }
