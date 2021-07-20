@@ -32,11 +32,11 @@ namespace AzurLaneClasses.Ship
         public List<ShipSkin> Skins { get; set; }
 
         // ? Ship Statistics
-        [Required] public ShipStats BaseStatsId { get; set; }
-        [Required] public ShipStats Level100StatsId { get; set; }
-        public ShipStats Level100RetrofitStatsId { get; set; }
-        [Required] public ShipStats Level120StatsId { get; set; }
-        public ShipStats Level120RetrofitStatsId { get; set; }
+        [Required] public ShipStats BaseStats { get; set; }
+        [Required] public ShipStats Level100Stats { get; set; }
+        public ShipStats Level100RetrofitStats { get; set; }
+        [Required] public ShipStats Level120Stats { get; set; }
+        public ShipStats Level120RetrofitStats { get; set; }
 
         // ? Ship Equippables
         [Required] public ShipEquippable? EquippableTypeSlot1 { get; set; }
