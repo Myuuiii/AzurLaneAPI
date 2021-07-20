@@ -26,14 +26,14 @@ namespace AzurLaneAPI.Controllers
         }
 
         [HttpGet(Routes.V1.Routes.Ships.GetId)]
-        public async Task<ActionResult<Ship>> GetShip(String shipId)
+        public async Task<ActionResult<Ship>> GetShip(String id)
         {
             try
             {
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (await ctx.Ships.AnyAsync(ship => ship.ShipId == shipId))
+                if (await ctx.Ships.AnyAsync(ship => ship.ShipId == id))
                 {
-                    return await ctx.Ships.SingleAsync(ship => ship.ShipId == shipId);
+                    return await ctx.Ships.SingleAsync(ship => ship.ShipId == id);
                 }
                 else
                 {
@@ -63,7 +63,7 @@ namespace AzurLaneAPI.Controllers
         }
 
         [HttpPatch(Routes.V1.Routes.Ships.Update)]
-        public async Task<ActionResult<ALEvent>> UpdateShip(String shipId, [FromBody] Ship ship)
+        public async Task<ActionResult<ALEvent>> UpdateShip(String id, [FromBody] Ship ship)
         {
             try
             {
@@ -76,14 +76,14 @@ namespace AzurLaneAPI.Controllers
         }
 
         [HttpDelete(Routes.V1.Routes.Ships.Delete)]
-        public async Task<ActionResult<Ship>> DeleteShip(String shipId)
+        public async Task<ActionResult<Ship>> DeleteShip(String id)
         {
             try
             {
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (await ctx.Ships.AnyAsync(ship => ship.ShipId == shipId))
+                if (await ctx.Ships.AnyAsync(ship => ship.ShipId == id))
                 {
-                    Ship selectedShip = ctx.Ships.Single(ship => ship.ShipId == shipId);
+                    Ship selectedShip = ctx.Ships.Single(ship => ship.ShipId == id);
                     ctx.Ships.Remove(selectedShip);
                     await ctx.SaveChangesAsync();
                     return selectedShip;

@@ -25,14 +25,14 @@ namespace AzurLaneAPI.Controllers
         }
 
         [HttpGet(Routes.V1.Routes.Events.GetId)]
-        public async Task<ActionResult<ALEvent>> GetEvent(Guid eventId)
+        public async Task<ActionResult<ALEvent>> GetEvent(Guid id)
         {
             try
             {
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (await ctx.Events.AnyAsync(ev => ev.Id == eventId))
+                if (await ctx.Events.AnyAsync(ev => ev.Id == id))
                 {
-                    return await ctx.Events.SingleAsync(ev => ev.Id == eventId);
+                    return await ctx.Events.SingleAsync(ev => ev.Id == id);
                 }
                 else
                 {
@@ -63,7 +63,7 @@ namespace AzurLaneAPI.Controllers
         }
 
         [HttpPatch(Routes.V1.Routes.Events.Update)]
-        public async Task<ActionResult<ALEvent>> UpdateEvent(Guid eventId, [FromBody] ALEvent aLEvent)
+        public async Task<ActionResult<ALEvent>> UpdateEvent(Guid id, [FromBody] ALEvent aLEvent)
         {
             try
             {
@@ -76,14 +76,14 @@ namespace AzurLaneAPI.Controllers
         }
 
         [HttpDelete(Routes.V1.Routes.Events.Delete)]
-        public async Task<ActionResult<ALEvent>> DeleteEvent(Guid eventId)
+        public async Task<ActionResult<ALEvent>> DeleteEvent(Guid id)
         {
             try
             {
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (await ctx.Events.AnyAsync(ev => ev.Id == eventId))
+                if (await ctx.Events.AnyAsync(ev => ev.Id == id))
                 {
-                    ALEvent selectedEvent = ctx.Events.Single(ev => ev.Id == eventId);
+                    ALEvent selectedEvent = ctx.Events.Single(ev => ev.Id == id);
                     ctx.Events.Remove(selectedEvent);
                     await ctx.SaveChangesAsync();
                     return selectedEvent;
