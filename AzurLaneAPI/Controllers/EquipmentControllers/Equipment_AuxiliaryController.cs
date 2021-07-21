@@ -10,31 +10,66 @@ namespace AzurLaneAPI.Controllers.EquipmentControllers
         [HttpGet(Routes.V1.Routes.Equipment.Auxiliary.GetAll)]
         public async Task<ActionResult<List<Object>>> GetAll()
         {
-            return StatusCode(501);
+            try 
+            {
+                return StatusCode(501);
+            }
+            catch 
+            {
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+            }
         }
 
         [HttpGet(Routes.V1.Routes.Equipment.Auxiliary.GetId)]
-        public async Task<ActionResult<Object>> GetId(Guid id)
+        public async Task<ActionResult<Object>> GetById(string id)
         {
-            return StatusCode(501);
+            try 
+            {
+                return StatusCode(501);
+            }
+            catch 
+            {
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+            }
         }
 
         [HttpPost(Routes.V1.Routes.Equipment.Auxiliary.Create)]
-        public async Task<ActionResult<Object>> Create([FromBody] Object auxiliary)
+        public async Task<ActionResult<Object>> Create([FromBody]Object auxiliary)
         {
-            return StatusCode(501);
+            try 
+            {
+                return StatusCode(501);
+            }
+            catch 
+            {
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+            }
         }
 
         [HttpPatch(Routes.V1.Routes.Equipment.Auxiliary.Update)]
-        public async Task<ActionResult<Object>> Update(Guid id, [FromBody] Object auxiliary)
+        public async Task<ActionResult<Object>> Update(Guid id, [FromBody]Object auxiliary)
         {
-            return StatusCode(501);
+            try
+            {
+                return StatusCode(501);
+            }
+            catch
+            {
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+            }
         }
 
         [HttpDelete(Routes.V1.Routes.Equipment.Auxiliary.Delete)]
         public async Task<ActionResult<Object>> Delete(Guid id)
         {
-            return StatusCode(501);
+            try
+            {
+                return StatusCode(501);
+            }
+            catch
+            {
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+            }
         }
     }
 }

@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AzurLaneAPI.Controllers.EquipmentControllers
 {
-    public class Equipment_CargoController : ControllerBase
+    public class Equipment_SubmarineTorpedoesController : ControllerBase
     {
-        [HttpGet(Routes.V1.Routes.Equipment.Cargo.GetAll)]
+        [HttpGet(Routes.V1.Routes.Equipment.SubmarineTorpedoes.GetAll)]
         public async Task<ActionResult<List<Object>>> GetAll()
         {
             try 
@@ -20,7 +20,7 @@ namespace AzurLaneAPI.Controllers.EquipmentControllers
             }
         }
 
-        [HttpGet(Routes.V1.Routes.Equipment.Cargo.GetId)]
+        [HttpGet(Routes.V1.Routes.Equipment.SubmarineTorpedoes.GetId)]
         public async Task<ActionResult<Object>> GetById(string id)
         {
             try 
@@ -33,8 +33,8 @@ namespace AzurLaneAPI.Controllers.EquipmentControllers
             }
         }
 
-        [HttpPost(Routes.V1.Routes.Equipment.Cargo.Create)]
-        public async Task<ActionResult<Object>> Create([FromBody]Object cargo)
+        [HttpPost(Routes.V1.Routes.Equipment.SubmarineTorpedoes.Create)]
+        public async Task<ActionResult<Object>> Create([FromBody]Object torpedo)
         {
             try 
             {
@@ -46,8 +46,8 @@ namespace AzurLaneAPI.Controllers.EquipmentControllers
             }
         }
 
-        [HttpPatch(Routes.V1.Routes.Equipment.Cargo.Update)]
-        public async Task<ActionResult<Object>> Update(Guid id, [FromBody]Object cargo)
+        [HttpPatch(Routes.V1.Routes.Equipment.SubmarineTorpedoes.Update)]
+        public async Task<ActionResult<Object>> Update(Guid id, [FromBody]Object torpedo)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace AzurLaneAPI.Controllers.EquipmentControllers
             }
         }
 
-        [HttpDelete(Routes.V1.Routes.Equipment.Cargo.Delete)]
+        [HttpDelete(Routes.V1.Routes.Equipment.SubmarineTorpedoes.Delete)]
         public async Task<ActionResult<Object>> Delete(Guid id)
         {
             try
