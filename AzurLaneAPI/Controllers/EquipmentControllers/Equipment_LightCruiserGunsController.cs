@@ -5,49 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AzurLaneAPI.Controllers.EquipmentControllers
 {
-    public class Equipment_CargoController : ControllerBase
+    public class Equipment_LightCruiserGunsController : ControllerBase
     {
-        [HttpGet(Routes.V1.Routes.Equipment.Cargo.GetAll)]
+        [HttpGet(Routes.V1.Routes.Equipment.LightCruiserGuns.GetAll)]
         public async Task<ActionResult<List<Object>>> GetAll()
-        {
-            try 
-            {
-                return StatusCode(501);
-            }
-            catch 
-            {
-                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
-            }
-        }
-
-        [HttpGet(Routes.V1.Routes.Equipment.Cargo.GetId)]
-        public async Task<ActionResult<Object>> GetById(string id)
-        {
-            try 
-            {
-                return StatusCode(501);
-            }
-            catch 
-            {
-                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
-            }
-        }
-
-        [HttpPost(Routes.V1.Routes.Equipment.Cargo.Create)]
-        public async Task<ActionResult<Object>> Create([FromBody]Object cargo)
-        {
-            try 
-            {
-                return StatusCode(501);
-            }
-            catch 
-            {
-                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
-            }
-        }
-
-        [HttpPatch(Routes.V1.Routes.Equipment.Cargo.Update)]
-        public async Task<ActionResult<Object>> Update(Guid id, [FromBody]Object cargo)
         {
             try
             {
@@ -59,7 +20,46 @@ namespace AzurLaneAPI.Controllers.EquipmentControllers
             }
         }
 
-        [HttpDelete(Routes.V1.Routes.Equipment.Cargo.Delete)]
+        [HttpGet(Routes.V1.Routes.Equipment.LightCruiserGuns.GetId)]
+        public async Task<ActionResult<Object>> GetById(string id)
+        {
+            try
+            {
+                return StatusCode(501);
+            }
+            catch
+            {
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+            }
+        }
+
+        [HttpPost(Routes.V1.Routes.Equipment.LightCruiserGuns.Create)]
+        public async Task<ActionResult<Object>> Create([FromBody] Object gun)
+        {
+            try
+            {
+                return StatusCode(501);
+            }
+            catch
+            {
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+            }
+        }
+
+        [HttpPatch(Routes.V1.Routes.Equipment.LightCruiserGuns.Update)]
+        public async Task<ActionResult<Object>> Update(Guid id, [FromBody] Object gun)
+        {
+            try
+            {
+                return StatusCode(501);
+            }
+            catch
+            {
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+            }
+        }
+
+        [HttpDelete(Routes.V1.Routes.Equipment.LightCruiserGuns.Delete)]
         public async Task<ActionResult<Object>> Delete(Guid id)
         {
             try
