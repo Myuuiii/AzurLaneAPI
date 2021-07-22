@@ -1,7 +1,9 @@
 using System;
 using System.IO;
+using AzurLaneClasses.Equipment;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using static AzurLaneClasses.Equipment.EquipmentOverrides;
 
 namespace AzurLaneClasses
 {
@@ -45,6 +47,27 @@ namespace AzurLaneClasses
 
         // * Construction pool
         public DbSet<ConstructionPool> ConstructionPools { get; set; }
+
+        // * Equipment
+        public DbSet<DestroyerGun> DestroyerGuns { get; set; }
+        public DbSet<LightCruiserGun> LightCruiserGuns { get; set; }
+        public DbSet<HeavyCruiserGun> HeavyCruiserGuns { get; set; }
+        public DbSet<LargeCruiserGun> LargeCruiserGuns { get; set; }
+        public DbSet<BattleshipGun> BattleshipGuns { get; set; }
+
+        public DbSet<SubmarineTorpedo> SubmarineTorpedoes { get; set; }
+        public DbSet<Torpedo> Torpedoes { get; set; }
+
+        public DbSet<FighterPlane> FighterPlanes { get; set; }
+        public DbSet<DiveBomberPlane> DiveBomberPlanes { get; set; }
+        public DbSet<TorpedoBomberPlane> TorpedoBomberPlanes { get; set; }
+        public DbSet<Seaplane> Seaplanes { get; set; }
+
+        public DbSet<AntiAirGun> AntiAirGuns { get; set; }
+
+        public DbSet<Auxiliary> Auxiliaries { get; set; }
+        public DbSet<Cargo> Cargo { get; set; }
+
 
         // ! Authentication
         public DbSet<ALToken> ALTokens { get; set; }
