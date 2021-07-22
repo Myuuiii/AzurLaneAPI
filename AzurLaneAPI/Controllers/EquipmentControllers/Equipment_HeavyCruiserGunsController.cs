@@ -46,7 +46,7 @@ namespace AzurLaneAPI.Controllers.EquipmentControllers
             }
         }
 
-        [HttpPut(Routes.V1.Routes.Equipment.HeavyCruiserGuns.Update)]
+        [HttpPatch(Routes.V1.Routes.Equipment.HeavyCruiserGuns.Update)]
         public async Task<ActionResult<Object>> Update(Guid id, [FromBody]Object gun)
         {
             try
