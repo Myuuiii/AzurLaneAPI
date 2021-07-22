@@ -14,7 +14,7 @@ namespace AzurLaneClasses.Ship
         [Required] public String ShipId { get; set; }
         [Required] public String Name { get; set; }
         [Required] public ShipRarity Rarity { get; set; }
-        [Required] public ShipNation Nation { get; set; }
+        [Required] public Nation Nation { get; set; }
         [Required] public ShipType Type { get; set; }
         public Boolean HasLive2DModel { get; set; } = false;
 
