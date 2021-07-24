@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AzurLaneClasses.Migrations
 {
     [DbContext(typeof(AzurLaneDbContext))]
-    [Migration("20210722222308_Initial")]
-    partial class Initial
+    [Migration("20210724214403_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -878,9 +878,6 @@ namespace AzurLaneClasses.Migrations
                     b.Property<Guid?>("BaseStatsId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("ClassId")
-                        .HasColumnType("char(36)");
-
                     b.Property<string>("DefaultChibiImage")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -955,23 +952,6 @@ namespace AzurLaneClasses.Migrations
                     b.HasIndex("Level120StatsId");
 
                     b.ToTable("Ships");
-                });
-
-            modelBuilder.Entity("AzurLaneClasses.Ship.ShipClass", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Summary")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ShipClasses");
                 });
 
             modelBuilder.Entity("AzurLaneClasses.Ship.ShipSkin", b =>

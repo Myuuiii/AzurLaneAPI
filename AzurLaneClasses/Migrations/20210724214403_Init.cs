@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AzurLaneClasses.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -425,22 +425,6 @@ namespace AzurLaneClasses.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "ShipClasses",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Name = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Summary = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ShipClasses", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "ShipStats",
                 columns: table => new
                 {
@@ -561,8 +545,7 @@ namespace AzurLaneClasses.Migrations
                     Level120RetrofitStatsId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     EquippableTypeSlot1 = table.Column<int>(type: "int", nullable: false),
                     EquippableTypeSlot2 = table.Column<int>(type: "int", nullable: false),
-                    EquippableTypeSlot3 = table.Column<int>(type: "int", nullable: false),
-                    ClassId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    EquippableTypeSlot3 = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -706,9 +689,6 @@ namespace AzurLaneClasses.Migrations
 
             migrationBuilder.DropTable(
                 name: "Seaplanes");
-
-            migrationBuilder.DropTable(
-                name: "ShipClasses");
 
             migrationBuilder.DropTable(
                 name: "ShipSkins");

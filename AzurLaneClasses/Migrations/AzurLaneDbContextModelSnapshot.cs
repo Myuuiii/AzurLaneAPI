@@ -876,9 +876,6 @@ namespace AzurLaneClasses.Migrations
                     b.Property<Guid?>("BaseStatsId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("ClassId")
-                        .HasColumnType("char(36)");
-
                     b.Property<string>("DefaultChibiImage")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -953,23 +950,6 @@ namespace AzurLaneClasses.Migrations
                     b.HasIndex("Level120StatsId");
 
                     b.ToTable("Ships");
-                });
-
-            modelBuilder.Entity("AzurLaneClasses.Ship.ShipClass", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Summary")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ShipClasses");
                 });
 
             modelBuilder.Entity("AzurLaneClasses.Ship.ShipSkin", b =>
