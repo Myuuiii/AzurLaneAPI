@@ -9,7 +9,7 @@ namespace AzurLaneClasses.Ship
     public class ShipStats
     {
         // * Identity Properties
-        [Key] public Guid Id { get; set; }
+        [Key] public Guid Id { get; set; } = Guid.NewGuid();
 
         // * Stats
         public Int32 Luck { get; set; }
