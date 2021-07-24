@@ -8,7 +8,7 @@ namespace AzurLaneClasses.Ship
     /// </summary>
     public class ShipClass
     {
-        [Key] public Guid Id { get; set; }
+        [Key] public Guid Id { get; set; } = Guid.NewGuid();
         public String Name { get; set; }
         public String Summary { get; set; }
     }
