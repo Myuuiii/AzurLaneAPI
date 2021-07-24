@@ -42,8 +42,5 @@ namespace AzurLaneClasses.Ship
         [Required] public ShipEquippable? EquippableTypeSlot1 { get; set; }
         [Required] public ShipEquippable? EquippableTypeSlot2 { get; set; }
         [Required] public ShipEquippable? EquippableTypeSlot3 { get; set; }
-
-        // * External Object Ids
-        [Required] public Guid ClassId { get; set; }
     }
 }
