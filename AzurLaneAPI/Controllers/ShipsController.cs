@@ -17,7 +17,11 @@ namespace AzurLaneAPI.Controllers
             try
             {
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
-                return await ctx.Ships.ToListAsync();
+                return await ctx.Ships
+                    .Include(s => s.BaseStats).Include(s => s.Level100Stats).Include(s => s.Level120Stats)
+                    .Include(s => s.Level100RetrofitStats).Include(s => s.Level120RetrofitStats)
+                    .Include(s => s.Skins)
+                    .ToListAsync();
             }
             catch
             {
@@ -31,7 +35,11 @@ namespace AzurLaneAPI.Controllers
             try
             {
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (await ctx.Ships.AnyAsync(ship => ship.Id == id))
+                if (await ctx.Ships
+                    .Include(s => s.BaseStats).Include(s => s.Level100Stats).Include(s => s.Level120Stats)
+                    .Include(s => s.Level100RetrofitStats).Include(s => s.Level120RetrofitStats)
+                    .Include(s => s.Skins)
+                    .AnyAsync(ship => ship.Id == id))
                 {
                     return await ctx.Ships.SingleAsync(ship => ship.Id == id);
                 }
