@@ -29,7 +29,7 @@ namespace AzurLaneClasses.Ship
         [Required] public String DefaultChibiImage { get; set; }
 
         // * Not Mapped Properties
-        public List<ShipSkin> Skins { get; set; }
+        public List<ShipSkin> Skins { get; set; } = new List<ShipSkin>();
 
         // ? Ship Statistics
         [Required] public ShipStats BaseStats { get; set; }
