@@ -9,7 +9,7 @@ namespace AzurLaneClasses.Ship
     public class ShipSkin
     {
         // * Identity Properties
-        [Key] public Guid Id { get; set; }
+        [Key] public Guid Id { get; set; } = Guid.NewGuid();
 
         // * Properties
         public String Name_English { get; set; }
