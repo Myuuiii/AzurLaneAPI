@@ -61,12 +61,14 @@ namespace AzurLaneAPI.Controllers
             try
             {
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
+                ship.Id = Guid.NewGuid();
                 ctx.Ships.Add(ship);
                 await ctx.SaveChangesAsync();
                 return ship;
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e.ToString());
                 return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
             }
         }
@@ -99,13 +101,6 @@ namespace AzurLaneAPI.Controllers
                         .Single(ship => ship.Id == id);
 
                     ctx.Remove(selectedShip);
-                    ctx.Remove(selectedShip.BaseStats);
-                    ctx.Remove(selectedShip.Level100Stats);
-                    ctx.Remove(selectedShip.Level120Stats);
-                    ctx.Remove(selectedShip.Level100RetrofitStats);
-                    ctx.Remove(selectedShip.Level120RetrofitStats);
-                    ctx.RemoveRange(selectedShip.Skins);
-
                     ctx.Remove(selectedShip.BaseStats);
                     ctx.Remove(selectedShip.Level100Stats);
                     ctx.Remove(selectedShip.Level120Stats);
