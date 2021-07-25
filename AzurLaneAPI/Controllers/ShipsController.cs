@@ -97,7 +97,14 @@ namespace AzurLaneAPI.Controllers
                         .Include(s => s.Level100RetrofitStats).Include(s => s.Level120RetrofitStats)
                         .Include(s => s.Skins)
                         .Single(ship => ship.Id == id);
-                    ctx.Ships.Remove(selectedShip);
+
+                    ctx.Remove(selectedShip);
+                    ctx.Remove(selectedShip.BaseStats);
+                    ctx.Remove(selectedShip.Level100Stats);
+                    ctx.Remove(selectedShip.Level120Stats);
+                    ctx.Remove(selectedShip.Level100RetrofitStats);
+                    ctx.Remove(selectedShip.Level120RetrofitStats);
+                    ctx.RemoveRange(selectedShip.Skins);
 
                     await ctx.SaveChangesAsync();
                     return selectedShip;
