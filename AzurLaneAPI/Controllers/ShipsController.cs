@@ -106,6 +106,13 @@ namespace AzurLaneAPI.Controllers
                     ctx.Remove(selectedShip.Level120RetrofitStats);
                     ctx.RemoveRange(selectedShip.Skins);
 
+                    ctx.Remove(selectedShip.BaseStats);
+                    ctx.Remove(selectedShip.Level100Stats);
+                    ctx.Remove(selectedShip.Level120Stats);
+                    ctx.Remove(selectedShip.Level100RetrofitStats);
+                    ctx.Remove(selectedShip.Level120RetrofitStats);
+                    ctx.RemoveRange(selectedShip.Skins);
+
                     await ctx.SaveChangesAsync();
                     return selectedShip;
                 }
