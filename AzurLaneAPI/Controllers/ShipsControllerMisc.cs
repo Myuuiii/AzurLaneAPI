@@ -25,5 +25,20 @@ namespace AzurLaneAPI.Controllers
                 return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
             }
         }
+
+        [HttpGet(Routes.V1.Routes.Ships.Misc.GetByType)]
+        public async Task<ActionResult<List<Ship>>> GetByType(ShipType type)
+        {
+            try 
+            {
+                AzurLaneDbContext ctx = new AzurLaneDbContext();
+                var ships = await ctx.Ships.Where(s => s.Type == type).ToListAsync();
+                return ships;
+            }
+            catch 
+            {
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+            }
+        }
     }
 }
