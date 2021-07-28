@@ -17,6 +17,7 @@ namespace AzurLaneAPI.Routes.V1
             public static class Misc
             {
                 public const String GetByRarity = "/ships/rarity/{rarity}";
+                public const String GetByType = "/ships/type/{type}";
             }
 
             public static class ShipStats
