@@ -49,6 +49,14 @@ namespace AzurLaneAPI.Routes.V1
                     public const String Update = "/ships/{id}/lvl120stats";
                     public const String Delete = "/ships/{id}/lvl120stats";
                 }
+
+                public static class Level120RetrofitStats
+                {
+                    public const String Get = "/ships/{id}/lvl120retrofitstats";
+                    public const String Create = "/ships/{id}/lvl120retrofitstats";
+                    public const String Update = "/ships/{id}/lvl120retrofitstats";
+                    public const String Delete = "/ships/{id}/lvl120retrofitstats";
+                }
             }
         }
 
