@@ -9,5 +9,6 @@ namespace AzurLaneClasses
         public String Token { get; set; }
         public Boolean Active { get; set; }
         public Boolean WriteGrant { get; set; }
+        public DateTime LastRequest { get; set; } = DateTime.Now;
     }
 }
