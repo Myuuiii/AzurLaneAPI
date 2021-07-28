@@ -60,6 +60,8 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
+                if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
+                
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 ship.Id = Guid.NewGuid();
                 ctx.Ships.Add(ship);
@@ -78,6 +80,8 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
+                if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
+                
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 Ship ship = new Ship(minimalShip);
                 ctx.Ships.Add(ship);
@@ -108,6 +112,8 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
+                if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
+
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 if (await ctx.Ships.AnyAsync(ship => ship.Id == id))
                 {
@@ -118,12 +124,12 @@ namespace AzurLaneAPI.Controllers
                         .Single(ship => ship.Id == id);
 
                     ctx.Remove(selectedShip);
-                    ctx.Remove(selectedShip.BaseStats);
-                    ctx.Remove(selectedShip.Level100Stats);
-                    ctx.Remove(selectedShip.Level120Stats);
-                    ctx.Remove(selectedShip.Level100RetrofitStats);
-                    ctx.Remove(selectedShip.Level120RetrofitStats);
-                    ctx.RemoveRange(selectedShip.Skins);
+                    if (selectedShip.BaseStats != null) ctx.Remove(selectedShip.BaseStats);
+                    if (selectedShip.Level100Stats != null) ctx.Remove(selectedShip.Level100Stats);
+                    if (selectedShip.Level120Stats != null) ctx.Remove(selectedShip.Level120Stats);
+                    if (selectedShip.Level100RetrofitStats != null) ctx.Remove(selectedShip.Level100RetrofitStats);
+                    if (selectedShip.Level120RetrofitStats != null) ctx.Remove(selectedShip.Level120RetrofitStats);
+                    if (selectedShip.Skins != null) ctx.RemoveRange(selectedShip.Skins);
 
                     await ctx.SaveChangesAsync();
                     return selectedShip;

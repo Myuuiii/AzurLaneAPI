@@ -50,6 +50,8 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
+                if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
+
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 aLEvent.Id = Guid.NewGuid();
                 ctx.Events.Add(aLEvent);
@@ -80,6 +82,8 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
+                if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
+
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 if (await ctx.Events.AnyAsync(ev => ev.Id == id))
                 {
