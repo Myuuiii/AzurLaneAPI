@@ -73,6 +73,23 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
+        [HttpPost(Routes.V1.Routes.Ships.CreateShipMinimal)]
+        public async Task<ActionResult<Ship>> CreateMinimalShip([FromBody] MinimalShip minimalShip)
+        {
+            try
+            {
+                AzurLaneDbContext ctx = new AzurLaneDbContext();
+                Ship ship = new Ship(minimalShip);
+                ctx.Ships.Add(ship);
+                await ctx.SaveChangesAsync();
+                return ship;
+            }
+            catch
+            {
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+            }
+        }
+
         [HttpPatch(Routes.V1.Routes.Ships.Update)]
         public async Task<ActionResult<ALEvent>> UpdateShip(Guid id, [FromBody] Ship ship)
         {

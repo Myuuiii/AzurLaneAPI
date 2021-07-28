@@ -7,6 +7,24 @@ namespace AzurLaneClasses.Ship
 {
     public class Ship
     {
+        public Ship(){}
+        public Ship(MinimalShip minimalShip)
+        {
+            this.Id = minimalShip.Id;
+            this.ShipId = minimalShip.ShipId;
+            this.Name = minimalShip.Name;
+            this.Rarity = minimalShip.Rarity;
+            this.Nation = minimalShip.Nation;
+            this.Type = minimalShip.Type;  
+            this.HasLive2DModel = minimalShip.HasLive2DModel;
+            this.Artist = minimalShip.Artist;
+            this.VoiceActor = minimalShip.VoiceActor;
+            this.IconImage = minimalShip.IconImage;
+            this.ThumbnailImage = minimalShip.ThumbnailImage;
+            this.DefaultFullImage = minimalShip.DefaultFullImage;
+            this.DefaultChibiImage = minimalShip.DefaultChibiImage;
+        }
+        
         // * Identity Properties
         [Key] public Guid Id { get; set; }
 
@@ -39,8 +57,8 @@ namespace AzurLaneClasses.Ship
         public ShipStats Level120RetrofitStats { get; set; }
 
         // ? Ship Equippables
-        [Required] public ShipEquippable? EquippableTypeSlot1 { get; set; }
-        [Required] public ShipEquippable? EquippableTypeSlot2 { get; set; }
-        [Required] public ShipEquippable? EquippableTypeSlot3 { get; set; }
+        public ShipEquippable? EquippableTypeSlot1 { get; set; } = null;
+        public ShipEquippable? EquippableTypeSlot2 { get; set; } = null;
+        public ShipEquippable? EquippableTypeSlot3 { get; set; } = null;
     }
 }
