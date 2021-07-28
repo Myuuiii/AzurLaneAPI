@@ -17,10 +17,14 @@ namespace AzurLaneAPI.Routes.V1
             public static class ShipStats
             {
                 public const String GetAll = "/ships/stats";
-                public const String GetId = "/ships/stats/{id}";
-                public const String Create = "/ships/stats/{id}";
-                public const String Update = "/ships/stats/{id}";
-                public const String Delete = "/ships/stats/{id}";
+
+                public static class BaseStats
+                {
+                    public const String Get = "/ships/{id}/basestats";
+                    public const String Create = "/ships/{id}/basestats";
+                    public const String Update = "/ships/{id}/basestats";
+                    public const String Delete = "/ships/{id}/basestats";
+                }
             }
         }
 
