@@ -10,6 +10,7 @@ namespace AzurLaneAPI.Routes.V1
         {
             public const String GetAll = "/ships";
             public const String GetId = "/ships/{id}";
+            public const String GetName = "/ships/name/{name}";
             public const String Import = "/ships/";
             public const String Create = "/ships";
             public const String Update = "/ships/{id}";
