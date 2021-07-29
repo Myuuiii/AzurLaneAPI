@@ -38,7 +38,11 @@ namespace AzurLaneAPI.Controllers
                     .Include(s => s.EnhanceValue)
                     .Include(s => s.ScrapValue)
                     .Include(s => s.Construction)
-                    .Include(s => s.Misc)
+                    .Include(s => s.Artist)
+                    .Include(s => s.Pixiv)
+                    .Include(s => s.Twitter)
+                    .Include(s => s.Web)
+                    .Include(s => s.VoiceActor)
                         .ToListAsync();
                 }
                 else if (page == null && itemsPerPage != null)
@@ -77,7 +81,11 @@ namespace AzurLaneAPI.Controllers
                     .Include(s => s.EnhanceValue)
                     .Include(s => s.ScrapValue)
                     .Include(s => s.Construction)
-                    .Include(s => s.Misc)
+                    .Include(s => s.Artist)
+                    .Include(s => s.Pixiv)
+                    .Include(s => s.Twitter)
+                    .Include(s => s.Web)
+                    .Include(s => s.VoiceActor)
                     .Skip((Int32)skip).Take((Int32)itemsPerPage)
                         .ToListAsync();
                 }
@@ -101,7 +109,7 @@ namespace AzurLaneAPI.Controllers
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 if (await ctx.Ships.AnyAsync(ship => ship.Id == id))
                 {
-                    return await ctx.Ships
+                    Ship ship = await ctx.Ships
                     .Include(s => s.Stars)
                     .Include(s => s.DefaultSkin)
                     .Include(s => s.Skins)
@@ -117,8 +125,13 @@ namespace AzurLaneAPI.Controllers
                     .Include(s => s.EnhanceValue)
                     .Include(s => s.ScrapValue)
                     .Include(s => s.Construction)
-                    .Include(s => s.Misc)
+                    .Include(s => s.Artist)
+                    .Include(s => s.Pixiv)
+                    .Include(s => s.Twitter)
+                    .Include(s => s.Web)
+                    .Include(s => s.VoiceActor)
                         .SingleAsync(ship => ship.Id == id);
+                    return ship;
                 }
                 else
                 {
@@ -208,7 +221,11 @@ namespace AzurLaneAPI.Controllers
                     .Include(s => s.EnhanceValue)
                     .Include(s => s.ScrapValue)
                     .Include(s => s.Construction)
-                    .Include(s => s.Misc)
+                    .Include(s => s.Artist)
+                    .Include(s => s.Pixiv)
+                    .Include(s => s.Twitter)
+                    .Include(s => s.Web)
+                    .Include(s => s.VoiceActor)
                         .Single(ship => ship.Id == id);
 
                     ctx.Remove(selectedShip);
@@ -227,7 +244,11 @@ namespace AzurLaneAPI.Controllers
                     if (selectedShip.EnhanceValue != null) ctx.Remove(selectedShip.EnhanceValue);
                     if (selectedShip.ScrapValue != null) ctx.Remove(selectedShip.ScrapValue);
                     if (selectedShip.Construction != null) ctx.Remove(selectedShip.Construction);
-                    if (selectedShip.Misc != null) ctx.Remove(selectedShip.Misc);
+                    if (selectedShip.Artist != null) ctx.Remove(selectedShip.Artist);
+                    if (selectedShip.Pixiv != null) ctx.Remove(selectedShip.Pixiv);
+                    if (selectedShip.Twitter != null) ctx.Remove(selectedShip.Twitter);
+                    if (selectedShip.Web != null) ctx.Remove(selectedShip.Web);
+                    if (selectedShip.VoiceActor != null) ctx.Remove(selectedShip.VoiceActor);
 
                     await ctx.SaveChangesAsync();
                     return selectedShip;
