@@ -90,9 +90,7 @@ namespace AzurLaneClasses
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var splitStringConverter = new ValueConverter<IEnumerable<String>, String>(v => String.Join(";", v), v => v.Split(new[] { ';' }));
-            modelBuilder.Entity<ShipLimitBreak>().Property(nameof(ShipLimitBreak.First)).HasConversion(splitStringConverter);
-            modelBuilder.Entity<ShipLimitBreak>().Property(nameof(ShipLimitBreak.Second)).HasConversion(splitStringConverter);
-            modelBuilder.Entity<ShipLimitBreak>().Property(nameof(ShipLimitBreak.Third)).HasConversion(splitStringConverter);
+            modelBuilder.Entity<ShipLimitBreaks>().Property(nameof(ShipLimitBreaks.LimitBreaks)).HasConversion(splitStringConverter);
         }
     }
 }

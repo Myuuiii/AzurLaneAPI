@@ -15,6 +15,6 @@ namespace AzurLaneClasses.Equipment
         public Double Reload { get; set; }
         public Double AADPS { get; set; }
         public Int32 Range { get; set; }
-        public Nation Nation { get; set; }
+        public String Nation { get; set; }
     }
 }

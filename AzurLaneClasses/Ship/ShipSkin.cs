@@ -15,5 +15,6 @@ namespace AzurLaneClasses.Ship
         public String BackgroundUrl { get; set; }
         public String ChibiUrl { get; set; }
         public Boolean Live2dModel { get; set; }
+        public String ObtainedFrom { get; set; }
     }
 }

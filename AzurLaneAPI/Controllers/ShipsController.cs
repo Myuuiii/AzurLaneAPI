@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AzurLaneClasses;
+using AzurLaneClasses.Import;
 using AzurLaneClasses.Ship;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,15 +19,22 @@ namespace AzurLaneAPI.Controllers
             {
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 return await ctx.Ships
-                    .Include(s => s.BaseStats).Include(s => s.Level100Stats).Include(s => s.Level120Stats)
-                    .Include(s => s.Level100RetrofitStats).Include(s => s.Level120RetrofitStats)
-                    .Include(s => s.Skins).Include(s => s.DefaultSkin)
-                    .Include(s => s.Skills)
-                    .Include(s => s.LimitBreaks)
-                    .Include(s => s.Gallery)
-                    .Include(s => s.EquipSlot1).Include(s => s.EquipSlot2).Include(s => s.EquipSlot3)
-                    .Include(s => s.EnhanceValue).Include(s => s.ScrapValue).Include(s => s.Construction)
-                    .Include(s => s.Misc)
+                .Include(s => s.Stars)
+                .Include(s => s.DefaultSkin)
+                .Include(s => s.Skins)
+                .Include(s => s.Skills)
+                .Include(s => s.LimitBreaks)
+                .Include(s => s.Gallery)
+                .Include(s => s.EquippableSlots)
+                .Include(s => s.BaseStats)
+                // .Include(s => s.Level100Stats)
+                // .Include(s => s.Level120Stats)
+                // .Include(s => s.Level100RetrofitStats)
+                // .Include(s => s.Level120RetrofitStats)
+                // .Include(s => s.EnhanceValue)
+                // .Include(s => s.ScrapValue)
+                // .Include(s => s.Construction)
+                .Include(s => s.Misc)
                     .ToListAsync();
             }
             catch
@@ -42,18 +50,25 @@ namespace AzurLaneAPI.Controllers
             {
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 if (await ctx.Ships
-                    .AnyAsync(ship => ship.Id == id))
+                    .Include(s => s.Stars)
+                    .Include(s => s.DefaultSkin)
+                    .Include(s => s.Skins)
+                    .Include(s => s.Skills)
+                    .Include(s => s.LimitBreaks)
+                    .Include(s => s.Gallery)
+                    .Include(s => s.EquippableSlots)
+                    .Include(s => s.BaseStats)
+                    .Include(s => s.Level100Stats)
+                    .Include(s => s.Level120Stats)
+                    .Include(s => s.Level100RetrofitStats)
+                    .Include(s => s.Level120RetrofitStats)
+                    .Include(s => s.EnhanceValue)
+                    .Include(s => s.ScrapValue)
+                    .Include(s => s.Construction)
+                    .Include(s => s.Misc)
+                        .AnyAsync(ship => ship.Id == id))
                 {
                     return await ctx.Ships
-                        .Include(s => s.BaseStats).Include(s => s.Level100Stats).Include(s => s.Level120Stats)
-                        .Include(s => s.Level100RetrofitStats).Include(s => s.Level120RetrofitStats)
-                        .Include(s => s.Skins).Include(s => s.DefaultSkin)
-                        .Include(s => s.Skills)
-                        .Include(s => s.LimitBreaks)
-                        .Include(s => s.Gallery)
-                        .Include(s => s.EquipSlot1).Include(s => s.EquipSlot2).Include(s => s.EquipSlot3)
-                        .Include(s => s.EnhanceValue).Include(s => s.ScrapValue).Include(s => s.Construction)
-                        .Include(s => s.Misc)
                         .SingleAsync(ship => ship.Id == id);
                 }
                 else
@@ -73,7 +88,7 @@ namespace AzurLaneAPI.Controllers
             try
             {
                 if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
-                
+
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 ship.Id = Guid.NewGuid();
                 ctx.Ships.Add(ship);
@@ -82,7 +97,25 @@ namespace AzurLaneAPI.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+            }
+        }
+
+        [HttpPut(Routes.V1.Routes.Ships.Import)]
+        public async Task<ActionResult> ImportShips([FromBody] List<ShipDataImportModel> shipDataImportModels)
+        {
+            try
+            {
+                AzurLaneDbContext ctx = new AzurLaneDbContext();
+                foreach (ShipDataImportModel shipDataImportModel in shipDataImportModels)
+                {
+                    ctx.Add(new Ship(shipDataImportModel));
+                }
+                await ctx.SaveChangesAsync();
+                return Ok();
+            }
+            catch
+            {
                 return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
             }
         }
@@ -111,24 +144,41 @@ namespace AzurLaneAPI.Controllers
                 if (await ctx.Ships.AnyAsync(ship => ship.Id == id))
                 {
                     Ship selectedShip = ctx.Ships
-                        .Include(s => s.BaseStats).Include(s => s.Level100Stats).Include(s => s.Level120Stats)
-                        .Include(s => s.Level100RetrofitStats).Include(s => s.Level120RetrofitStats)
-                        .Include(s => s.Skins).Include(s => s.DefaultSkin)
-                        .Include(s => s.Skills)
-                        .Include(s => s.LimitBreaks)
-                        .Include(s => s.Gallery)
-                        .Include(s => s.EquipSlot1).Include(s => s.EquipSlot2).Include(s => s.EquipSlot3)
-                        .Include(s => s.EnhanceValue).Include(s => s.ScrapValue).Include(s => s.Construction)
-                        .Include(s => s.Misc)
+                        .Include(s => s.Stars)
+                    .Include(s => s.DefaultSkin)
+                    .Include(s => s.Skins)
+                    .Include(s => s.Skills)
+                    .Include(s => s.LimitBreaks)
+                    .Include(s => s.Gallery)
+                    .Include(s => s.EquippableSlots)
+                    .Include(s => s.BaseStats)
+                    .Include(s => s.Level100Stats)
+                    .Include(s => s.Level120Stats)
+                    .Include(s => s.Level100RetrofitStats)
+                    .Include(s => s.Level120RetrofitStats)
+                    .Include(s => s.EnhanceValue)
+                    .Include(s => s.ScrapValue)
+                    .Include(s => s.Construction)
+                    .Include(s => s.Misc)
                         .Single(ship => ship.Id == id);
 
                     ctx.Remove(selectedShip);
+                    if (selectedShip.Stars != null) ctx.Remove(selectedShip.Stars);
+                    if (selectedShip.DefaultSkin != null) ctx.Remove(selectedShip.DefaultSkin);
+                    if (selectedShip.Skins != null) ctx.RemoveRange(selectedShip.Skins);
+                    if (selectedShip.Skills != null) ctx.RemoveRange(selectedShip.Skills);
+                    if (selectedShip.LimitBreaks != null) ctx.RemoveRange(selectedShip.LimitBreaks);
+                    if (selectedShip.Gallery != null) ctx.RemoveRange(selectedShip.Gallery);
+                    if (selectedShip.EquippableSlots != null) ctx.Remove(selectedShip.EquippableSlots);
                     if (selectedShip.BaseStats != null) ctx.Remove(selectedShip.BaseStats);
                     if (selectedShip.Level100Stats != null) ctx.Remove(selectedShip.Level100Stats);
                     if (selectedShip.Level120Stats != null) ctx.Remove(selectedShip.Level120Stats);
                     if (selectedShip.Level100RetrofitStats != null) ctx.Remove(selectedShip.Level100RetrofitStats);
                     if (selectedShip.Level120RetrofitStats != null) ctx.Remove(selectedShip.Level120RetrofitStats);
-                    if (selectedShip.Skins != null) ctx.RemoveRange(selectedShip.Skins);
+                    if (selectedShip.EnhanceValue != null) ctx.Remove(selectedShip.EnhanceValue);
+                    if (selectedShip.ScrapValue != null) ctx.Remove(selectedShip.ScrapValue);
+                    if (selectedShip.Construction != null) ctx.Remove(selectedShip.Construction);
+                    if (selectedShip.Misc != null) ctx.Remove(selectedShip.Misc);
 
                     await ctx.SaveChangesAsync();
                     return selectedShip;

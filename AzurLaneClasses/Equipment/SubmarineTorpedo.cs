@@ -21,6 +21,6 @@ namespace AzurLaneClasses.Equipment
         public Int32 Spread { get; set; }
         public Int32 Angle { get; set; }
         public String Attribute { get; set; }
-        public Nation Nation { get; set; }
+        public String Nation { get; set; }
     }
 }

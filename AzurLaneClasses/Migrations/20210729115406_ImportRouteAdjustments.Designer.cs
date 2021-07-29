@@ -3,14 +3,16 @@ using System;
 using AzurLaneClasses;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AzurLaneClasses.Migrations
 {
     [DbContext(typeof(AzurLaneDbContext))]
-    partial class AzurLaneDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210729115406_ImportRouteAdjustments")]
+    partial class ImportRouteAdjustments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -875,17 +877,17 @@ namespace AzurLaneClasses.Migrations
                     b.Property<string>("Exchange")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Heavy")
-                        .HasColumnType("longtext");
+                    b.Property<bool>("Heavy")
+                        .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("Light")
-                        .HasColumnType("longtext");
+                    b.Property<bool>("Light")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Limited")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Special")
-                        .HasColumnType("longtext");
+                    b.Property<bool>("Special")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
 

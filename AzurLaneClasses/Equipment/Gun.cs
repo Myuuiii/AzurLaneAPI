@@ -28,6 +28,6 @@ namespace AzurLaneClasses.Equipment
         public Int32 Angle { get; set; }
         public String Attribute { get; set; }
         public AmmoType AmmoType { get; set; }
-        public Nation Nation { get; set; }
+        public String Nation { get; set; }
     }
 }

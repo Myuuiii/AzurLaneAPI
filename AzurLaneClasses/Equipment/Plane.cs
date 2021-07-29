@@ -22,6 +22,6 @@ namespace AzurLaneClasses.Equipment
 
         public Int32 Crash_Speed { get; set; }
         public Int32 Crash_Damage { get; set; }
-        public Nation Nation { get; set; }
+        public String Nation { get; set; }
     }
 }
