@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AzurLaneAPI.Attributes;
 using AzurLaneClasses;
 using AzurLaneClasses.Import;
 using AzurLaneClasses.Ship;
