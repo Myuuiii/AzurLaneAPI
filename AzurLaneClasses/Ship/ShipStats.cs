@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
 
 namespace AzurLaneClasses.Ship
 {
@@ -9,7 +8,10 @@ namespace AzurLaneClasses.Ship
     /// </summary>
     public class ShipStats
     {
-        [JsonIgnore] public Guid Id { get; set; } = Guid.NewGuid();
+        // * Identity Properties
+        [Key] public Guid Id { get; set; } = Guid.NewGuid();
+
+        // * Stats
         public Int32 Luck { get; set; }
         public ShipArmor Armor { get; set; }
         public Int32 Speed { get; set; }

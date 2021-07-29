@@ -20,13 +20,7 @@ namespace AzurLaneAPI.Controllers
                 return await ctx.Ships
                     .Include(s => s.BaseStats).Include(s => s.Level100Stats).Include(s => s.Level120Stats)
                     .Include(s => s.Level100RetrofitStats).Include(s => s.Level120RetrofitStats)
-                    .Include(s => s.Skins).Include(s => s.DefaultSkin)
-                    .Include(s => s.Skills)
-                    .Include(s => s.LimitBreaks)
-                    .Include(s => s.Gallery)
-                    .Include(s => s.EquipSlot1).Include(s => s.EquipSlot2).Include(s => s.EquipSlot3)
-                    .Include(s => s.EnhanceValue).Include(s => s.ScrapValue).Include(s => s.Construction)
-                    .Include(s => s.Misc)
+                    .Include(s => s.Skins)
                     .ToListAsync();
             }
             catch
@@ -47,13 +41,7 @@ namespace AzurLaneAPI.Controllers
                     return await ctx.Ships
                         .Include(s => s.BaseStats).Include(s => s.Level100Stats).Include(s => s.Level120Stats)
                         .Include(s => s.Level100RetrofitStats).Include(s => s.Level120RetrofitStats)
-                        .Include(s => s.Skins).Include(s => s.DefaultSkin)
-                        .Include(s => s.Skills)
-                        .Include(s => s.LimitBreaks)
-                        .Include(s => s.Gallery)
-                        .Include(s => s.EquipSlot1).Include(s => s.EquipSlot2).Include(s => s.EquipSlot3)
-                        .Include(s => s.EnhanceValue).Include(s => s.ScrapValue).Include(s => s.Construction)
-                        .Include(s => s.Misc)
+                        .Include(s => s.Skins)
                         .SingleAsync(ship => ship.Id == id);
                 }
                 else
@@ -87,6 +75,25 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
+        [HttpPost(Routes.V1.Routes.Ships.CreateShipMinimal)]
+        public async Task<ActionResult<Ship>> CreateMinimalShip([FromBody] MinimalShip minimalShip)
+        {
+            try
+            {
+                if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
+                
+                AzurLaneDbContext ctx = new AzurLaneDbContext();
+                Ship ship = new Ship(minimalShip);
+                ctx.Ships.Add(ship);
+                await ctx.SaveChangesAsync();
+                return ship;
+            }
+            catch
+            {
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+            }
+        }
+
         [HttpPatch(Routes.V1.Routes.Ships.Update)]
         public async Task<ActionResult<ALEvent>> UpdateShip(Guid id, [FromBody] Ship ship)
         {
@@ -113,13 +120,7 @@ namespace AzurLaneAPI.Controllers
                     Ship selectedShip = ctx.Ships
                         .Include(s => s.BaseStats).Include(s => s.Level100Stats).Include(s => s.Level120Stats)
                         .Include(s => s.Level100RetrofitStats).Include(s => s.Level120RetrofitStats)
-                        .Include(s => s.Skins).Include(s => s.DefaultSkin)
-                        .Include(s => s.Skills)
-                        .Include(s => s.LimitBreaks)
-                        .Include(s => s.Gallery)
-                        .Include(s => s.EquipSlot1).Include(s => s.EquipSlot2).Include(s => s.EquipSlot3)
-                        .Include(s => s.EnhanceValue).Include(s => s.ScrapValue).Include(s => s.Construction)
-                        .Include(s => s.Misc)
+                        .Include(s => s.Skins)
                         .Single(ship => ship.Id == id);
 
                     ctx.Remove(selectedShip);
