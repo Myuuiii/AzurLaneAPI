@@ -103,12 +103,12 @@ namespace AzurLaneAPI.Controllers
         }
 
         [HttpGet(Routes.V1.Routes.Ships.GetId)]
-        public async Task<ActionResult<Ship>> GetShip(Guid id)
+        public async Task<ActionResult<Ship>> GetShip(String id)
         {
             try
             {
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (await ctx.Ships.AnyAsync(ship => ship.Id == id))
+                if (await ctx.Ships.AnyAsync(ship => ship.ShipId == id))
                 {
                     Ship ship = await ctx.Ships
                     .Include(s => s.Stars)
@@ -131,7 +131,50 @@ namespace AzurLaneAPI.Controllers
                     .Include(s => s.Twitter)
                     .Include(s => s.Web)
                     .Include(s => s.VoiceActor)
-                        .SingleAsync(ship => ship.Id == id);
+                        .SingleAsync(ship => ship.ShipId == id);
+                    return ship;
+                }
+                else
+                {
+                    return NotFound(Errors.V1.Errors.X400.ResourceWithIdDoesNotExist);
+                }
+            }
+            catch
+            {
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+            }
+        }
+
+        [HttpGet(Routes.V1.Routes.Ships.GetName)]
+        public async Task<ActionResult<Ship>> GetByName(string name)
+        {
+            try
+            {
+                AzurLaneDbContext ctx = new AzurLaneDbContext();
+                if (await ctx.Ships.AnyAsync(ship => ship.Name == name))
+                {
+                    Ship ship = await ctx.Ships
+                    .Include(s => s.Stars)
+                    .Include(s => s.DefaultSkin)
+                    .Include(s => s.Skins)
+                    .Include(s => s.Skills)
+                    .Include(s => s.LimitBreaks)
+                    .Include(s => s.Gallery)
+                    .Include(s => s.EquippableSlots)
+                    .Include(s => s.BaseStats)
+                    .Include(s => s.Level100Stats)
+                    .Include(s => s.Level120Stats)
+                    .Include(s => s.Level100RetrofitStats)
+                    .Include(s => s.Level120RetrofitStats)
+                    .Include(s => s.EnhanceValue)
+                    .Include(s => s.ScrapValue)
+                    .Include(s => s.Construction)
+                    .Include(s => s.Artist)
+                    .Include(s => s.Pixiv)
+                    .Include(s => s.Twitter)
+                    .Include(s => s.Web)
+                    .Include(s => s.VoiceActor)
+                        .SingleAsync(ship => ship.Name == name);
                     return ship;
                 }
                 else
