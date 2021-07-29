@@ -11,8 +11,7 @@
 <hr />
 
 ## Authentication 🔓
-Because the API is still in its development phase, all routes are blocked by an API key. The requirement for this key will be lifted upon release of the Ship part of the API. Once the API key requirement is lifted, the public POST/PATCH and DELETE routes will be removed. 
-
+All of the GET routes are publicly available. For the POST/PATCH/DELETE routes you will need an API key, this key will be provided when you want to help us collect and maintain the API's data
 
 ## Contribution 👷‍♂️
 Since I do not really know a lot about Azur Lane and all of the data it might store, you are very welcome to create issues and or send me email about how I can improve on this.

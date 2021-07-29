@@ -24,7 +24,7 @@ namespace AzurLaneAPI.Controllers
         }
 
         [HttpGet(Routes.V1.Routes.Construction.GetPool)]
-        public async Task<ActionResult<ConstructionPool>> GetLightPool(String id)
+        public async Task<ActionResult<ConstructionPool>> GetPool(String id)
         {
             try
             {

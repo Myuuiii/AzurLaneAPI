@@ -3,14 +3,16 @@ using System;
 using AzurLaneClasses;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AzurLaneClasses.Migrations
 {
     [DbContext(typeof(AzurLaneDbContext))]
-    partial class AzurLaneDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210728145048_TokenLastAccessed")]
+    partial class TokenLastAccessed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -866,63 +868,42 @@ namespace AzurLaneClasses.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("SubmarineTorpedo");
                 });
 
-            modelBuilder.Entity("AzurLaneClasses.Ship.ConstructionAvailability", b =>
+            modelBuilder.Entity("AzurLaneClasses.Ship.Ship", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<bool>("Aviation")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Exchange")
+                    b.Property<string>("Artist")
+                        .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<bool>("Heavy")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("Light")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Limited")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ConstructionAvailability");
-                });
-
-            modelBuilder.Entity("AzurLaneClasses.Ship.Ship", b =>
-                {
-                    b.Property<string>("ShipId")
-                        .HasColumnType("varchar(255)");
 
                     b.Property<Guid?>("BaseStatsId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid?>("ConstructionId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("DefaultSkinId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("EnhanceValueId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("EquipSlot1Id")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("EquipSlot2Id")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("EquipSlot3Id")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("IconImage")
+                    b.Property<string>("DefaultChibiImage")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                    b.Property<string>("DefaultFullImage")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("EquippableTypeSlot1")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EquippableTypeSlot2")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EquippableTypeSlot3")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("HasLive2DModel")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("IconImage")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<Guid?>("Level100RetrofitStatsId")
                         .HasColumnType("char(36)");
@@ -936,10 +917,8 @@ namespace AzurLaneClasses.Migrations
                     b.Property<Guid?>("Level120StatsId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid?>("MiscId")
-                        .HasColumnType("char(36)");
-
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int>("Nation")
@@ -948,33 +927,24 @@ namespace AzurLaneClasses.Migrations
                     b.Property<int>("Rarity")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("ScrapValueId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("StarsId")
-                        .HasColumnType("char(36)");
+                    b.Property<string>("ShipId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ThumbnailImage")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
-                    b.HasKey("ShipId");
+                    b.Property<string>("VoiceActor")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("BaseStatsId");
-
-                    b.HasIndex("ConstructionId");
-
-                    b.HasIndex("DefaultSkinId");
-
-                    b.HasIndex("EnhanceValueId");
-
-                    b.HasIndex("EquipSlot1Id");
-
-                    b.HasIndex("EquipSlot2Id");
-
-                    b.HasIndex("EquipSlot3Id");
 
                     b.HasIndex("Level100RetrofitStatsId");
 
@@ -984,243 +954,7 @@ namespace AzurLaneClasses.Migrations
 
                     b.HasIndex("Level120StatsId");
 
-                    b.HasIndex("MiscId");
-
-                    b.HasIndex("ScrapValueId");
-
-                    b.HasIndex("StarsId");
-
                     b.ToTable("Ships");
-                });
-
-            modelBuilder.Entity("AzurLaneClasses.Ship.ShipArtist", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ShipArtist");
-                });
-
-            modelBuilder.Entity("AzurLaneClasses.Ship.ShipConstruction", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("AvailabilityId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<TimeSpan>("ConstructionTime")
-                        .HasColumnType("time(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AvailabilityId");
-
-                    b.ToTable("ShipConstruction");
-                });
-
-            modelBuilder.Entity("AzurLaneClasses.Ship.ShipEnhanceValues", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<int>("Aviation")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Firepower")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Reload")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Torpedo")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ShipEnhanceValues");
-                });
-
-            modelBuilder.Entity("AzurLaneClasses.Ship.ShipEquippableSlot", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<int>("Max")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MaxEfficiency")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MinEfficiency")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ShipEquippableSlot");
-                });
-
-            modelBuilder.Entity("AzurLaneClasses.Ship.ShipGalleryItem", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ShipId")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ShipId");
-
-                    b.ToTable("ShipGalleryItem");
-                });
-
-            modelBuilder.Entity("AzurLaneClasses.Ship.ShipLimitBreak", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("First")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Second")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ShipId")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("Third")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ShipId");
-
-                    b.ToTable("ShipLimitBreak");
-                });
-
-            modelBuilder.Entity("AzurLaneClasses.Ship.ShipMisc", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("ArtistId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("PixivId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("TwitterId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("VoiceActorId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("WebId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ArtistId");
-
-                    b.HasIndex("PixivId");
-
-                    b.HasIndex("TwitterId");
-
-                    b.HasIndex("VoiceActorId");
-
-                    b.HasIndex("WebId");
-
-                    b.ToTable("ShipMisc");
-                });
-
-            modelBuilder.Entity("AzurLaneClasses.Ship.ShipPixiv", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ShipPixiv");
-                });
-
-            modelBuilder.Entity("AzurLaneClasses.Ship.ShipScrapValues", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<int>("Coins")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Medals")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Oil")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ShipScrapValues");
-                });
-
-            modelBuilder.Entity("AzurLaneClasses.Ship.ShipSkill", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Color")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("IconUrl")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ShipId")
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ShipId");
-
-                    b.ToTable("ShipSkill");
                 });
 
             modelBuilder.Entity("AzurLaneClasses.Ship.ShipSkin", b =>
@@ -1229,46 +963,29 @@ namespace AzurLaneClasses.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("BackgroundUrl")
+                    b.Property<string>("ChibiImage")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("ChibiUrl")
+                    b.Property<string>("FullImage")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("ImageUrl")
+                    b.Property<string>("Name_Chinese")
                         .HasColumnType("longtext");
 
-                    b.Property<bool>("Live2dModel")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("Name_English")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("ShipId")
-                        .HasColumnType("varchar(255)");
+                    b.Property<string>("Name_Japanese")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid?>("ShipId")
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ShipId");
 
                     b.ToTable("ShipSkins");
-                });
-
-            modelBuilder.Entity("AzurLaneClasses.Ship.ShipStars", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Stars")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ShipStars");
                 });
 
             modelBuilder.Entity("AzurLaneClasses.Ship.ShipStats", b =>
@@ -1327,57 +1044,6 @@ namespace AzurLaneClasses.Migrations
                     b.ToTable("ShipStats");
                 });
 
-            modelBuilder.Entity("AzurLaneClasses.Ship.ShipTwitter", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ShipTwitter");
-                });
-
-            modelBuilder.Entity("AzurLaneClasses.Ship.ShipVoiceActor", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ShipVoiceActor");
-                });
-
-            modelBuilder.Entity("AzurLaneClasses.Ship.ShipWeb", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ShipWeb");
-                });
-
             modelBuilder.Entity("AzurLaneClasses.Equipment.Torpedo", b =>
                 {
                     b.HasBaseType("AzurLaneClasses.Equipment.SubmarineTorpedo");
@@ -1400,30 +1066,6 @@ namespace AzurLaneClasses.Migrations
                         .WithMany()
                         .HasForeignKey("BaseStatsId");
 
-                    b.HasOne("AzurLaneClasses.Ship.ShipConstruction", "Construction")
-                        .WithMany()
-                        .HasForeignKey("ConstructionId");
-
-                    b.HasOne("AzurLaneClasses.Ship.ShipSkin", "DefaultSkin")
-                        .WithMany()
-                        .HasForeignKey("DefaultSkinId");
-
-                    b.HasOne("AzurLaneClasses.Ship.ShipEnhanceValues", "EnhanceValue")
-                        .WithMany()
-                        .HasForeignKey("EnhanceValueId");
-
-                    b.HasOne("AzurLaneClasses.Ship.ShipEquippableSlot", "EquipSlot1")
-                        .WithMany()
-                        .HasForeignKey("EquipSlot1Id");
-
-                    b.HasOne("AzurLaneClasses.Ship.ShipEquippableSlot", "EquipSlot2")
-                        .WithMany()
-                        .HasForeignKey("EquipSlot2Id");
-
-                    b.HasOne("AzurLaneClasses.Ship.ShipEquippableSlot", "EquipSlot3")
-                        .WithMany()
-                        .HasForeignKey("EquipSlot3Id");
-
                     b.HasOne("AzurLaneClasses.Ship.ShipStats", "Level100RetrofitStats")
                         .WithMany()
                         .HasForeignKey("Level100RetrofitStatsId");
@@ -1440,31 +1082,7 @@ namespace AzurLaneClasses.Migrations
                         .WithMany()
                         .HasForeignKey("Level120StatsId");
 
-                    b.HasOne("AzurLaneClasses.Ship.ShipMisc", "Misc")
-                        .WithMany()
-                        .HasForeignKey("MiscId");
-
-                    b.HasOne("AzurLaneClasses.Ship.ShipScrapValues", "ScrapValue")
-                        .WithMany()
-                        .HasForeignKey("ScrapValueId");
-
-                    b.HasOne("AzurLaneClasses.Ship.ShipStars", "Stars")
-                        .WithMany()
-                        .HasForeignKey("StarsId");
-
                     b.Navigation("BaseStats");
-
-                    b.Navigation("Construction");
-
-                    b.Navigation("DefaultSkin");
-
-                    b.Navigation("EnhanceValue");
-
-                    b.Navigation("EquipSlot1");
-
-                    b.Navigation("EquipSlot2");
-
-                    b.Navigation("EquipSlot3");
 
                     b.Navigation("Level100RetrofitStats");
 
@@ -1473,75 +1091,6 @@ namespace AzurLaneClasses.Migrations
                     b.Navigation("Level120RetrofitStats");
 
                     b.Navigation("Level120Stats");
-
-                    b.Navigation("Misc");
-
-                    b.Navigation("ScrapValue");
-
-                    b.Navigation("Stars");
-                });
-
-            modelBuilder.Entity("AzurLaneClasses.Ship.ShipConstruction", b =>
-                {
-                    b.HasOne("AzurLaneClasses.Ship.ConstructionAvailability", "Availability")
-                        .WithMany()
-                        .HasForeignKey("AvailabilityId");
-
-                    b.Navigation("Availability");
-                });
-
-            modelBuilder.Entity("AzurLaneClasses.Ship.ShipGalleryItem", b =>
-                {
-                    b.HasOne("AzurLaneClasses.Ship.Ship", null)
-                        .WithMany("Gallery")
-                        .HasForeignKey("ShipId");
-                });
-
-            modelBuilder.Entity("AzurLaneClasses.Ship.ShipLimitBreak", b =>
-                {
-                    b.HasOne("AzurLaneClasses.Ship.Ship", null)
-                        .WithMany("LimitBreaks")
-                        .HasForeignKey("ShipId");
-                });
-
-            modelBuilder.Entity("AzurLaneClasses.Ship.ShipMisc", b =>
-                {
-                    b.HasOne("AzurLaneClasses.Ship.ShipArtist", "Artist")
-                        .WithMany()
-                        .HasForeignKey("ArtistId");
-
-                    b.HasOne("AzurLaneClasses.Ship.ShipPixiv", "Pixiv")
-                        .WithMany()
-                        .HasForeignKey("PixivId");
-
-                    b.HasOne("AzurLaneClasses.Ship.ShipTwitter", "Twitter")
-                        .WithMany()
-                        .HasForeignKey("TwitterId");
-
-                    b.HasOne("AzurLaneClasses.Ship.ShipVoiceActor", "VoiceActor")
-                        .WithMany()
-                        .HasForeignKey("VoiceActorId");
-
-                    b.HasOne("AzurLaneClasses.Ship.ShipWeb", "Web")
-                        .WithMany()
-                        .HasForeignKey("WebId");
-
-                    b.Navigation("Artist");
-
-                    b.Navigation("Pixiv");
-
-                    b.Navigation("Twitter");
-
-                    b.Navigation("VoiceActor");
-
-                    b.Navigation("Web");
-                });
-
-            modelBuilder.Entity("AzurLaneClasses.Ship.ShipSkill", b =>
-                {
-                    b.HasOne("AzurLaneClasses.Ship.Ship", null)
-                        .WithMany("Skills")
-                        .HasForeignKey("ShipId");
                 });
 
             modelBuilder.Entity("AzurLaneClasses.Ship.ShipSkin", b =>
@@ -1553,12 +1102,6 @@ namespace AzurLaneClasses.Migrations
 
             modelBuilder.Entity("AzurLaneClasses.Ship.Ship", b =>
                 {
-                    b.Navigation("Gallery");
-
-                    b.Navigation("LimitBreaks");
-
-                    b.Navigation("Skills");
-
                     b.Navigation("Skins");
                 });
 #pragma warning restore 612, 618

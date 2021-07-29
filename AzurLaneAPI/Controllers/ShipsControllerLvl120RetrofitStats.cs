@@ -35,6 +35,8 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
+                if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
+
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 if (ctx.Ships.Any(ship => ship.Id == id))
                 {
@@ -79,6 +81,8 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
+                if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
+
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 if (ctx.Ships.Any(ship => ship.Id == id))
                 {
