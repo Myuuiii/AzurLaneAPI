@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace AzurLaneClasses.Ship
 {
@@ -8,15 +9,11 @@ namespace AzurLaneClasses.Ship
     /// </summary>
     public class ShipSkin
     {
-        // * Identity Properties
-        [Key] public Guid Id { get; set; } = Guid.NewGuid();
-
-        // * Properties
-        public String Name_English { get; set; }
-        public String Name_Japanese { get; set; }
-        public String Name_Chinese { get; set; }
-
-        public String FullImage { get; set; }
-        public String ChibiImage { get; set; }
+        [JsonIgnore] public Guid Id { get; set; } = Guid.NewGuid();
+        public String Name { get; set; }
+        public String ImageUrl { get; set; }
+        public String BackgroundUrl { get; set; }
+        public String ChibiUrl { get; set; }
+        public Boolean Live2dModel { get; set; }
     }
 }
