@@ -3,14 +3,16 @@ using System;
 using AzurLaneClasses;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AzurLaneClasses.Migrations
 {
     [DbContext(typeof(AzurLaneDbContext))]
-    partial class AzurLaneDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210729073339_ShipsUpdate")]
+    partial class ShipsUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,6 +56,9 @@ namespace AzurLaneClasses.Migrations
 
                     b.Property<string>("Email")
                         .HasColumnType("longtext");
+
+                    b.Property<DateTime>("LastRequest")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Token")
                         .HasColumnType("longtext");
