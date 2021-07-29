@@ -146,33 +146,11 @@ namespace AzurLaneClasses.Ship
 
             if (importModel.misc != null)
             {
-                this.Misc = new ShipMisc();
-
-                if (importModel.misc.artist != null)
-                {
-                    this.Misc.Artist.Name = importModel.misc.artist.name;
-                    this.Misc.Artist.Url = importModel.misc.artist.url;
-                }
-                if (importModel.misc.pixiv != null)
-                {
-                    this.Misc.Pixiv.Name = importModel.misc.pixiv.name;
-                    this.Misc.Pixiv.Url = importModel.misc.pixiv.url;
-                }
-                if (importModel.misc.twitter != null)
-                {
-                    this.Misc.Twitter.Name = importModel.misc.twitter.name;
-                    this.Misc.Twitter.Url = importModel.misc.twitter.url;
-                }
-                if (importModel.misc.web != null)
-                {
-                    this.Misc.Web.Name = importModel.misc.web.name;
-                    this.Misc.Web.Url = importModel.misc.web.url;
-                }
-                if (importModel.misc.voice != null)
-                {
-                    this.Misc.VoiceActor.Name = importModel.misc.voice.name;
-                    this.Misc.VoiceActor.Url = importModel.misc.voice.url;
-                }
+                if (importModel.misc.artist != null) this.Artist = new ShipArtist() { Name = importModel.misc.artist.name, Url = importModel.misc.artist.url };
+                if (importModel.misc.pixiv != null) this.Pixiv = new ShipPixiv() { Name = importModel.misc.pixiv.name, Url = importModel.misc.pixiv.url };
+                if (importModel.misc.twitter != null) this.Twitter = new ShipTwitter() { Name = importModel.misc.twitter.name, Url = importModel.misc.twitter.url };
+                if (importModel.misc.web != null) this.Web = new ShipWeb() { Name = importModel.misc.web.name, Url = importModel.misc.web.url };
+                if (importModel.misc.voice != null) this.VoiceActor = new ShipVoiceActor() { Name = importModel.misc.voice.name, Url = importModel.misc.voice.url };
             }
         }
 
@@ -213,6 +191,10 @@ namespace AzurLaneClasses.Ship
 
 
         // ? Misc Information
-        public ShipMisc Misc { get; set; } = null;
+        public ShipArtist Artist { get; set; } = null;
+        public ShipPixiv Pixiv { get; set; } = null;
+        public ShipTwitter Twitter { get; set; } = null;
+        public ShipWeb Web { get; set; } = null;
+        public ShipVoiceActor VoiceActor { get; set; } = null;
     }
 }
