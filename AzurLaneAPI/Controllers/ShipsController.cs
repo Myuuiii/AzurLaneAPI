@@ -55,7 +55,7 @@ namespace AzurLaneAPI.Controllers
                     if (itemsPerPage > 20)
                     {
                         if (!Helpers.Authenticate(HttpContext)) return Unauthorized("You need an API key to retrieve more than 20 ships at a time");
-                    } 
+                    }
 
                     var skip = (page - 1) * itemsPerPage;
 
@@ -99,7 +99,9 @@ namespace AzurLaneAPI.Controllers
             try
             {
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (await ctx.Ships
+                if (await ctx.Ships.AnyAsync(ship => ship.Id == id))
+                {
+                    return await ctx.Ships
                     .Include(s => s.Stars)
                     .Include(s => s.DefaultSkin)
                     .Include(s => s.Skins)
@@ -116,9 +118,6 @@ namespace AzurLaneAPI.Controllers
                     .Include(s => s.ScrapValue)
                     .Include(s => s.Construction)
                     .Include(s => s.Misc)
-                        .AnyAsync(ship => ship.Id == id))
-                {
-                    return await ctx.Ships
                         .SingleAsync(ship => ship.Id == id);
                 }
                 else
