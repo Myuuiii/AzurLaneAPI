@@ -7,6 +7,7 @@ using AzurLaneClasses.Import;
 using AzurLaneClasses.Ship;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace AzurLaneAPI.Controllers
 {
@@ -168,6 +169,7 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
+                shipDataImportModels = JsonConvert.DeserializeObject<List<ShipDataImportModel>>(JsonConvert.SerializeObject(shipDataImportModels).Replace("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "http://cdn.mutedevs.nl/azurlaneapi/"));
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 foreach (ShipDataImportModel shipDataImportModel in shipDataImportModels)
                 {
