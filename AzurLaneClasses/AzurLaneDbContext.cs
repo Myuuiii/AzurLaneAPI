@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using AzurLaneClasses.Equipment;
+using AzurLaneClasses.Ship;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Newtonsoft.Json;
 using static AzurLaneClasses.Equipment.EquipmentOverrides;
 
@@ -82,6 +85,14 @@ namespace AzurLaneClasses
                 throw new Exception("The Database Connection String has not been configured correctly");
             }
 
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            var splitStringConverter = new ValueConverter<IEnumerable<String>, String>(v => String.Join(";", v), v => v.Split(new[] { ';' }));
+            modelBuilder.Entity<ShipLimitBreak>().Property(nameof(ShipLimitBreak.First)).HasConversion(splitStringConverter);
+            modelBuilder.Entity<ShipLimitBreak>().Property(nameof(ShipLimitBreak.Second)).HasConversion(splitStringConverter);
+            modelBuilder.Entity<ShipLimitBreak>().Property(nameof(ShipLimitBreak.Third)).HasConversion(splitStringConverter);
         }
     }
 }

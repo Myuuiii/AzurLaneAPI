@@ -11,7 +11,6 @@ namespace AzurLaneAPI.Routes.V1
             public const String GetAll = "/ships";
             public const String GetId = "/ships/{id}";
             public const String Create = "/ships";
-            public const String CreateShipMinimal = "/ships/minimal";
             public const String Update = "/ships/{id}";
             public const String Delete = "/ships/{id}";
 
