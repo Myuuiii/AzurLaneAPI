@@ -1,4 +1,4 @@
 @echo off
 :start
-dotnet watch run
+dotnet run
 goto start
