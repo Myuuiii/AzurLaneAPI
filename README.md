@@ -18,10 +18,7 @@ Since I do not really know a lot about Azur Lane and all of the data it might st
 
 
 ## Support us ❤
-All data is manually collected which is a lot of work, if you'd like to use this API please consider donating. This is not required at all. 
-
-## Help collect data 📠
-If you'd like to help collect data please send [Myuuiii](https://github.com/Myuuiii) an email. 
+You can help us fund this project so it can run more stable on better hardware, Any help is greatly appreciated!
 
 <hr />
 
