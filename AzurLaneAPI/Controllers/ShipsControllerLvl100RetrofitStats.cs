@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AzurLaneClasses;
 using AzurLaneClasses.Ship;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AzurLaneAPI.Controllers
 {
@@ -17,7 +18,9 @@ namespace AzurLaneAPI.Controllers
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 if (ctx.Ships.Any(ship => ship.Id == id))
                 {
-                    return ctx.Ships.Single(ship => ship.Id == id).Level100RetrofitStats;
+                    return ctx.Ships
+                        .Include(s => s.Level100RetrofitStats)
+                        .Single(ship => ship.Id == id).Level100RetrofitStats;
                 }
                 else
                 {
@@ -40,7 +43,10 @@ namespace AzurLaneAPI.Controllers
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 if (ctx.Ships.Any(ship => ship.Id == id))
                 {
-                    Ship selectedShip = ctx.Ships.Single(ship => ship.Id == id);
+                    Ship selectedShip = ctx.Ships
+                        .Include(s => s.Level100RetrofitStats)
+                        .Single(ship => ship.Id == id);
+
                     if (selectedShip.Level100RetrofitStats == null)
                     {
                         selectedShip.Level100RetrofitStats = stats;
@@ -86,7 +92,10 @@ namespace AzurLaneAPI.Controllers
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 if (ctx.Ships.Any(ship => ship.Id == id))
                 {
-                    Ship selectedShip = ctx.Ships.Single(ship => ship.Id == id);
+                    Ship selectedShip = ctx.Ships
+                        .Include(s => s.Level100RetrofitStats)
+                        .Single(ship => ship.Id == id);
+
                     selectedShip.Level100RetrofitStats = null;
                     await ctx.SaveChangesAsync();
                     return Ok();

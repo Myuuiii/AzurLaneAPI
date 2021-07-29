@@ -19,7 +19,10 @@ namespace AzurLaneAPI.Controllers
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 if (ctx.Ships.Any(s => s.Id == id))
                 {
-                    var ship = ctx.Ships.Include(s => s.Skins).Single(s => s.Id == id);
+                    var ship = ctx.Ships
+                        .Include(s => s.Skins)
+                        .Single(s => s.Id == id);
+
                     return ship.Skins;
                 }
                 else
@@ -41,7 +44,10 @@ namespace AzurLaneAPI.Controllers
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 if (ctx.Ships.Any(s => s.Id == id))
                 {
-                    var ship = ctx.Ships.Include(s => s.Skins).Single(s => s.Id == id);
+                    var ship = ctx.Ships
+                        .Include(s => s.Skins)
+                        .Single(s => s.Id == id);
+
                     if (ship.Skins.Any(s => s.Id == skinId))
                     {
                         return ship.Skins.Single(s => s.Id == skinId);
@@ -72,10 +78,13 @@ namespace AzurLaneAPI.Controllers
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 if (ctx.Ships.Any(s => s.Id == id))
                 {
-                    var ship = ctx.Ships.Include(s => s.Skins).Single(s => s.Id == id);
+                    var ship = ctx.Ships
+                        .Include(s => s.Skins)
+                        .Single(s => s.Id == id);
+
                     ship.Skins.Add(skin);
                     await ctx.SaveChangesAsync();
-                    return skin;
+                    return skin;	
                 }
                 else
                 {
@@ -86,7 +95,7 @@ namespace AzurLaneAPI.Controllers
             {
                 return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
             }
-        }   
+        }
 
         [HttpDelete(Routes.V1.Routes.Ships.Skins.Delete)]
         public async Task<ActionResult<ShipSkin>> DeleteSkinAsync(Guid id, Guid skinId)
@@ -98,7 +107,10 @@ namespace AzurLaneAPI.Controllers
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 if (ctx.Ships.Any(s => s.Id == id))
                 {
-                    var ship = ctx.Ships.Include(s => s.Skins).Single(s => s.Id == id);
+                    var ship = ctx.Ships
+						.Include(s => s.Skins)
+						.Single(s => s.Id == id);
+						
                     if (ship.Skins.Any(s => s.Id == skinId))
                     {
                         ship.Skins.Remove(ship.Skins.Single(s => s.Id == skinId));

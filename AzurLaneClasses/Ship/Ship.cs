@@ -92,7 +92,7 @@ namespace AzurLaneClasses.Ship
             this.Level100Stats = new ShipStats(importModel.stats.level100);
             this.Level120Stats = new ShipStats(importModel.stats.level120);
             if (importModel.stats.level100Retrofit != null) this.Level100RetrofitStats = new ShipStats(importModel.stats.level100Retrofit);
-            if (importModel.stats.level120Retrofit != null) this.Level100RetrofitStats = new ShipStats(importModel.stats.level120Retrofit);
+            if (importModel.stats.level120Retrofit != null) this.Level120RetrofitStats = new ShipStats(importModel.stats.level120Retrofit);
 
             if (importModel.slots != null)
             {

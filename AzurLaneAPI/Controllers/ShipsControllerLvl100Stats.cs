@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AzurLaneClasses;
 using AzurLaneClasses.Ship;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AzurLaneAPI.Controllers
 {
@@ -17,7 +18,9 @@ namespace AzurLaneAPI.Controllers
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 if (ctx.Ships.Any(ship => ship.Id == id))
                 {
-                    return ctx.Ships.Single(ship => ship.Id == id).Level100Stats;
+                    return ctx.Ships
+                        .Include(s => s.Level100Stats)
+                        .Single(ship => ship.Id == id).Level100Stats;
                 }
                 else
                 {
@@ -40,7 +43,10 @@ namespace AzurLaneAPI.Controllers
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 if (ctx.Ships.Any(ship => ship.Id == id))
                 {
-                    Ship selectedShip = ctx.Ships.Single(ship => ship.Id == id);
+                    Ship selectedShip = ctx.Ships
+                        .Include(s => s.Level100Stats)
+                        .Single(ship => ship.Id == id);
+
                     if (selectedShip.Level100Stats == null)
                     {
                         selectedShip.Level100Stats = stats;
@@ -86,7 +92,10 @@ namespace AzurLaneAPI.Controllers
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
                 if (ctx.Ships.Any(ship => ship.Id == id))
                 {
-                    Ship selectedShip = ctx.Ships.Single(ship => ship.Id == id);
+                    Ship selectedShip = ctx.Ships
+                        .Include(s => s.Level100Stats)
+                        .Single(ship => ship.Id == id);
+                        
                     selectedShip.Level100Stats = null;
                     await ctx.SaveChangesAsync();
                     return Ok();
