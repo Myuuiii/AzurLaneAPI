@@ -11,16 +11,16 @@ namespace AzurLaneAPI.Controllers
     public partial class ShipsController
     {
         [HttpGet(Routes.V1.Routes.Ships.ShipStats.Level100RetrofitStats.Get)]
-        public async Task<ActionResult<ShipStats>> GetLvl100RetrofitStats(Guid id)
+        public async Task<ActionResult<ShipStats>> GetLvl100RetrofitStats(String id)
         {
             try
             {
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Ships.Any(ship => ship.Id == id))
+                if (ctx.Ships.Any(ship => ship.ShipId == id))
                 {
                     return ctx.Ships
                         .Include(s => s.Level100RetrofitStats)
-                        .Single(ship => ship.Id == id).Level100RetrofitStats;
+                        .Single(ship => ship.ShipId == id).Level100RetrofitStats;
                 }
                 else
                 {
@@ -34,18 +34,18 @@ namespace AzurLaneAPI.Controllers
         }
 
         [HttpPost(Routes.V1.Routes.Ships.ShipStats.Level100RetrofitStats.Create)]
-        public async Task<ActionResult<ShipStats>> CreateLvl100RetrofitStats(Guid id, [FromBody] ShipStats stats)
+        public async Task<ActionResult<ShipStats>> CreateLvl100RetrofitStats(String id, [FromBody] ShipStats stats)
         {
             try
             {
                 if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
 
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Ships.Any(ship => ship.Id == id))
+                if (ctx.Ships.Any(ship => ship.ShipId == id))
                 {
                     Ship selectedShip = ctx.Ships
                         .Include(s => s.Level100RetrofitStats)
-                        .Single(ship => ship.Id == id);
+                        .Single(ship => ship.ShipId == id);
 
                     if (selectedShip.Level100RetrofitStats == null)
                     {
@@ -70,7 +70,7 @@ namespace AzurLaneAPI.Controllers
         }
 
         [HttpPatch(Routes.V1.Routes.Ships.ShipStats.Level100RetrofitStats.Update)]
-        public async Task<ActionResult<ShipStats>> UpdateLvl100RetrofitStats(Guid id, [FromBody] ShipStats stats)
+        public async Task<ActionResult<ShipStats>> UpdateLvl100RetrofitStats(String id, [FromBody] ShipStats stats)
         {
             try
             {
@@ -83,18 +83,18 @@ namespace AzurLaneAPI.Controllers
         }
 
         [HttpDelete(Routes.V1.Routes.Ships.ShipStats.Level100RetrofitStats.Delete)]
-        public async Task<ActionResult<ShipStats>> DeleteLvl100RetrofitStats(Guid id)
+        public async Task<ActionResult<ShipStats>> DeleteLvl100RetrofitStats(String id)
         {
             try
             {
                 if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
 
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Ships.Any(ship => ship.Id == id))
+                if (ctx.Ships.Any(ship => ship.ShipId == id))
                 {
                     Ship selectedShip = ctx.Ships
                         .Include(s => s.Level100RetrofitStats)
-                        .Single(ship => ship.Id == id);
+                        .Single(ship => ship.ShipId == id);
 
                     selectedShip.Level100RetrofitStats = null;
                     await ctx.SaveChangesAsync();

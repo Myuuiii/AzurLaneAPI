@@ -11,16 +11,16 @@ namespace AzurLaneAPI.Controllers
     public partial class ShipsController
     {
         [HttpGet(Routes.V1.Routes.Ships.ShipStats.BaseStats.Get)]
-        public async Task<ActionResult<ShipStats>> GetBaseStats(Guid id)
+        public async Task<ActionResult<ShipStats>> GetBaseStats(String id)
         {
             try
             {
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Ships.Any(ship => ship.Id == id))
+                if (ctx.Ships.Any(ship => ship.ShipId == id))
                 {
                     return ctx.Ships
                         .Include(s => s.BaseStats)
-                        .Single(ship => ship.Id == id).BaseStats;
+                        .Single(ship => ship.ShipId == id).BaseStats;
                 }
                 else
                 {
@@ -34,18 +34,18 @@ namespace AzurLaneAPI.Controllers
         }
 
         [HttpPost(Routes.V1.Routes.Ships.ShipStats.BaseStats.Create)]
-        public async Task<ActionResult<ShipStats>> CreateBaseStats(Guid id, [FromBody] ShipStats stats)
+        public async Task<ActionResult<ShipStats>> CreateBaseStats(String id, [FromBody] ShipStats stats)
         {
             try
             {
                 if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
 
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Ships.Any(ship => ship.Id == id))
+                if (ctx.Ships.Any(ship => ship.ShipId == id))
                 {
                     Ship selectedShip = ctx.Ships
                         .Include(s => s.BaseStats)
-                        .Single(ship => ship.Id == id);
+                        .Single(ship => ship.ShipId == id);
 
                     if (selectedShip.BaseStats == null)
                     {
@@ -70,7 +70,7 @@ namespace AzurLaneAPI.Controllers
         }
 
         [HttpPatch(Routes.V1.Routes.Ships.ShipStats.BaseStats.Update)]
-        public async Task<ActionResult<ShipStats>> UpdateBaseStats(Guid id, [FromBody] ShipStats stats)
+        public async Task<ActionResult<ShipStats>> UpdateBaseStats(String id, [FromBody] ShipStats stats)
         {
             try
             {
@@ -83,18 +83,18 @@ namespace AzurLaneAPI.Controllers
         }
 
         [HttpDelete(Routes.V1.Routes.Ships.ShipStats.BaseStats.Delete)]
-        public async Task<ActionResult<ShipStats>> DeleteBaseStats(Guid id)
+        public async Task<ActionResult<ShipStats>> DeleteBaseStats(String id)
         {
             try
             {
                 if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
 
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Ships.Any(ship => ship.Id == id))
+                if (ctx.Ships.Any(ship => ship.ShipId == id))
                 {
                     Ship selectedShip = ctx.Ships
                         .Include(s => s.BaseStats)
-                        .Single(ship => ship.Id == id);
+                        .Single(ship => ship.ShipId == id);
                         
                     selectedShip.BaseStats = null;
                     await ctx.SaveChangesAsync();
