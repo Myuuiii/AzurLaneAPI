@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using AzurLaneClasses.Import;
 
 namespace AzurLaneClasses.Ship
@@ -155,7 +156,7 @@ namespace AzurLaneClasses.Ship
         }
 
         // * Properties
-        public Guid Id { get; set; } = Guid.NewGuid();
+        [JsonIgnore] public Guid Id { get; set; } = Guid.NewGuid();
         [Key] public String ShipId { get; set; }
 
         public String Name { get; set; }

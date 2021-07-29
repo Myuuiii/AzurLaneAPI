@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using AzurLaneClasses.Import;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace AzurLaneClasses.Ship
 {
