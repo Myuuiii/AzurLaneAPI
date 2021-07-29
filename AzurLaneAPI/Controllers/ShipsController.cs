@@ -13,29 +13,79 @@ namespace AzurLaneAPI.Controllers
     public partial class ShipsController : Controller
     {
         [HttpGet(Routes.V1.Routes.Ships.GetAll)]
-        public async Task<ActionResult<List<Ship>>> GetShips()
+        public async Task<ActionResult<List<Ship>>> GetShips(Int32? page = null, Int32? itemsPerPage = null)
         {
             try
             {
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
-                return await ctx.Ships
-                .Include(s => s.Stars)
-                .Include(s => s.DefaultSkin)
-                .Include(s => s.Skins)
-                .Include(s => s.Skills)
-                .Include(s => s.LimitBreaks)
-                .Include(s => s.Gallery)
-                .Include(s => s.EquippableSlots)
-                .Include(s => s.BaseStats)
-                .Include(s => s.Level100Stats)
-                .Include(s => s.Level120Stats)
-                .Include(s => s.Level100RetrofitStats)
-                .Include(s => s.Level120RetrofitStats)
-                .Include(s => s.EnhanceValue)
-                .Include(s => s.ScrapValue)
-                .Include(s => s.Construction)
-                .Include(s => s.Misc)
-                    .ToListAsync();
+                if (page == null && itemsPerPage == null)
+                {
+                    if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
+
+                    return await ctx.Ships
+                    .Include(s => s.Stars)
+                    .Include(s => s.DefaultSkin)
+                    .Include(s => s.Skins)
+                    .Include(s => s.Skills)
+                    .Include(s => s.LimitBreaks)
+                    .Include(s => s.Gallery)
+                    .Include(s => s.EquippableSlots)
+                    .Include(s => s.BaseStats)
+                    .Include(s => s.Level100Stats)
+                    .Include(s => s.Level120Stats)
+                    .Include(s => s.Level100RetrofitStats)
+                    .Include(s => s.Level120RetrofitStats)
+                    .Include(s => s.EnhanceValue)
+                    .Include(s => s.ScrapValue)
+                    .Include(s => s.Construction)
+                    .Include(s => s.Misc)
+                        .ToListAsync();
+                }
+                else if (page == null && itemsPerPage != null)
+                {
+                    return BadRequest("You need to define a page number");
+                }
+                else if (page != null && itemsPerPage == null)
+                {
+                    return BadRequest("You need to define the amount of ships per page");
+                }
+                else if (page != null && itemsPerPage != null)
+                {
+
+                    if (itemsPerPage > 20)
+                    {
+                        if (!Helpers.Authenticate(HttpContext)) return Unauthorized("You need an API key to retrieve more than 20 ships at a time");
+                    } 
+
+                    var skip = (page - 1) * itemsPerPage;
+
+                    HttpContext.Response.Headers.Add("TotalPages", Convert.ToString(ctx.Ships.ToArray().Length / itemsPerPage));
+                    HttpContext.Response.Headers.Add("CurrentPage", Convert.ToString(page));
+                    return await ctx.Ships
+                    .Include(s => s.Stars)
+                    .Include(s => s.DefaultSkin)
+                    .Include(s => s.Skins)
+                    .Include(s => s.Skills)
+                    .Include(s => s.LimitBreaks)
+                    .Include(s => s.Gallery)
+                    .Include(s => s.EquippableSlots)
+                    .Include(s => s.BaseStats)
+                    .Include(s => s.Level100Stats)
+                    .Include(s => s.Level120Stats)
+                    .Include(s => s.Level100RetrofitStats)
+                    .Include(s => s.Level120RetrofitStats)
+                    .Include(s => s.EnhanceValue)
+                    .Include(s => s.ScrapValue)
+                    .Include(s => s.Construction)
+                    .Include(s => s.Misc)
+                    .Skip((Int32)skip).Take((Int32)itemsPerPage)
+                        .ToListAsync();
+                }
+                else
+                {
+                    return BadRequest("Something was not formatted correctly in your request");
+                }
+
             }
             catch
             {
