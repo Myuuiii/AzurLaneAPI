@@ -5,7 +5,9 @@
 # Azur Lane API
 
 ### A free, unofficial Azur Lane API
-
+  
+![](http://cdn.mutedevs.nl/git/AzurLaneAPI/cf9530ab-fdcf-49c1-976d-0a43cb4ca3a4.png)
+  
 </div>
 
 <hr />
