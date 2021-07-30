@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using AzurLaneClasses;
 using AzurLaneClasses.Import;
@@ -13,6 +14,11 @@ namespace AzurLaneAPI.Controllers
 {
     public partial class ShipsController : Controller
     {
+        /// <summary>
+        /// Retrieve all ships, limited to 20 per page for users without API key
+        /// </summary>
+        /// <param name="page">Page Number</param>
+        /// <param name="itemsPerPage">Items to display per page, limited to 20 without API key</param>
         [HttpGet(Routes.V1.Routes.Ships.GetAll)]
         public async Task<ActionResult<List<Ship>>> GetShips(Int32? page = null, Int32? itemsPerPage = null)
         {
@@ -46,14 +52,8 @@ namespace AzurLaneAPI.Controllers
                     .Include(s => s.VoiceActor)
                         .ToListAsync();
                 }
-                else if (page == null && itemsPerPage != null)
-                {
-                    return BadRequest("You need to define a page number");
-                }
-                else if (page != null && itemsPerPage == null)
-                {
-                    return BadRequest("You need to define the amount of ships per page");
-                }
+                else if (page == null && itemsPerPage != null) return BadRequest("You need to define a page number");
+                else if (page != null && itemsPerPage == null) return BadRequest("You need to define the amount of ships per page");
                 else if (page != null && itemsPerPage != null)
                 {
 
@@ -102,6 +102,63 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Get all minimal ships, limited to 20 per page without API key
+        /// </summary>
+        /// <param name="page">Page Number</param>
+        /// <param name="itemsPerPage">Items to display per page, limited to 20 without API key</param>
+        [HttpGet(Routes.V1.Routes.Ships.GetAllMinimal)]
+        public async Task<ActionResult<List<MinimalShip>>> GetMinimalShips(Int32? page = null, Int32? itemsPerPage = null)
+        {
+            try
+            {
+                AzurLaneDbContext ctx = new AzurLaneDbContext();
+                List<MinimalShip> minimalShips = new List<MinimalShip>();
+                List<Ship> fullShips = await ctx.Ships.ToListAsync();
+
+                foreach (Ship ship in fullShips)
+                {
+                    minimalShips.Add(new MinimalShip(ship));
+                }
+
+                if (page == null && itemsPerPage == null)
+                {
+                    if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
+
+                    return minimalShips;
+                }
+                else if (page == null && itemsPerPage != null) return BadRequest("You need to define a page number");
+                else if (page != null && itemsPerPage == null) return BadRequest("You need to define the amount of ships per page");
+                else if (page != null && itemsPerPage != null)
+                {
+                    if (itemsPerPage > 20)
+                    {
+                        if (!Helpers.Authenticate(HttpContext)) return Unauthorized("You need an API key to retrieve more than 20 ships at a time");
+                    }
+
+                    var skip = (page - 1) * itemsPerPage;
+
+                    HttpContext.Response.Headers.Add("TotalPages", Convert.ToString(ctx.Ships.ToArray().Length / itemsPerPage));
+                    HttpContext.Response.Headers.Add("CurrentPage", Convert.ToString(page));
+                    return minimalShips.Skip((Int32)skip).Take((Int32)itemsPerPage).ToList();
+                }
+                else
+                {
+                    return BadRequest("Something was not formatted correctly in your request");
+                }
+            }
+            catch
+            {
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+            }
+        }
+
+
+        /// <summary>
+        /// Retrieve a ship by Ship Id (e.g. 019 for "Laffey")
+        /// </summary>
+        /// <param name="id">Ship Id</param>
         [HttpGet(Routes.V1.Routes.Ships.GetId)]
         public async Task<ActionResult<Ship>> GetShip(String id)
         {
@@ -145,6 +202,37 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Get minimal ship information using the Ship Id
+        /// </summary>
+        /// <param name="id">Ship Id</param>
+        [HttpGet(Routes.V1.Routes.Ships.GetMinimalId)]
+        public async Task<ActionResult<MinimalShip>> GetMinimalShip(String id)
+        {
+            try
+            {
+                AzurLaneDbContext ctx = new AzurLaneDbContext();
+                if (await ctx.Ships.AnyAsync(ship => ship.ShipId == id))
+                {
+                    return new MinimalShip(await ctx.Ships.SingleAsync(ship => ship.ShipId == id));
+                }
+                else
+                {
+                    return NotFound(Errors.V1.Errors.X400.ResourceWithIdDoesNotExist);
+                }
+            }
+            catch
+            {
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+            }
+        }
+
+
+        /// <summary>
+        /// Get a ship by ship name
+        /// </summary>
+        /// <param name="name">Ship Name</param>        
         [HttpGet(Routes.V1.Routes.Ships.GetName)]
         public async Task<ActionResult<Ship>> GetByName(string name)
         {
@@ -188,69 +276,46 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
-        [HttpPost(Routes.V1.Routes.Ships.Create)]
-        public async Task<ActionResult<Ship>> CreateShip([FromBody] Ship ship)
+
+        /// <summary>
+        /// Get minimal ship information using ship name
+        /// </summary>
+        /// <param name="name">Ship Name</param>
+        [HttpGet(Routes.V1.Routes.Ships.GetMinimalName)]
+        public async Task<ActionResult<MinimalShip>> GetMinimalByName(string name)
         {
             try
             {
-                if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
-
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
-                ship.Id = Guid.NewGuid();
-                ctx.Ships.Add(ship);
-                await ctx.SaveChangesAsync();
-                return ship;
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
-            }
-        }
-
-        [HttpPut(Routes.V1.Routes.Ships.Import)]
-        public async Task<ActionResult> ImportShips([FromBody] List<ShipDataImportModel> shipDataImportModels)
-        {
-            try
-            {
-                shipDataImportModels = JsonConvert.DeserializeObject<List<ShipDataImportModel>>(JsonConvert.SerializeObject(shipDataImportModels).Replace("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "http://cdn.mutedevs.nl/azurlaneapi/"));
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                foreach (ShipDataImportModel shipDataImportModel in shipDataImportModels)
+                if (await ctx.Ships.AnyAsync(ship => ship.Name == name))
                 {
-                    ctx.Add(new Ship(shipDataImportModel));
+                    return new MinimalShip(await ctx.Ships.SingleAsync(ship => ship.Name == name));
                 }
-                await ctx.SaveChangesAsync();
-                return Ok();
-            }
-            catch
-            {
-                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
-            }
-        }
-
-        [HttpPatch(Routes.V1.Routes.Ships.Update)]
-        public async Task<ActionResult<ALEvent>> UpdateShip(Guid id, [FromBody] Ship ship)
-        {
-            try
-            {
-                return StatusCode(501);
-            }
-            catch
-            {
-                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
-            }
-        }
-
-        [HttpDelete(Routes.V1.Routes.Ships.Delete)]
-        public async Task<ActionResult<Ship>> DeleteShip(Guid id)
-        {
-            try
-            {
-                if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
-
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (await ctx.Ships.AnyAsync(ship => ship.Id == id))
+                else
                 {
-                    Ship selectedShip = ctx.Ships
+                    return NotFound(Errors.V1.Errors.X400.ResourceWithIdDoesNotExist);
+                }
+            }
+            catch
+            {
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+            }
+        }
+
+
+        /// <summary>
+        /// Import ships (Developer Only)
+        /// </summary>
+        /// <param name="shipDataImportModels">Data import models</param>
+        [HttpPut(Routes.V1.Routes.Ships.Import)]
+        public async Task<ActionResult> ImportShips()
+        {
+            try
+            {
+                List<ShipDataImportModel> shipDataImportModels = JsonConvert.DeserializeObject<List<ShipDataImportModel>>(new WebClient().DownloadString("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/ships.json").Replace("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "http://cdn.mutedevs.nl/azurlaneapi/"));
+                AzurLaneDbContext ctx = new AzurLaneDbContext();
+
+                ctx.Ships.RemoveRange(ctx.Ships
                         .Include(s => s.Stars)
                     .Include(s => s.DefaultSkin)
                     .Include(s => s.Skins)
@@ -270,42 +335,18 @@ namespace AzurLaneAPI.Controllers
                     .Include(s => s.Pixiv)
                     .Include(s => s.Twitter)
                     .Include(s => s.Web)
-                    .Include(s => s.VoiceActor)
-                        .Single(ship => ship.Id == id);
+                    .Include(s => s.VoiceActor));
+                ctx.SaveChanges();
 
-                    ctx.Remove(selectedShip);
-                    if (selectedShip.Stars != null) ctx.Remove(selectedShip.Stars);
-                    if (selectedShip.DefaultSkin != null) ctx.Remove(selectedShip.DefaultSkin);
-                    if (selectedShip.Skins != null) ctx.RemoveRange(selectedShip.Skins);
-                    if (selectedShip.Skills != null) ctx.RemoveRange(selectedShip.Skills);
-                    if (selectedShip.LimitBreaks != null) ctx.RemoveRange(selectedShip.LimitBreaks);
-                    if (selectedShip.Gallery != null) ctx.RemoveRange(selectedShip.Gallery);
-                    if (selectedShip.EquippableSlots != null) ctx.Remove(selectedShip.EquippableSlots);
-                    if (selectedShip.BaseStats != null) ctx.Remove(selectedShip.BaseStats);
-                    if (selectedShip.Level100Stats != null) ctx.Remove(selectedShip.Level100Stats);
-                    if (selectedShip.Level120Stats != null) ctx.Remove(selectedShip.Level120Stats);
-                    if (selectedShip.Level100RetrofitStats != null) ctx.Remove(selectedShip.Level100RetrofitStats);
-                    if (selectedShip.Level120RetrofitStats != null) ctx.Remove(selectedShip.Level120RetrofitStats);
-                    if (selectedShip.EnhanceValue != null) ctx.Remove(selectedShip.EnhanceValue);
-                    if (selectedShip.ScrapValue != null) ctx.Remove(selectedShip.ScrapValue);
-                    if (selectedShip.Construction != null) ctx.Remove(selectedShip.Construction);
-                    if (selectedShip.Artist != null) ctx.Remove(selectedShip.Artist);
-                    if (selectedShip.Pixiv != null) ctx.Remove(selectedShip.Pixiv);
-                    if (selectedShip.Twitter != null) ctx.Remove(selectedShip.Twitter);
-                    if (selectedShip.Web != null) ctx.Remove(selectedShip.Web);
-                    if (selectedShip.VoiceActor != null) ctx.Remove(selectedShip.VoiceActor);
-
-                    await ctx.SaveChangesAsync();
-                    return selectedShip;
-                }
-                else
+                foreach (ShipDataImportModel shipDataImportModel in shipDataImportModels)
                 {
-                    return NotFound(Errors.V1.Errors.X400.ResourceWithIdDoesNotExist);
+                    ctx.Add(new Ship(shipDataImportModel));
                 }
+                await ctx.SaveChangesAsync();
+                return Ok("API Data was successfully updated");
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(e.ToString());
                 return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
             }
         }
