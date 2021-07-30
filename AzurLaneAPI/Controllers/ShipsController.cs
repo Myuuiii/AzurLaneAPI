@@ -312,6 +312,8 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
+                if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
+                
                 List<ShipDataImportModel> shipDataImportModels = JsonConvert.DeserializeObject<List<ShipDataImportModel>>(new WebClient().DownloadString("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/ships.json").Replace("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "http://cdn.mutedevs.nl/azurlaneapi/"));
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
 
