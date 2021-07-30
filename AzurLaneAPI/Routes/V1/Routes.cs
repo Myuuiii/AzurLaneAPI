@@ -9,70 +9,26 @@ namespace AzurLaneAPI.Routes.V1
         public static class Ships
         {
             public const String GetAll = "/ships";
+            public const String GetAllMinimal = "/ships/minimal";
             public const String GetId = "/ships/{id}";
+            public const String GetMinimalId = "/ships/{id}/minimal";
             public const String GetName = "/ships/name/{name}";
+            public const String GetMinimalName = "/ships/name/{name}/minimal";
             public const String Import = "/ships/";
-            public const String Create = "/ships";
-            public const String Update = "/ships/{id}";
-            public const String Delete = "/ships/{id}";
 
-            public static class Misc
-            {
-                public const String GetByRarity = "/ships/rarity/{rarity}";
-                public const String GetByType = "/ships/type/{type}";
-            }
-
-            public static class Skins 
+            public static class Skins
             {
                 public const String GetAll = "/ships/{id}/skins";
                 public const String GetId = "/ships/{id}/skins/{skinId}";
-                public const String Create = "/ships/{id}/skins";
-                public const String Delete = "/ships/{id}/skins/{skinId}";
             }
 
             public static class ShipStats
             {
-                public const String GetAll = "/ships/stats";
-
-                public static class BaseStats
-                {
-                    public const String Get = "/ships/{id}/basestats";
-                    public const String Create = "/ships/{id}/basestats";
-                    public const String Update = "/ships/{id}/basestats";
-                    public const String Delete = "/ships/{id}/basestats";
-                }
-
-                public static class Level100Stats
-                {
-                    public const String Get = "/ships/{id}/lvl100stats";
-                    public const String Create = "/ships/{id}/lvl100stats";
-                    public const String Update = "/ships/{id}/lvl100stats";
-                    public const String Delete = "/ships/{id}/lvl100stats";
-                }
-
-                public static class Level100RetrofitStats
-                {
-                    public const String Get = "/ships/{id}/lvl100retrofitstats";
-                    public const String Create = "/ships/{id}/lvl100retrofitstats";
-                    public const String Update = "/ships/{id}/lvl100retrofitstats";
-                    public const String Delete = "/ships/{id}/lvl100retrofitstats";
-                }
-
-                public static class Level120Stats
-                {
-                    public const String Get = "/ships/{id}/lvl120stats";
-                    public const String Create = "/ships/{id}/lvl120stats";
-                    public const String Update = "/ships/{id}/lvl120stats";
-                    public const String Delete = "/ships/{id}/lvl120stats";
-                }
-
-                public static class Level120RetrofitStats
-                {
-                    public const String Get = "/ships/{id}/lvl120retrofitstats";
-                    public const String Create = "/ships/{id}/lvl120retrofitstats";
-                    public const String Update = "/ships/{id}/lvl120retrofitstats";
-                    public const String Delete = "/ships/{id}/lvl120retrofitstats";
-                }
+                public const String Base = "/ships/{id}/basestats";
+                public const String Lvl100 = "/ships/{id}/lvl100stats";
+                public const String Lvl100Retro = "/ships/{id}/lvl100retrofitstats";
+                public const String Lvl120 = "/ships/{id}/lvl120stats";
+                public const String Lvl120Retro = "/ships/{id}/lvl120retrofitstats";
             }
         }
 

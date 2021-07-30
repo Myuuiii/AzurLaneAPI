@@ -10,7 +10,11 @@ namespace AzurLaneAPI.Controllers
 {
     public partial class ShipsController
     {
-        [HttpGet(Routes.V1.Routes.Ships.ShipStats.Level120Stats.Get)]
+        /// <summary>
+        /// Retrieve a ship's level 120 stats
+        /// </summary>
+        /// <param name="id">Ship Id</param>
+        [HttpGet(Routes.V1.Routes.Ships.ShipStats.Lvl120)]
         public async Task<ActionResult<ShipStats>> GetLvl120Stats(String id)
         {
             try
@@ -21,84 +25,6 @@ namespace AzurLaneAPI.Controllers
                     return ctx.Ships
                         .Include(s => s.Level120Stats)
                         .Single(ship => ship.ShipId == id).Level120Stats;
-                }
-                else
-                {
-                    return NotFound(Errors.V1.Errors.X400.ResourceWithIdDoesNotExist);
-                }
-            }
-            catch
-            {
-                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
-            }
-        }
-
-        [HttpPost(Routes.V1.Routes.Ships.ShipStats.Level120Stats.Create)]
-        public async Task<ActionResult<ShipStats>> CreateLvl120Stats(String id, [FromBody] ShipStats stats)
-        {
-            try
-            {
-                if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
-
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Ships.Any(ship => ship.ShipId == id))
-                {
-                    Ship selectedShip = ctx.Ships
-                        .Include(s => s.Level120Stats)
-                        .Single(ship => ship.ShipId == id);
-
-                    if (selectedShip.Level120Stats == null)
-                    {
-                        selectedShip.Level120Stats = stats;
-                        await ctx.SaveChangesAsync();
-                        return stats;
-                    }
-                    else
-                    {
-                        return StatusCode(409);
-                    }
-                }
-                else
-                {
-                    return NotFound(Errors.V1.Errors.X400.ResourceWithIdDoesNotExist);
-                }
-            }
-            catch
-            {
-                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
-            }
-        }
-
-        [HttpPatch(Routes.V1.Routes.Ships.ShipStats.Level120Stats.Update)]
-        public async Task<ActionResult<ShipStats>> UpdateLvl120Stats(String id, [FromBody] ShipStats stats)
-        {
-            try
-            {
-                return StatusCode(501);
-            }
-            catch
-            {
-                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
-            }
-        }
-
-        [HttpDelete(Routes.V1.Routes.Ships.ShipStats.Level120Stats.Delete)]
-        public async Task<ActionResult<ShipStats>> DeleteLvl120Stats(String id)
-        {
-            try
-            {
-                if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
-
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Ships.Any(ship => ship.ShipId == id))
-                {
-                    Ship selectedShip = ctx.Ships
-                        .Include(s => s.Level120Stats)
-                        .Single(ship => ship.ShipId == id);
-                        
-                    selectedShip.Level120Stats = null;
-                    await ctx.SaveChangesAsync();
-                    return Ok();
                 }
                 else
                 {

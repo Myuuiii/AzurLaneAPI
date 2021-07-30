@@ -11,6 +11,10 @@ namespace AzurLaneAPI.Controllers
 {
     public partial class ShipsController
     {
+        /// <summary>
+        /// Retrieve all the skins of a ship 
+        /// </summary>
+        /// <param name="id">Ship Id</param>
         [HttpGet(Routes.V1.Routes.Ships.Skins.GetAll)]
         public async Task<ActionResult<List<ShipSkin>>> GetAllSkinsAsync(String id)
         {
@@ -36,6 +40,12 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Get a skin by id
+        /// <summary>
+        /// <param name="id">Ship Id</param>
+        /// <param name="skinId">Guid Skin Id</param>
         [HttpGet(Routes.V1.Routes.Ships.Skins.GetId)]
         public async Task<ActionResult<ShipSkin>> GetSkinByIdAsync(String id, Guid skinId)
         {
@@ -51,71 +61,6 @@ namespace AzurLaneAPI.Controllers
                     if (ship.Skins.Any(s => s.Id == skinId))
                     {
                         return ship.Skins.Single(s => s.Id == skinId);
-                    }
-                    else
-                    {
-                        return StatusCode(404, "(Ship Skin Entity) " + Errors.V1.Errors.X400.ResourceNotFound);
-                    }
-                }
-                else
-                {
-                    return StatusCode(404, "(Ship Entity)" + Errors.V1.Errors.X400.ResourceNotFound);
-                }
-            }
-            catch
-            {
-                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
-            }
-        }
-
-        [HttpPost(Routes.V1.Routes.Ships.Skins.Create)]
-        public async Task<ActionResult<ShipSkin>> CreateSkinAsync(String id, [FromBody] ShipSkin skin)
-        {
-            try
-            {
-                if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
-
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Ships.Any(s => s.ShipId == id))
-                {
-                    var ship = ctx.Ships
-                        .Include(s => s.Skins)
-                        .Single(s => s.ShipId == id);
-
-                    ship.Skins.Add(skin);
-                    await ctx.SaveChangesAsync();
-                    return skin;	
-                }
-                else
-                {
-                    return StatusCode(404, Errors.V1.Errors.X400.ResourceNotFound);
-                }
-            }
-            catch
-            {
-                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
-            }
-        }
-
-        [HttpDelete(Routes.V1.Routes.Ships.Skins.Delete)]
-        public async Task<ActionResult<ShipSkin>> DeleteSkinAsync(String id, Guid skinId)
-        {
-            try
-            {
-                if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
-
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Ships.Any(s => s.ShipId == id))
-                {
-                    var ship = ctx.Ships
-						.Include(s => s.Skins)
-						.Single(s => s.ShipId == id);
-						
-                    if (ship.Skins.Any(s => s.Id == skinId))
-                    {
-                        ship.Skins.Remove(ship.Skins.Single(s => s.Id == skinId));
-                        await ctx.SaveChangesAsync();
-                        return Ok();
                     }
                     else
                     {
