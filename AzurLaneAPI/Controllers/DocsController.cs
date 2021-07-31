@@ -10,5 +10,11 @@ namespace AzurLaneAPI.Controllers
         {
             return View("/Views/Index.cshtml");
         }
+
+        [HttpGet("/TokenRequest")]
+        public async Task<ActionResult> TokenRequest()
+        {
+            return View("/Views/TokenRequest.cshtml");
+        }
     }
 }
