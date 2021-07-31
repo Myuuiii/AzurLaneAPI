@@ -1,54 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
+@{
+    Layout = "~/Views/Layouts/_Base.cshtml";
+}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Azur Lane API</title>
-    <link rel="stylesheet" href="~/docs/style.css" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-</head>
+<img src="http://cdn.mutedevs.nl/git/AzurLaneAPI/AzurLaneLogo.png" class="logo" />
+<h1 class="alexisText fadeComponent">Azur Lane API</h1>
+<h2 class="alexisText fadeComponent">A free open API to retrieve data about Azur Lane</h2>
+<br />
+<img src="http://cdn.mutedevs.nl/git/AzurLaneAPI/cf9530ab-fdcf-49c1-976d-0a43cb4ca3a4.png" width="60%" />
+<br /><br /><br />
 
-<body>
-
-    <div class="mainContainer">
-        <img src="http://cdn.mutedevs.nl/git/AzurLaneAPI/AzurLaneLogo.png" class="logo" />
-        <h1 class="alexisText">Azur Lane API</h1>
-        <h2 class="alexisText">A free open API to retrieve data about Azur Lane</h2>
-        <br />
-        <img src="http://cdn.mutedevs.nl/git/AzurLaneAPI/cf9530ab-fdcf-49c1-976d-0a43cb4ca3a4.png" width="60%" />
-
-        <br /><br /><br />
-
-        <div class="container">
-            <div class="row">
-                <div class="col-sm">
-                    <h3 class="alexisText">GitHub Repository</h3>
-                    <a href="https://github.com/Myuuiii/AzurLaneAPI">
-                        <img class="card-img-top columnImage" src="http://cdn.mutedevs.nl/azurlaneapi/repoBanner.png" alt="GitHub Repository Social Image">
-                    </a>
-                </div>
-                <div class="col-sm">
-                    <h3 class="alexisText">Request API Token</h3>
-                    <a href="">
-                        <img class="card-img-top columnImage" src="http://cdn.mutedevs.nl/azurlaneapi/ApiTokenPanel.png" alt="Request an API Token">
-                    </a>
-                </div>
-                <div class="col-sm">
-                    <h3 class="alexisText">Routes</h3>
-                    <a href="/swagger">
-                        <img class="card-img-top columnImage" src="http://cdn.mutedevs.nl/azurlaneapi/RoutesPanel.png" alt="View Available Routes">
-                    </a>
-                </div>
-            </div>
+<div class="container">
+    <div class="row fadeComponent">
+        <div class="col-sm">
+            <h3 class="alexisText">GitHub Repository</h3>
+            <a href="https://github.com/Myuuiii/AzurLaneAPI">
+                <img class="card-img-top columnImage" src="http://cdn.mutedevs.nl/azurlaneapi/repoBanner.png" alt="GitHub Repository Social Image">
+            </a>
+        </div>
+        <div class="col-sm">
+            <h3 class="alexisText">Request API Token</h3>
+            <a href="/TokenRequest">
+                <img class="card-img-top columnImage" src="http://cdn.mutedevs.nl/azurlaneapi/ApiTokenPanel.png" alt="Request an API Token">
+            </a>
+        </div>
+        <div class="col-sm">
+            <h3 class="alexisText">Routes</h3>
+            <a href="/swagger">
+                <img class="card-img-top columnImage" src="http://cdn.mutedevs.nl/azurlaneapi/RoutesPanel.png" alt="View Available Routes">
+            </a>
         </div>
     </div>
-    </div>
-
-    <br /><br />
-    <p class="text-center" style="color: white;">All API data falls under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="text-decoration: none; color: orange;">Creative Commons BY-NC-SA 4.0 License</a></p>
-
-</body>
-
-</html>
+</div>

@@ -4,14 +4,30 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    animation: ease-in-out 0.5s;
 }
 
 * {
     box-sizing: border-box;
 }
 
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 .logo {
     width: 15em;
+}
+
+.fadeComponent {
+    animation: fadeInAnimation ease 2s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
 }
 
 .mainContainer {
