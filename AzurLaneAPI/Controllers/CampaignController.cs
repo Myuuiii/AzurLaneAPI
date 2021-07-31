@@ -10,6 +10,9 @@ namespace AzurLaneAPI.Controllers
 {
     public class CampaignController : ControllerBase
     {
+        /// <summary>
+        /// Get all the campaign levels
+        /// </summary>
         [HttpGet(Routes.V1.Routes.Campaign.GetAll)]
         public async Task<ActionResult<List<CampaignLevel>>> GetLevels()
         {
@@ -24,6 +27,10 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Get a campaign level by id
+        /// </summary>
+        /// <param name="id">Level ID</param>
         [HttpGet(Routes.V1.Routes.Campaign.GetId)]
         public async Task<ActionResult<CampaignLevel>> GetLevel(Guid id)
         {
@@ -45,6 +52,11 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Get a campaign level by Chapter and Level Nr
+        /// </summary>
+        /// <param name="chapter">Chapter</param>
+        /// <param name="level">Level Nr</param>
         [HttpGet(Routes.V1.Routes.Campaign.GetSelect)]
         public async Task<ActionResult<CampaignLevel>> GetSelectLevel(Int32 chapter, Int32 level)
         {
