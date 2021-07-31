@@ -1,3 +1,8 @@
+using System;
+using System.IO;
+using System.Reflection;
+using AzurLaneAPI.Conventions;
+using AzurLaneAPI.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -23,10 +28,18 @@ namespace AzurLaneAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddControllers();
+            services.AddControllers(o => {
+                o.Conventions.Add(new ActionHidingConvention());
+            });
+
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
             services.AddSwaggerGen(c =>
             {
+                c.DocumentFilter<RemoveSchemasDocumentFilter>();
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AzurLaneAPI", Version = "v1" });
+                c.IncludeXmlComments(xmlPath);
             });
         }
 
@@ -35,7 +48,8 @@ namespace AzurLaneAPI
         {
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
-            app.UseSwaggerUI(c => {
+            app.UseSwaggerUI(c =>
+            {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "AzurLaneAPI v1");
                 c.InjectStylesheet("/swagger-custom-styles.css");
                 c.InjectJavascript("/swagger-custom-script.js", "text/javascript");
