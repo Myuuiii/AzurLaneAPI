@@ -37,7 +37,7 @@ namespace AzurLaneAPI
 
             services.AddSwaggerGen(c =>
             {
-                c.DocumentFilter<RemoveSchemasDocumentFilter>();
+                // c.DocumentFilter<RemoveSchemasDocumentFilter>();
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AzurLaneAPI", Version = "v1" });
                 c.IncludeXmlComments(xmlPath);
             });
