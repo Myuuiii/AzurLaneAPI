@@ -9,6 +9,9 @@ namespace AzurLaneAPI.Controllers
 {
     public class ConstructionController : ControllerBase
     {
+        /// <summary>
+        /// Get all construction pools
+        /// </summary>
         [HttpGet(Routes.V1.Routes.Construction.GetPools)]
         public async Task<ActionResult<List<ConstructionPool>>> GetPools()
         {
@@ -23,6 +26,9 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Get construction pool by id 
+        /// </summary>
         [HttpGet(Routes.V1.Routes.Construction.GetPool)]
         public async Task<ActionResult<ConstructionPool>> GetPool(String id)
         {

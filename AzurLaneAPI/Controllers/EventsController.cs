@@ -10,6 +10,9 @@ namespace AzurLaneAPI.Controllers
 {
     public class EventsController : ControllerBase
     {
+        /// <summary>
+        /// Get all events
+        /// </summary>
         [HttpGet(Routes.V1.Routes.Events.GetAll)]
         public async Task<ActionResult<List<ALEvent>>> GetEvents()
         {
@@ -24,6 +27,10 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Get event by id
+        /// </summary>
+        /// <param name="id">Event Id</param>
         [HttpGet(Routes.V1.Routes.Events.GetId)]
         public async Task<ActionResult<ALEvent>> GetEvent(Guid id)
         {
@@ -44,7 +51,11 @@ namespace AzurLaneAPI.Controllers
                 return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
             }
         }
-
+        
+        /// <summary>
+        /// Create a new event
+        /// </summary>
+        /// <param name="event">Event object</param>
         [HttpPost(Routes.V1.Routes.Events.Create)]
         public async Task<ActionResult<ALEvent>> CreateEvent([FromBody] ALEvent aLEvent)
         {
@@ -64,6 +75,11 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Update an event
+        /// </summary>
+        /// <param name="id">Event Id</param>
+        /// <param name="event">Event object</param>
         [HttpPatch(Routes.V1.Routes.Events.Update)]
         public async Task<ActionResult<ALEvent>> UpdateEvent(Guid id, [FromBody] ALEvent aLEvent)
         {
@@ -77,6 +93,10 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Delete an event
+        /// </summary>
+        /// <param name="id">Event Id</param>
         [HttpDelete(Routes.V1.Routes.Events.Delete)]
         public async Task<ActionResult<ALEvent>> DeleteEvent(Guid id)
         {
