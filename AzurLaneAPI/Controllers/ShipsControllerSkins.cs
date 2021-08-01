@@ -42,34 +42,26 @@ namespace AzurLaneAPI.Controllers
 
 
         /// <summary>
-        /// Get a skin by id
-        /// <summary>
-        /// <param name="id">Ship Id</param>
-        /// <param name="skinId">Guid Skin Id</param>
-        [HttpGet(Routes.V1.Routes.Ships.Skins.GetId)]
-        public async Task<ActionResult<ShipSkin>> GetSkinByIdAsync(String id, Guid skinId)
+        /// Retrieve all the skins of a ship using the name of the ship
+        /// </summary>
+        /// <param name="name">Ship Name</param>
+        [HttpGet(Routes.V1.Routes.Ships.Skins.GetAllByName)]
+        public async Task<ActionResult<List<ShipSkin>>> GetAllSkinsByShipNameAsync(String name)
         {
             try
             {
                 AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Ships.Any(s => s.ShipId == id))
+                if (ctx.Ships.Any(s => s.Name == name))
                 {
                     var ship = ctx.Ships
                         .Include(s => s.Skins)
-                        .Single(s => s.ShipId == id);
+                        .Single(s => s.Name == name);
 
-                    if (ship.Skins.Any(s => s.Id == skinId))
-                    {
-                        return ship.Skins.Single(s => s.Id == skinId);
-                    }
-                    else
-                    {
-                        return StatusCode(404, "(Ship Skin Entity) " + Errors.V1.Errors.X400.ResourceNotFound);
-                    }
+                    return ship.Skins;
                 }
                 else
                 {
-                    return StatusCode(404, "(Ship Entity)" + Errors.V1.Errors.X400.ResourceNotFound);
+                    return StatusCode(404, Errors.V1.Errors.X400.ResourceNotFound);
                 }
             }
             catch
