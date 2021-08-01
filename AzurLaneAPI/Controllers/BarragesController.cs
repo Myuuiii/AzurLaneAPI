@@ -82,6 +82,41 @@ namespace AzurLaneAPI.Controllers
             }
         }
 
+        
+        /// <summary>
+        /// Get barrages by ship name
+        /// </summary>
+        /// <param name="name">Ship Name</param>
+        [HttpGet(Routes.V1.Routes.Barrages.GetAllByName)]
+        public async Task<ActionResult<List<Barrage>>> GetAllByName(string name)
+        {
+            try 
+            {
+                AzurLaneDbContext ctx = new AzurLaneDbContext();
+                List<Barrage> barrages = new List<Barrage>();
+                foreach (var barrage in ctx.Barrages.Include(b => b.Rounds))
+                {
+                    foreach (var shipName in barrage.Ships)
+                    {
+                        if (shipName.ToLower() == name.ToLower()) barrages.Add(barrage);
+                    }
+                }
+
+                if (barrages.Any())
+                {
+                    return barrages;
+                }
+                else 
+                {
+                    return StatusCode(404, Errors.V1.Errors.X400.ResourceWithIdDoesNotExist);
+                }
+            }
+            catch 
+            {
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+            }
+        }
+
 
         /// <summary>
         /// Import Barrages (Developer Only)

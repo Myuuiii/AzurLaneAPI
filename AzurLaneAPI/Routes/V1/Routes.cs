@@ -46,6 +46,7 @@ namespace AzurLaneAPI.Routes.V1
         {
             public const String GetAll = "/barrages";
             public const String GetId = "/barrages/{id}";
+            public const String GetAllByName = "/barrages/ship/{name}";
             public const String Import = "/barrages";
         }
 
