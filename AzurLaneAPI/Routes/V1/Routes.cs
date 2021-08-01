@@ -16,10 +16,11 @@ namespace AzurLaneAPI.Routes.V1
             public const String GetMinimalName = "/ships/name/{name}/minimal";
             public const String Import = "/ships/";
 
-            public static class Skins
+            public static class ShipSkins
             {
-                public const String GetAll = "/ships/{id}/skins";
-                public const String GetAllByName = "/ships/name/{name}/skins";
+                public const String GetAll = "/shipskins";
+                public const String GetAllByShipId = "/shipskins/{id}";
+                public const String GetAllByShipName = "/shipskins/name/{name}";
             }
 
             public static class ShipStats
