@@ -19,7 +19,7 @@ namespace AzurLaneAPI.Routes.V1
             public static class Skins
             {
                 public const String GetAll = "/ships/{id}/skins";
-                public const String GetId = "/ships/{id}/skins/{skinId}";
+                public const String GetAllByName = "/ships/name/{name}/skins";
             }
 
             public static class ShipStats
