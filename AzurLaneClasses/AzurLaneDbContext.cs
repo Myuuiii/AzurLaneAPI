@@ -50,6 +50,9 @@ namespace AzurLaneClasses
         // * Construction pool
         public DbSet<ConstructionPool> ConstructionPools { get; set; }
 
+        // * Barrages
+        public DbSet<Barrage> Barrages { get; set; }
+
         // * Equipment
         public DbSet<DestroyerGun> DestroyerGuns { get; set; }
         public DbSet<LightCruiserGun> LightCruiserGuns { get; set; }
@@ -91,6 +94,7 @@ namespace AzurLaneClasses
         {
             var splitStringConverter = new ValueConverter<IEnumerable<String>, String>(v => String.Join(";", v), v => v.Split(new[] { ';' }));
             modelBuilder.Entity<ShipLimitBreaks>().Property(nameof(ShipLimitBreaks.LimitBreaks)).HasConversion(splitStringConverter);
+            modelBuilder.Entity<Barrage>().Property(nameof(Barrage.Ships)).HasConversion(splitStringConverter);
         }
     }
 }

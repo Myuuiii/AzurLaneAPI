@@ -28,13 +28,13 @@ namespace AzurLaneAPI.Controllers
                     return ctx.ShipSkins.ToList();
                 }
                 else if (page == null && itemsPerPage != null) return BadRequest("You need to define a page number");
-                else if (page != null && itemsPerPage == null) return BadRequest("You need to define the amount of ships per page");
+                else if (page != null && itemsPerPage == null) return BadRequest("You need to define the amount of skins per page");
                 else if (page != null && itemsPerPage != null)
                 {
 
                     if (itemsPerPage > 20)
                     {
-                        if (!Helpers.Authenticate(HttpContext)) return Unauthorized("You need an API key to retrieve more than 20 ships at a time");
+                        if (!Helpers.Authenticate(HttpContext)) return Unauthorized("You need an API key to retrieve more than 20 skins at a time");
                     }
 
                     var skip = (page - 1) * itemsPerPage;
