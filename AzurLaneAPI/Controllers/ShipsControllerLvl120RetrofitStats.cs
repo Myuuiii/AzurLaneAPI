@@ -36,5 +36,33 @@ namespace AzurLaneAPI.Controllers
                 return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
             }
         }
+
+
+        /// <summary>
+        /// Retrieve a ship's level 120 retrofit stats by name
+        /// </summary>
+        /// <param name="name">Ship Name</param>
+        [HttpGet(Routes.V1.Routes.Ships.ShipStats.Lvl120RetroName)]
+        public async Task<ActionResult<ShipStats>> GetLvl120RetrofitStatsByName(String name)
+        {
+            try
+            {
+                AzurLaneDbContext ctx = new AzurLaneDbContext();
+                if (ctx.Ships.Any(ship => ship.Name == name))
+                {
+                    return ctx.Ships
+                        .Include(s => s.Level120RetrofitStats)
+                        .Single(ship => ship.Name == name).Level120RetrofitStats;
+                }
+                else
+                {
+                    return NotFound(Errors.V1.Errors.X400.ResourceWithIdDoesNotExist);
+                }
+            }
+            catch
+            {
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+            }
+        }
     }
 }

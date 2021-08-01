@@ -25,10 +25,19 @@ namespace AzurLaneAPI.Routes.V1
             public static class ShipStats
             {
                 public const String Base = "/ships/{id}/basestats";
+                public const String BaseName = "/ships/name/{name}/basestats";
+
                 public const String Lvl100 = "/ships/{id}/lvl100stats";
+                public const String Lvl100Name = "/ships/name/{name}/lvl100stats";
+
                 public const String Lvl100Retro = "/ships/{id}/lvl100retrofitstats";
+                public const String Lvl100RetroName = "/ships/name/{name}/lvl100retrofitstats";
+
                 public const String Lvl120 = "/ships/{id}/lvl120stats";
+                public const String Lvl120Name = "/ships/name/{name}/lvl120stats";
+                
                 public const String Lvl120Retro = "/ships/{id}/lvl120retrofitstats";
+                public const String Lvl120RetroName = "/ships/name/{name}/lvl120retrofitstats";
             }
         }
 

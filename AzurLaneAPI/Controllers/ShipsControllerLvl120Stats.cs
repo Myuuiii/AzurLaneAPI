@@ -13,7 +13,7 @@ namespace AzurLaneAPI.Controllers
         /// <summary>
         /// Retrieve a ship's level 120 stats
         /// </summary>
-        /// <param name="id">Ship Id</param>
+        /// <param name="name">Ship Id</param>
         [HttpGet(Routes.V1.Routes.Ships.ShipStats.Lvl120)]
         public async Task<ActionResult<ShipStats>> GetLvl120Stats(String id)
         {
@@ -25,6 +25,33 @@ namespace AzurLaneAPI.Controllers
                     return ctx.Ships
                         .Include(s => s.Level120Stats)
                         .Single(ship => ship.ShipId == id).Level120Stats;
+                }
+                else
+                {
+                    return NotFound(Errors.V1.Errors.X400.ResourceWithIdDoesNotExist);
+                }
+            }
+            catch
+            {
+                return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+            }
+        }
+
+        /// <summary>
+        /// Retrieve a ship's level 120 stats by name
+        /// </summary>
+        /// <param name="name">Ship Name</param>
+        [HttpGet(Routes.V1.Routes.Ships.ShipStats.Lvl120Name)]
+        public async Task<ActionResult<ShipStats>> GetLvl120StatsByName(String name)
+        {
+            try
+            {
+                AzurLaneDbContext ctx = new AzurLaneDbContext();
+                if (ctx.Ships.Any(ship => ship.Name == name))
+                {
+                    return ctx.Ships
+                        .Include(s => s.Level120Stats)
+                        .Single(ship => ship.Name == name).Level120Stats;
                 }
                 else
                 {
