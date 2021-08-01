@@ -3,14 +3,16 @@ using System;
 using AzurLaneClasses;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AzurLaneClasses.Migrations
 {
     [DbContext(typeof(AzurLaneDbContext))]
-    partial class AzurLaneDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210801160742_Barrages")]
+    partial class Barrages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

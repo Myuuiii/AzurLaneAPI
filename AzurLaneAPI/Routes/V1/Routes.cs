@@ -42,6 +42,13 @@ namespace AzurLaneAPI.Routes.V1
             }
         }
 
+        public static class Barrages 
+        {
+            public const String GetAll = "/barrages";
+            public const String GetId = "/barrages/{id}";
+            public const String Import = "/barrages";
+        }
+
         public static class Events
         {
             public const String GetAll = "/events";
