@@ -14,22 +14,28 @@ namespace AzurLaneAPI.Controllers
 {
     public partial class ShipsController : Controller
     {
-        /// <summary>
-        /// Retrieve all ships, limited to 20 per page for users without API key
-        /// </summary>
-        /// <param name="page">Page Number</param>
-        /// <param name="itemsPerPage">Items to display per page, limited to 20 without API key</param>
-        [HttpGet(Routes.V1.Routes.Ships.GetAll)]
+        private AzurLaneDbContext _context;
+
+		public ShipsController(AzurLaneDbContext context)
+		{
+			_context = context;
+		}
+
+		/// <summary>
+		/// Retrieve all ships, limited to 20 per page for users without API key
+		/// </summary>
+		/// <param name="page">Page Number</param>
+		/// <param name="itemsPerPage">Items to display per page, limited to 20 without API key</param>
+		[HttpGet(Routes.V1.Routes.Ships.GetAll)]
         public async Task<ActionResult<List<Ship>>> GetShips(Int32? page = null, Int32? itemsPerPage = null)
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
                 if (page == null && itemsPerPage == null)
                 {
                     if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
 
-                    return await ctx.Ships
+                    return await _context.Ships
                     .Include(s => s.Stars)
                     .Include(s => s.DefaultSkin)
                     .Include(s => s.Skins)
@@ -64,9 +70,9 @@ namespace AzurLaneAPI.Controllers
 
                     var skip = (page - 1) * itemsPerPage;
 
-                    HttpContext.Response.Headers.Add("TotalPages", Convert.ToString(ctx.Ships.ToArray().Length / itemsPerPage));
+                    HttpContext.Response.Headers.Add("TotalPages", Convert.ToString(_context.Ships.ToArray().Length / itemsPerPage));
                     HttpContext.Response.Headers.Add("CurrentPage", Convert.ToString(page));
-                    return await ctx.Ships
+                    return await _context.Ships
                     .Include(s => s.Stars)
                     .Include(s => s.DefaultSkin)
                     .Include(s => s.Skins)
@@ -113,9 +119,8 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
                 List<MinimalShip> minimalShips = new List<MinimalShip>();
-                List<Ship> fullShips = await ctx.Ships.ToListAsync();
+                List<Ship> fullShips = await _context.Ships.ToListAsync();
 
                 foreach (Ship ship in fullShips)
                 {
@@ -139,7 +144,7 @@ namespace AzurLaneAPI.Controllers
 
                     var skip = (page - 1) * itemsPerPage;
 
-                    HttpContext.Response.Headers.Add("TotalPages", Convert.ToString(ctx.Ships.ToArray().Length / itemsPerPage));
+                    HttpContext.Response.Headers.Add("TotalPages", Convert.ToString(_context.Ships.ToArray().Length / itemsPerPage));
                     HttpContext.Response.Headers.Add("CurrentPage", Convert.ToString(page));
                     return minimalShips.Skip((Int32)skip).Take((Int32)itemsPerPage).ToList();
                 }
@@ -164,10 +169,9 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (await ctx.Ships.AnyAsync(ship => ship.ShipId == id))
+                if (await _context.Ships.AnyAsync(ship => ship.ShipId == id))
                 {
-                    Ship ship = await ctx.Ships
+                    Ship ship = await _context.Ships
                     .Include(s => s.Stars)
                     .Include(s => s.DefaultSkin)
                     .Include(s => s.Skins)
@@ -212,10 +216,9 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (await ctx.Ships.AnyAsync(ship => ship.ShipId == id))
+                if (await _context.Ships.AnyAsync(ship => ship.ShipId == id))
                 {
-                    return new MinimalShip(await ctx.Ships.SingleAsync(ship => ship.ShipId == id));
+                    return new MinimalShip(await _context.Ships.SingleAsync(ship => ship.ShipId == id));
                 }
                 else
                 {
@@ -238,10 +241,9 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (await ctx.Ships.AnyAsync(ship => ship.Name == name))
+                if (await _context.Ships.AnyAsync(ship => ship.Name == name))
                 {
-                    Ship ship = await ctx.Ships
+                    Ship ship = await _context.Ships
                     .Include(s => s.Stars)
                     .Include(s => s.DefaultSkin)
                     .Include(s => s.Skins)
@@ -286,10 +288,9 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (await ctx.Ships.AnyAsync(ship => ship.Name == name))
+                if (await _context.Ships.AnyAsync(ship => ship.Name == name))
                 {
-                    return new MinimalShip(await ctx.Ships.SingleAsync(ship => ship.Name == name));
+                    return new MinimalShip(await _context.Ships.SingleAsync(ship => ship.Name == name));
                 }
                 else
                 {
@@ -315,9 +316,8 @@ namespace AzurLaneAPI.Controllers
                 if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
                 
                 List<ShipDataImportModel> shipDataImportModels = JsonConvert.DeserializeObject<List<ShipDataImportModel>>(new WebClient().DownloadString("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/ships.json").Replace("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "http://cdn.mutedevs.nl/azurlaneapi/"));
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
 
-                ctx.Ships.RemoveRange(ctx.Ships
+                _context.Ships.RemoveRange(_context.Ships
                         .Include(s => s.Stars)
                     .Include(s => s.DefaultSkin)
                     .Include(s => s.Skins)
@@ -338,13 +338,13 @@ namespace AzurLaneAPI.Controllers
                     .Include(s => s.Twitter)
                     .Include(s => s.Web)
                     .Include(s => s.VoiceActor));
-                ctx.SaveChanges();
+                _context.SaveChanges();
 
                 foreach (ShipDataImportModel shipDataImportModel in shipDataImportModels)
                 {
-                    ctx.Add(new Ship(shipDataImportModel));
+                    _context.Add(new Ship(shipDataImportModel));
                 }
-                await ctx.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return Ok("API Data was successfully updated");
             }
             catch

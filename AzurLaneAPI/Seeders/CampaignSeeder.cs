@@ -6,6 +6,7 @@ namespace AzurLaneAPI.Seeders
 {
     public class CampaignSeeder
     {
+        
         public static void Seed()
         {
             AzurLaneDbContext ctx = new AzurLaneDbContext();

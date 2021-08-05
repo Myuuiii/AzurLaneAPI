@@ -10,16 +10,23 @@ namespace AzurLaneAPI.Controllers
 {
     public class CampaignController : ControllerBase
     {
-        /// <summary>
-        /// Get all the campaign levels
-        /// </summary>
-        [HttpGet(Routes.V1.Routes.Campaign.GetAll)]
+
+        private AzurLaneDbContext _context;
+
+		public CampaignController(AzurLaneDbContext context)
+		{
+			_context = context;
+		}
+
+		/// <summary>
+		/// Get all the campaign levels
+		/// </summary>
+		[HttpGet(Routes.V1.Routes.Campaign.GetAll)]
         public async Task<ActionResult<List<CampaignLevel>>> GetLevels()
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                return await ctx.CampaignLevels.OrderBy(cl => cl.Chapter).ThenBy(cl => cl.Level).ToListAsync();
+                return await _context.CampaignLevels.OrderBy(cl => cl.Chapter).ThenBy(cl => cl.Level).ToListAsync();
             }
             catch
             {
@@ -36,10 +43,9 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (await ctx.CampaignLevels.AnyAsync(cl => cl.Id == id))
+                if (await _context.CampaignLevels.AnyAsync(cl => cl.Id == id))
                 {
-                    return await ctx.CampaignLevels.SingleAsync(cl => cl.Id == id);
+                    return await _context.CampaignLevels.SingleAsync(cl => cl.Id == id);
                 }
                 else
                 {
@@ -66,10 +72,9 @@ namespace AzurLaneAPI.Controllers
                 {
                     if (level <= 4 && level >= 0)
                     {
-                        AzurLaneDbContext ctx = new AzurLaneDbContext();
-                        if (await ctx.CampaignLevels.AnyAsync(cl => cl.Chapter == chapter && cl.Level == level))
+                        if (await _context.CampaignLevels.AnyAsync(cl => cl.Chapter == chapter && cl.Level == level))
                         {
-                            return ctx.CampaignLevels.Single(cl => cl.Chapter == chapter && cl.Level == level);
+                            return _context.CampaignLevels.Single(cl => cl.Chapter == chapter && cl.Level == level);
                         }
                         else
                         {

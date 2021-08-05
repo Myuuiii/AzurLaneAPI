@@ -9,16 +9,22 @@ namespace AzurLaneAPI.Controllers
 {
     public class ConstructionController : ControllerBase
     {
-        /// <summary>
-        /// Get all construction pools
-        /// </summary>
-        [HttpGet(Routes.V1.Routes.Construction.GetPools)]
+        private AzurLaneDbContext _context;
+
+		public ConstructionController(AzurLaneDbContext context)
+		{
+			_context = context;
+		}
+
+		/// <summary>
+		/// Get all construction pools
+		/// </summary>
+		[HttpGet(Routes.V1.Routes.Construction.GetPools)]
         public async Task<ActionResult<List<ConstructionPool>>> GetPools()
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                return await ctx.ConstructionPools.ToListAsync();
+                return await _context.ConstructionPools.ToListAsync();
             }
             catch
             {
@@ -34,10 +40,9 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (await ctx.ConstructionPools.AnyAsync(p => p.Name.ToLower() == id.ToLower()))
+                if (await _context.ConstructionPools.AnyAsync(p => p.Name.ToLower() == id.ToLower()))
                 {
-                    return await ctx.ConstructionPools.SingleAsync(p => p.Name.ToLower() == id.ToLower());
+                    return await _context.ConstructionPools.SingleAsync(p => p.Name.ToLower() == id.ToLower());
                 }
                 else 
                 {

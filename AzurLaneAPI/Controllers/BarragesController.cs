@@ -12,21 +12,26 @@ using Newtonsoft.Json;
 namespace AzurLaneAPI.Controllers
 {
     public class BarragesController : Controller
-    {
-        /// <summary>
-        /// Get all the barrages
-        /// </summary>
-        [HttpGet(Routes.V1.Routes.Barrages.GetAll)]
+    {   
+        private AzurLaneDbContext _context;
+
+		public BarragesController(AzurLaneDbContext context)
+		{
+			_context = context;
+		}
+
+		/// <summary>
+		/// Get all the barrages
+		/// </summary>
+		[HttpGet(Routes.V1.Routes.Barrages.GetAll)]
         public async Task<ActionResult<List<Barrage>>> GetAll(Int32? page = null, Int32? itemsPerPage = null)
         {
             try 
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-
                 if (page == null && itemsPerPage == null) 
                 {
                     if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
-                    return ctx.Barrages.Include(b => b.Rounds).ToList();
+                    return _context.Barrages.Include(b => b.Rounds).ToList();
                 }
                 else if (page == null && itemsPerPage != null) return BadRequest("You need to define a page number");
                 else if (page != null && itemsPerPage == null) return BadRequest("You need to define the amount of barrages per page");
@@ -40,9 +45,9 @@ namespace AzurLaneAPI.Controllers
 
                     var skip = (page - 1) * itemsPerPage;
 
-                    HttpContext.Response.Headers.Add("TotalPages", Convert.ToString(ctx.Ships.ToArray().Length / itemsPerPage));
+                    HttpContext.Response.Headers.Add("TotalPages", Convert.ToString(_context.Ships.ToArray().Length / itemsPerPage));
                     HttpContext.Response.Headers.Add("CurrentPage", Convert.ToString(page));
-                    return await ctx.Barrages
+                    return await _context.Barrages
                         .Include(b => b.Rounds)
                         .Skip((Int32)skip).Take((Int32)itemsPerPage)
                         .ToListAsync();
@@ -66,10 +71,9 @@ namespace AzurLaneAPI.Controllers
         {
             try 
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Barrages.Any(b => b.Id == id))
+                if (_context.Barrages.Any(b => b.Id == id))
                 {
-                    return await ctx.Barrages.SingleAsync(b => b.Id == id);
+                    return await _context.Barrages.SingleAsync(b => b.Id == id);
                 }
                 else 
                 {
@@ -92,9 +96,8 @@ namespace AzurLaneAPI.Controllers
         {
             try 
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
                 List<Barrage> barrages = new List<Barrage>();
-                foreach (var barrage in ctx.Barrages.Include(b => b.Rounds))
+                foreach (var barrage in _context.Barrages.Include(b => b.Rounds))
                 {
                     foreach (var shipName in barrage.Ships)
                     {
@@ -129,15 +132,15 @@ namespace AzurLaneAPI.Controllers
                 if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
 
                 List<BarrageDataImportModel> barrageDataImportModels = JsonConvert.DeserializeObject<List<BarrageDataImportModel>>(new WebClient().DownloadString("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/dist/barrage.json").Replace("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "http://cdn.mutedevs.nl/azurlaneapi/"));
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                ctx.Barrages.RemoveRange(ctx.Barrages.Include(b => b.Rounds));
-                ctx.SaveChanges();
+                
+                _context.Barrages.RemoveRange(_context.Barrages.Include(b => b.Rounds));
+                _context.SaveChanges();
 
                 foreach (BarrageDataImportModel barrageDataImportModel in barrageDataImportModels)
                 {
-                    ctx.Add(new Barrage(barrageDataImportModel));
+                    _context.Add(new Barrage(barrageDataImportModel));
                 }
-                await ctx.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return Ok("API Data was successfully updated");
             }
             catch 

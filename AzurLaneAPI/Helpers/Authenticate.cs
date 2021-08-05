@@ -9,13 +9,18 @@ namespace AzurLaneAPI
 {
     public partial class Helpers
     {
-        /// <summary>
-        /// Check if the request is authenticated
-        /// </summary>
-        public static Boolean Authenticate(HttpContext context)
-        {
-            AzurLaneDbContext ctx = new AzurLaneDbContext();
+        private static AzurLaneDbContext _context;
 
+		public Helpers(AzurLaneDbContext context)
+		{
+			_context = context;
+		}
+
+		/// <summary>
+		/// Check if the request is authenticated
+		/// </summary>
+		public static Boolean Authenticate(HttpContext context)
+        {
             // Save the value of the Authorization header in a variable
 
             if (context.Request.Headers.ContainsKey("Authorization"))
@@ -24,13 +29,13 @@ namespace AzurLaneAPI
                 String[] authHeaderParts = authHeader.Split(' ');
                 String token = String.Join(' ', authHeaderParts.Skip(1));
 
-                if (ctx.ALTokens.Any(t => t.Token == token))
+                if (_context.ALTokens.Any(t => t.Token == token))
                 {
-                    ALToken authToken = ctx.ALTokens.Single(t => t.Token == token);
+                    ALToken authToken = _context.ALTokens.Single(t => t.Token == token);
                     if (authToken.Active)
                     {
                         authToken.LastRequest = DateTime.Now;
-                        ctx.SaveChanges();
+                        _context.SaveChanges();
                         return true;
                     }
                     else
