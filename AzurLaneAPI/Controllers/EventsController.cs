@@ -10,16 +10,22 @@ namespace AzurLaneAPI.Controllers
 {
     public class EventsController : ControllerBase
     {
-        /// <summary>
-        /// Get all events
-        /// </summary>
-        [HttpGet(Routes.V1.Routes.Events.GetAll)]
+        private AzurLaneDbContext _context;
+
+		public EventsController(AzurLaneDbContext context)
+		{
+			_context = context;
+		}
+
+		/// <summary>
+		/// Get all events
+		/// </summary>
+		[HttpGet(Routes.V1.Routes.Events.GetAll)]
         public async Task<ActionResult<List<ALEvent>>> GetEvents()
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                return await ctx.Events.ToListAsync();
+                return await _context.Events.ToListAsync();
             }
             catch
             {
@@ -36,10 +42,9 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (await ctx.Events.AnyAsync(ev => ev.Id == id))
+                if (await _context.Events.AnyAsync(ev => ev.Id == id))
                 {
-                    return await ctx.Events.SingleAsync(ev => ev.Id == id);
+                    return await _context.Events.SingleAsync(ev => ev.Id == id);
                 }
                 else
                 {
@@ -62,11 +67,10 @@ namespace AzurLaneAPI.Controllers
             try
             {
                 if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
-
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
+                
                 aLEvent.Id = Guid.NewGuid();
-                ctx.Events.Add(aLEvent);
-                await ctx.SaveChangesAsync();
+                _context.Events.Add(aLEvent);
+                await _context.SaveChangesAsync();
                 return aLEvent;
             }
             catch
@@ -104,12 +108,11 @@ namespace AzurLaneAPI.Controllers
             {
                 if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
 
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (await ctx.Events.AnyAsync(ev => ev.Id == id))
+                if (await _context.Events.AnyAsync(ev => ev.Id == id))
                 {
-                    ALEvent selectedEvent = ctx.Events.Single(ev => ev.Id == id);
-                    ctx.Events.Remove(selectedEvent);
-                    await ctx.SaveChangesAsync();
+                    ALEvent selectedEvent = _context.Events.Single(ev => ev.Id == id);
+                    _context.Events.Remove(selectedEvent);
+                    await _context.SaveChangesAsync();
                     return selectedEvent;
                 }
                 else

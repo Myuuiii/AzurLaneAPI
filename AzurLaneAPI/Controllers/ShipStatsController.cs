@@ -10,6 +10,13 @@ namespace AzurLaneAPI.Controllers
 {
 	public class ShipStatsController : Controller
 	{
+        private AzurLaneDbContext _context;
+
+		public ShipStatsController(AzurLaneDbContext context)
+		{
+			_context = context;
+		}
+
 		/// <summary>
 		/// Retrieve a ship's base stats
 		/// </summary>
@@ -19,10 +26,9 @@ namespace AzurLaneAPI.Controllers
 		{
 			try
 			{
-				AzurLaneDbContext ctx = new AzurLaneDbContext();
-				if (ctx.Ships.Any(ship => ship.ShipId == id))
+				if (_context.Ships.Any(ship => ship.ShipId == id))
 				{
-					return ctx.Ships
+					return _context.Ships
 						.Include(s => s.BaseStats)
 						.Single(ship => ship.ShipId == id).BaseStats;
 				}
@@ -47,10 +53,9 @@ namespace AzurLaneAPI.Controllers
 		{
 			try
 			{
-				AzurLaneDbContext ctx = new AzurLaneDbContext();
-				if (ctx.Ships.Any(ship => ship.Name == name))
+				if (_context.Ships.Any(ship => ship.Name == name))
 				{
-					return ctx.Ships
+					return _context.Ships
 						.Include(s => s.BaseStats)
 						.Single(ship => ship.Name == name).BaseStats;
 				}
@@ -75,10 +80,9 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Ships.Any(ship => ship.ShipId == id))
+                if (_context.Ships.Any(ship => ship.ShipId == id))
                 {
-                    return ctx.Ships
+                    return _context.Ships
                         .Include(s => s.Level100RetrofitStats)
                         .Single(ship => ship.ShipId == id).Level100RetrofitStats;
                 }
@@ -102,10 +106,9 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Ships.Any(ship => ship.Name == name))
+                if (_context.Ships.Any(ship => ship.Name == name))
                 {
-                    return ctx.Ships
+                    return _context.Ships
                         .Include(s => s.Level100RetrofitStats)
                         .Single(ship => ship.Name == name).Level100RetrofitStats;
                 }
@@ -130,10 +133,9 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Ships.Any(ship => ship.ShipId == id))
+                if (_context.Ships.Any(ship => ship.ShipId == id))
                 {
-                    return ctx.Ships
+                    return _context.Ships
                         .Include(s => s.Level100Stats)
                         .Single(ship => ship.ShipId == id).Level100Stats;
                 }
@@ -158,10 +160,9 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Ships.Any(ship => ship.Name == name))
+                if (_context.Ships.Any(ship => ship.Name == name))
                 {
-                    return ctx.Ships
+                    return _context.Ships
                         .Include(s => s.Level100Stats)
                         .Single(ship => ship.Name == name).Level100Stats;
                 }
@@ -186,10 +187,9 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Ships.Any(ship => ship.ShipId == id))
+                if (_context.Ships.Any(ship => ship.ShipId == id))
                 {
-                    return ctx.Ships
+                    return _context.Ships
                         .Include(s => s.Level120RetrofitStats)
                         .Single(ship => ship.ShipId == id).Level120RetrofitStats;
                 }
@@ -214,10 +214,9 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Ships.Any(ship => ship.Name == name))
+                if (_context.Ships.Any(ship => ship.Name == name))
                 {
-                    return ctx.Ships
+                    return _context.Ships
                         .Include(s => s.Level120RetrofitStats)
                         .Single(ship => ship.Name == name).Level120RetrofitStats;
                 }
@@ -242,10 +241,9 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Ships.Any(ship => ship.ShipId == id))
+                if (_context.Ships.Any(ship => ship.ShipId == id))
                 {
-                    return ctx.Ships
+                    return _context.Ships
                         .Include(s => s.Level120Stats)
                         .Single(ship => ship.ShipId == id).Level120Stats;
                 }
@@ -269,10 +267,9 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Ships.Any(ship => ship.Name == name))
+                if (_context.Ships.Any(ship => ship.Name == name))
                 {
-                    return ctx.Ships
+                    return _context.Ships
                         .Include(s => s.Level120Stats)
                         .Single(ship => ship.Name == name).Level120Stats;
                 }

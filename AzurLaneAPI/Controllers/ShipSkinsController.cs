@@ -11,21 +11,27 @@ namespace AzurLaneAPI.Controllers
 {
     public class ShipSkinsController : Controller
     {
-        /// <summary>
-        /// Retrieve all the ship skins
-        /// </summary>
-        /// <param name="page">Page Number</param>
-        /// <param name="itemsPerPage">Items to display per page, limited to 20 without API key</param>
-        [HttpGet(Routes.V1.Routes.Ships.ShipSkins.GetAll)]
+        private AzurLaneDbContext _context;
+
+		public ShipSkinsController(AzurLaneDbContext context)
+		{
+			_context = context;
+		}
+
+		/// <summary>
+		/// Retrieve all the ship skins
+		/// </summary>
+		/// <param name="page">Page Number</param>
+		/// <param name="itemsPerPage">Items to display per page, limited to 20 without API key</param>
+		[HttpGet(Routes.V1.Routes.Ships.ShipSkins.GetAll)]
         public async Task<ActionResult<List<ShipSkin>>> GetAll(Int32? page = null, Int32? itemsPerPage = null)
         {
             try 
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
                 if (page == null && itemsPerPage == null) 
                 {
                     if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
-                    return ctx.ShipSkins.ToList();
+                    return _context.ShipSkins.ToList();
                 }
                 else if (page == null && itemsPerPage != null) return BadRequest("You need to define a page number");
                 else if (page != null && itemsPerPage == null) return BadRequest("You need to define the amount of skins per page");
@@ -39,9 +45,9 @@ namespace AzurLaneAPI.Controllers
 
                     var skip = (page - 1) * itemsPerPage;
 
-                    HttpContext.Response.Headers.Add("TotalPages", Convert.ToString(ctx.Ships.ToArray().Length / itemsPerPage));
+                    HttpContext.Response.Headers.Add("TotalPages", Convert.ToString(_context.Ships.ToArray().Length / itemsPerPage));
                     HttpContext.Response.Headers.Add("CurrentPage", Convert.ToString(page));
-                    return await ctx.ShipSkins
+                    return await _context.ShipSkins
                         .Skip((Int32)skip).Take((Int32)itemsPerPage)
                         .ToListAsync();
                 }
@@ -67,10 +73,9 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Ships.Any(s => s.ShipId == id))
+                if (_context.Ships.Any(s => s.ShipId == id))
                 {
-                    var ship = ctx.Ships
+                    var ship = _context.Ships
                         .Include(s => s.Skins)
                         .Single(s => s.ShipId == id);
 
@@ -97,10 +102,9 @@ namespace AzurLaneAPI.Controllers
         {
             try
             {
-                AzurLaneDbContext ctx = new AzurLaneDbContext();
-                if (ctx.Ships.Any(s => s.Name == name))
+                if (_context.Ships.Any(s => s.Name == name))
                 {
-                    var ship = ctx.Ships
+                    var ship = _context.Ships
                         .Include(s => s.Skins)
                         .Single(s => s.Name == name);
 

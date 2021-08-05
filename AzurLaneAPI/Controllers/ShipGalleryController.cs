@@ -11,17 +11,23 @@ namespace AzurLaneAPI.Controllers
 {
 	public class ShipGalleryController : Controller
 	{
-        /// <summary>
-        /// Retrieve all the gallery items
-        /// </summary>
+		private AzurLaneDbContext _context;
+
+		public ShipGalleryController(AzurLaneDbContext context)
+		{
+			_context = context;
+		}
+
+		/// <summary>
+		/// Retrieve all the gallery items
+		/// </summary>
 		[HttpGet(Routes.V1.Routes.Ships.ShipGallery.GetAll)]
 		public async Task<ActionResult<List<ShipGalleryItem>>> GetAll()
 		{
 			try
 			{
-				AzurLaneDbContext ctx = new AzurLaneDbContext();
 				List<ShipGalleryItem> galleryItems = new List<ShipGalleryItem>();
-				foreach (var ship in ctx.Ships.Include(s => s.Gallery))
+				foreach (var ship in _context.Ships.Include(s => s.Gallery))
 				{
 					galleryItems.AddRange(ship.Gallery);
 				}
@@ -43,10 +49,9 @@ namespace AzurLaneAPI.Controllers
 		{
 			try
 			{
-				AzurLaneDbContext ctx = new AzurLaneDbContext();
-				if (ctx.Ships.Any(s => s.ShipId == id))
+				if (_context.Ships.Any(s => s.ShipId == id))
 				{
-					return ctx.Ships.Include(s => s.Gallery).Single(s => s.ShipId == id).Gallery;
+					return _context.Ships.Include(s => s.Gallery).Single(s => s.ShipId == id).Gallery;
 				}
 				else
                 {
@@ -69,10 +74,9 @@ namespace AzurLaneAPI.Controllers
 		{
 			try
 			{
-				AzurLaneDbContext ctx = new AzurLaneDbContext();
-				if (ctx.Ships.Any(s => s.Name == name))
+				if (_context.Ships.Any(s => s.Name == name))
 				{
-					return ctx.Ships.Include(s => s.Gallery).Single(s => s.Name == name).Gallery;
+					return _context.Ships.Include(s => s.Gallery).Single(s => s.Name == name).Gallery;
 				}
 				else
                 {
