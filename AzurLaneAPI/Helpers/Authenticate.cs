@@ -13,7 +13,7 @@ namespace AzurLaneAPI
 
 		public Helpers(AzurLaneDbContext context)
 		{
-			_context = context;
+			_context = new AzurLaneDbContext();
 		}
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace AzurLaneAPI
 		public static Boolean Authenticate(HttpContext context)
         {
             // Save the value of the Authorization header in a variable
-
+            _context = new AzurLaneDbContext();
             if (context.Request.Headers.ContainsKey("Authorization"))
             {
                 String authHeader = context.Request.Headers["Authorization"];

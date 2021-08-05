@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using AzurLaneAPI.Conventions;
 using AzurLaneAPI.Filters;
+using AzurLaneAPI.Middleware;
 using AzurLaneClasses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -48,6 +49,7 @@ namespace AzurLaneAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseMiddleware<RequestLoggingMiddleware>();
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
