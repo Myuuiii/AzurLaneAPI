@@ -2,212 +2,219 @@ using System;
 
 namespace AzurLaneAPI.Routes.V1
 {
-    public static class Routes
-    {
-        public const String Base = "/v1";
+	public static class Routes
+	{
+		public const String Base = "/v1";
 
-        public static class Ships
-        {
-            public const String GetAll = "/ships";
-            public const String GetAllMinimal = "/ships/minimal";
-            public const String GetId = "/ships/{id}";
-            public const String GetMinimalId = "/ships/{id}/minimal";
-            public const String GetName = "/ships/name/{name}";
-            public const String GetMinimalName = "/ships/name/{name}/minimal";
-            public const String Import = "/ships/";
+		public static class Ships
+		{
+			public const String GetAll = "/ships";
+			public const String GetAllMinimal = "/ships/minimal";
+			public const String GetId = "/ships/{id}";
+			public const String GetMinimalId = "/ships/{id}/minimal";
+			public const String GetName = "/ships/name/{name}";
+			public const String GetMinimalName = "/ships/name/{name}/minimal";
+			public const String Import = "/ships/";
 
-            public static class ShipSkins
-            {
-                public const String GetAll = "/shipskins";
-                public const String GetAllByShipId = "/shipskins/{id}";
-                public const String GetAllByShipName = "/shipskins/name/{name}";
-            }
+			public static class ShipGallery
+			{
+				public const String GetAll = "/shipgallery";
+				public const String GetAllByShipId = "/shipgallery/{id}";
+				public const String GetAllByShipName = "/shipgallery/name/{name}";
+			}
 
-            public static class ShipStats
-            {
-                public const String Base = "/shipstats/base/{id}";
-                public const String BaseName = "/shipstats/base/name/{name}";
+			public static class ShipSkins
+			{
+				public const String GetAll = "/shipskins";
+				public const String GetAllByShipId = "/shipskins/{id}";
+				public const String GetAllByShipName = "/shipskins/name/{name}";
+			}
 
-                public const String Lvl100 = "/shipstats/100/{id}";
-                public const String Lvl100Name = "/shipstats/100/{name}";
+			public static class ShipStats
+			{
+				public const String Base = "/shipstats/base/{id}";
+				public const String BaseName = "/shipstats/base/name/{name}";
 
-                public const String Lvl100Retro = "/shipstats/100R/{id}";
-                public const String Lvl100RetroName = "/shipstats/100R/name/{name}";
+				public const String Lvl100 = "/shipstats/100/{id}";
+				public const String Lvl100Name = "/shipstats/100/{name}";
 
-                public const String Lvl120 = "/shipstats/120/{id}";
-                public const String Lvl120Name = "/shipstats/120/name/{name}";
-                
-                public const String Lvl120Retro = "/shipstats/120R/{id}";
-                public const String Lvl120RetroName = "/shipstats/120R/name/{name}";
-            }
-        }
+				public const String Lvl100Retro = "/shipstats/100R/{id}";
+				public const String Lvl100RetroName = "/shipstats/100R/name/{name}";
 
-        public static class Barrages 
-        {
-            public const String GetAll = "/barrages";
-            public const String GetId = "/barrages/{id}";
-            public const String GetAllByName = "/barrages/ship/{name}";
-            public const String Import = "/barrages";
-        }
+				public const String Lvl120 = "/shipstats/120/{id}";
+				public const String Lvl120Name = "/shipstats/120/name/{name}";
 
-        public static class Events
-        {
-            public const String GetAll = "/events";
-            public const String GetId = "/events/{id}";
-            public const String Create = "/events";
-            public const String Update = "/events/{eventId}";
-            public const String Delete = "/events/{eventId}";
-        }
+				public const String Lvl120Retro = "/shipstats/120R/{id}";
+				public const String Lvl120RetroName = "/shipstats/120R/name/{name}";
+			}
+		}
 
-        public static class Campaign
-        {
-            public const String GetAll = "/campaign";
-            public const String GetId = "/campaign/{id}";
-            public const String GetSelect = "/campaign/{chapter}/{level}";
-        }
+		public static class Barrages
+		{
+			public const String GetAll = "/barrages";
+			public const String GetId = "/barrages/{id}";
+			public const String GetAllByName = "/barrages/ship/{name}";
+			public const String Import = "/barrages";
+		}
 
-        public static class Construction
-        {
-            public const String GetPools = "/construction";
-            public const String GetPool = "/construction/{id}";
-        }
+		public static class Events
+		{
+			public const String GetAll = "/events";
+			public const String GetId = "/events/{id}";
+			public const String Create = "/events";
+			public const String Update = "/events/{eventId}";
+			public const String Delete = "/events/{eventId}";
+		}
 
-        public static class Equipment
-        {
-            public static class DestroyerGuns
-            {
-                public const String GetAll = "/equipment/destroyerguns";
-                public const String GetId = "/equipment/destroyerguns/{id}";
-                public const String Create = "/equipment/destroyerguns";
-                public const String Update = "/equipment/destroyerguns/{id}";
-                public const String Delete = "/equipment/destroyerguns/{id}";
-            }
+		public static class Campaign
+		{
+			public const String GetAll = "/campaign";
+			public const String GetId = "/campaign/{id}";
+			public const String GetSelect = "/campaign/{chapter}/{level}";
+		}
 
-            public static class LightCruiserGuns
-            {
-                public const String GetAll = "/equipment/lightcruiserguns";
-                public const String GetId = "/equipment/lightcruiserguns/{id}";
-                public const String Create = "/equipment/lightcruiserguns";
-                public const String Update = "/equipment/lightcruiserguns/{id}";
-                public const String Delete = "/equipment/lightcruiserguns/{id}";
-            }
+		public static class Construction
+		{
+			public const String GetPools = "/construction";
+			public const String GetPool = "/construction/{id}";
+		}
 
-            public static class HeavyCruiserGuns
-            {
-                public const String GetAll = "/equipment/heavycruiserguns";
-                public const String GetId = "/equipment/heavycruiserguns/{id}";
-                public const String Create = "/equipment/heavycruiserguns";
-                public const String Update = "/equipment/heavycruiserguns/{id}";
-                public const String Delete = "/equipment/heavycruiserguns/{id}";
-            }
+		public static class Equipment
+		{
+			public static class DestroyerGuns
+			{
+				public const String GetAll = "/equipment/destroyerguns";
+				public const String GetId = "/equipment/destroyerguns/{id}";
+				public const String Create = "/equipment/destroyerguns";
+				public const String Update = "/equipment/destroyerguns/{id}";
+				public const String Delete = "/equipment/destroyerguns/{id}";
+			}
 
-            public static class LargeCruiserGuns
-            {
-                public const String GetAll = "/equipment/largecruiserguns";
-                public const String GetId = "/equipment/largecruiserguns/{id}";
-                public const String Create = "/equipment/largecruiserguns";
-                public const String Update = "/equipment/largecruiserguns/{id}";
-                public const String Delete = "/equipment/largecruiserguns/{id}";
-            }
+			public static class LightCruiserGuns
+			{
+				public const String GetAll = "/equipment/lightcruiserguns";
+				public const String GetId = "/equipment/lightcruiserguns/{id}";
+				public const String Create = "/equipment/lightcruiserguns";
+				public const String Update = "/equipment/lightcruiserguns/{id}";
+				public const String Delete = "/equipment/lightcruiserguns/{id}";
+			}
 
-            public static class BattleshipGuns
-            {
-                public const String GetAll = "/equipment/battleshipguns";
-                public const String GetId = "/equipment/battleshipguns/{id}";
-                public const String Create = "/equipment/battleshipguns";
-                public const String Update = "/equipment/battleshipguns/{id}";
-                public const String Delete = "/equipment/battleshipguns/{id}";
-            }
+			public static class HeavyCruiserGuns
+			{
+				public const String GetAll = "/equipment/heavycruiserguns";
+				public const String GetId = "/equipment/heavycruiserguns/{id}";
+				public const String Create = "/equipment/heavycruiserguns";
+				public const String Update = "/equipment/heavycruiserguns/{id}";
+				public const String Delete = "/equipment/heavycruiserguns/{id}";
+			}
 
-            public static class Torpedoes
-            {
-                public const String GetAll = "/equipment/torpedoes";
-                public const String GetId = "/equipment/torpedoes/{id}";
-                public const String Create = "/equipment/torpedoes";
-                public const String Update = "/equipment/torpedoes/{id}";
-                public const String Delete = "/equipment/torpedoes/{id}";
-            }
+			public static class LargeCruiserGuns
+			{
+				public const String GetAll = "/equipment/largecruiserguns";
+				public const String GetId = "/equipment/largecruiserguns/{id}";
+				public const String Create = "/equipment/largecruiserguns";
+				public const String Update = "/equipment/largecruiserguns/{id}";
+				public const String Delete = "/equipment/largecruiserguns/{id}";
+			}
 
-            public static class SubmarineTorpedoes
-            {
-                public const String GetAll = "/equipment/submarinetorpedoes";
-                public const String GetId = "/equipment/submarinetorpedoes/{id}";
-                public const String Create = "/equipment/submarinetorpedoes";
-                public const String Update = "/equipment/submarinetorpedoes/{id}";
-                public const String Delete = "/equipment/submarinetorpedoes/{id}";
-            }
+			public static class BattleshipGuns
+			{
+				public const String GetAll = "/equipment/battleshipguns";
+				public const String GetId = "/equipment/battleshipguns/{id}";
+				public const String Create = "/equipment/battleshipguns";
+				public const String Update = "/equipment/battleshipguns/{id}";
+				public const String Delete = "/equipment/battleshipguns/{id}";
+			}
 
-            public static class FighterPlanes
-            {
-                public const String GetAll = "/equipment/fighterplanes";
-                public const String GetId = "/equipment/fighterplanes/{id}";
-                public const String Create = "/equipment/fighterplanes";
-                public const String Update = "/equipment/fighterplanes/{id}";
-                public const String Delete = "/equipment/fighterplanes/{id}";
-            }
+			public static class Torpedoes
+			{
+				public const String GetAll = "/equipment/torpedoes";
+				public const String GetId = "/equipment/torpedoes/{id}";
+				public const String Create = "/equipment/torpedoes";
+				public const String Update = "/equipment/torpedoes/{id}";
+				public const String Delete = "/equipment/torpedoes/{id}";
+			}
 
-            public static class DiveBomberPlanes
-            {
-                public const String GetAll = "/equipment/divebomberplanes";
-                public const String GetId = "/equipment/divebomberplanes/{id}";
-                public const String Create = "/equipment/divebomberplanes";
-                public const String Update = "/equipment/divebomberplanes/{id}";
-                public const String Delete = "/equipment/divebomberplanes/{id}";
-            }
+			public static class SubmarineTorpedoes
+			{
+				public const String GetAll = "/equipment/submarinetorpedoes";
+				public const String GetId = "/equipment/submarinetorpedoes/{id}";
+				public const String Create = "/equipment/submarinetorpedoes";
+				public const String Update = "/equipment/submarinetorpedoes/{id}";
+				public const String Delete = "/equipment/submarinetorpedoes/{id}";
+			}
 
-            public static class TorpedoBomberPlanes
-            {
-                public const String GetAll = "/equipment/torpedobomberplanes";
-                public const String GetId = "/equipment/torpedobomberplanes/{id}";
-                public const String Create = "/equipment/torpedobomberplanes";
-                public const String Update = "/equipment/torpedobomberplanes/{id}";
-                public const String Delete = "/equipment/torpedobomberplanes/{id}";
-            }
+			public static class FighterPlanes
+			{
+				public const String GetAll = "/equipment/fighterplanes";
+				public const String GetId = "/equipment/fighterplanes/{id}";
+				public const String Create = "/equipment/fighterplanes";
+				public const String Update = "/equipment/fighterplanes/{id}";
+				public const String Delete = "/equipment/fighterplanes/{id}";
+			}
 
-            public static class Seaplanes
-            {
-                public const String GetAll = "/equipment/seaplanes";
-                public const String GetId = "/equipment/seaplanes/{id}";
-                public const String Create = "/equipment/seaplanes";
-                public const String Update = "/equipment/seaplanes/{id}";
-                public const String Delete = "/equipment/seaplanes/{id}";
-            }
+			public static class DiveBomberPlanes
+			{
+				public const String GetAll = "/equipment/divebomberplanes";
+				public const String GetId = "/equipment/divebomberplanes/{id}";
+				public const String Create = "/equipment/divebomberplanes";
+				public const String Update = "/equipment/divebomberplanes/{id}";
+				public const String Delete = "/equipment/divebomberplanes/{id}";
+			}
 
-            public static class AntiAirGuns
-            {
-                public const String GetAll = "/equipment/antiairguns";
-                public const String GetId = "/equipment/antiairguns/{id}";
-                public const String Create = "/equipment/antiairguns";
-                public const String Update = "/equipment/antiairguns/{id}";
-                public const String Delete = "/equipment/antiairguns/{id}";
-            }
+			public static class TorpedoBomberPlanes
+			{
+				public const String GetAll = "/equipment/torpedobomberplanes";
+				public const String GetId = "/equipment/torpedobomberplanes/{id}";
+				public const String Create = "/equipment/torpedobomberplanes";
+				public const String Update = "/equipment/torpedobomberplanes/{id}";
+				public const String Delete = "/equipment/torpedobomberplanes/{id}";
+			}
 
-            public static class Auxiliary
-            {
-                public const String GetAll = "/equipment/auxiliary";
-                public const String GetId = "/equipment/auxiliary/{id}";
-                public const String Create = "/equipment/auxiliary";
-                public const String Update = "/equipment/auxiliary/{id}";
-                public const String Delete = "/equipment/auxiliary/{id}";
-            }
+			public static class Seaplanes
+			{
+				public const String GetAll = "/equipment/seaplanes";
+				public const String GetId = "/equipment/seaplanes/{id}";
+				public const String Create = "/equipment/seaplanes";
+				public const String Update = "/equipment/seaplanes/{id}";
+				public const String Delete = "/equipment/seaplanes/{id}";
+			}
 
-            public static class Cargo
-            {
-                public const String GetAll = "/equipment/cargo";
-                public const String GetId = "/equipment/cargo/{id}";
-                public const String Create = "/equipment/cargo";
-                public const String Update = "/equipment/cargo/{id}";
-                public const String Delete = "/equipment/cargo/{id}";
-            }
+			public static class AntiAirGuns
+			{
+				public const String GetAll = "/equipment/antiairguns";
+				public const String GetId = "/equipment/antiairguns/{id}";
+				public const String Create = "/equipment/antiairguns";
+				public const String Update = "/equipment/antiairguns/{id}";
+				public const String Delete = "/equipment/antiairguns/{id}";
+			}
 
-            public static class AntiSubmarine
-            {
-                public const String GetAll = "/equipment/antisubmarine";
-                public const String GetId = "/equipment/antisubmarine/{id}";
-                public const String Create = "/equipment/antisubmarine";
-                public const String Update = "/equipment/antisubmarine/{id}";
-                public const String Delete = "/equipment/antisubmarine/{id}";
-            }
-        }
-    }
+			public static class Auxiliary
+			{
+				public const String GetAll = "/equipment/auxiliary";
+				public const String GetId = "/equipment/auxiliary/{id}";
+				public const String Create = "/equipment/auxiliary";
+				public const String Update = "/equipment/auxiliary/{id}";
+				public const String Delete = "/equipment/auxiliary/{id}";
+			}
+
+			public static class Cargo
+			{
+				public const String GetAll = "/equipment/cargo";
+				public const String GetId = "/equipment/cargo/{id}";
+				public const String Create = "/equipment/cargo";
+				public const String Update = "/equipment/cargo/{id}";
+				public const String Delete = "/equipment/cargo/{id}";
+			}
+
+			public static class AntiSubmarine
+			{
+				public const String GetAll = "/equipment/antisubmarine";
+				public const String GetId = "/equipment/antisubmarine/{id}";
+				public const String Create = "/equipment/antisubmarine";
+				public const String Update = "/equipment/antisubmarine/{id}";
+				public const String Delete = "/equipment/antisubmarine/{id}";
+			}
+		}
+	}
 }
