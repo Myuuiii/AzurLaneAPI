@@ -73,6 +73,8 @@ namespace AzurLaneAPI.Scrapers
 
 				ship = GetShipSkins(ship, url); /* Very Resource Heavy */
 				ship = GetShipGallery(ship, url);
+				ship = GetShipMiscInfo(ship, hasNote, document);
+				ship = GetShipScrapValue(ship, hasNote, document);
 
 				// ! not finished
 				// ship = GetShipSkills(ship, hasNote, document);
@@ -80,9 +82,7 @@ namespace AzurLaneAPI.Scrapers
 				// ship = GetShipEquippableSlots(ship, hasNote, document);
 				// ship = GetShipStatistics(ship, hasNote, document);
 				// ship = GetShipEnhanceValue(ship, hasNote, document);
-				// ship = GetShipScrapValue(ship, hasNote, document);
 				// ship = GetShipConstruction(ship, hasNote, document);
-				ship = GetShipMiscInfo(ship, hasNote, document);
 
 				return ship;
 			}
@@ -460,6 +460,39 @@ namespace AzurLaneAPI.Scrapers
 		}
 
 		/// <summary>
+		/// Get the ship's scrap values
+		/// </summary>
+		public static Ship GetShipScrapValue(Ship ship, Boolean hasNote, HtmlDocument document)
+		{
+			HtmlNode scrapNode = null;
+			if (hasNote)
+			{
+				scrapNode = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[2]/div[2]/table[4]/tbody/tr[2]/td[2]");
+			}
+			else
+			{
+				scrapNode = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[4]/tbody/tr[2]/td[2]");
+			}
+
+			try
+			{
+				ship.ScrapValue = new ShipScrapValues
+				{
+					Coins = Convert.ToInt32(scrapNode.Descendants("#text").First().InnerText.Replace("\n", "")),
+					Oil = Convert.ToInt32(scrapNode.Descendants("#text").Skip(1).First().InnerText.Replace("\n", "")),
+					Medals = Convert.ToInt32(scrapNode.Descendants("#text").Skip(2).First().InnerText.Replace("\n", "")),
+				};
+			}
+			catch 
+			{
+				ship.ScrapValue = null;
+			}
+
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+			return ship;
+		}
+
+		/// <summary>
 		/// Get all the ship's skills
 		/// </summary>
 		public static Ship GetShipSkills(Ship ship, Boolean hasNote, HtmlDocument document)
@@ -503,16 +536,6 @@ namespace AzurLaneAPI.Scrapers
 		/// Get the ship's enhance values
 		/// </summary>
 		public static Ship GetShipEnhanceValue(Ship ship, Boolean hasNote, HtmlDocument document)
-		{
-
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
-			return ship;
-		}
-
-		/// <summary>
-		/// Get the ship's scrap values
-		/// </summary>
-		public static Ship GetShipScrapValue(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
 
 			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
