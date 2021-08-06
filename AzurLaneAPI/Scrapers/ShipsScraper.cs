@@ -11,6 +11,10 @@ namespace AzurLaneAPI.Scrapers
 	public class ShipsScraper
 	{
 		private const String ImageBaseUrl = "https://azurlane.koumakan.jp/";
+
+		/// <summary>
+		/// Get all the wiki urls for all the ships
+		/// </summary>
 		public static List<String> GetShipWikiUrls()
 		{
 			List<String> urls = new List<String>();
@@ -65,7 +69,18 @@ namespace AzurLaneAPI.Scrapers
 				ship = GetThumbnailImage(ship, hasNote, document);
 				ship = GetConstruction(ship, hasNote, document);
 				
-				ship = GetShipSkins(ship, url);
+				ship = GetShipSkins(ship, url); /* Very Resource Heavy */
+
+				// ! not finished
+				ship = GetShipSkills(ship, hasNote, document);
+				ship = GetShipLimitBreaks(ship, hasNote, document);
+				ship = GetShipGallery(ship, hasNote, document);
+				ship = GetShipEquippableSlots(ship, hasNote, document);
+				ship = GetShipStatistics(ship, hasNote, document);
+				ship = GetShipEnhanceValue(ship, hasNote, document);
+				ship = GetShipScrapValue(ship, hasNote, document);
+				ship = GetShipConstruction(ship, hasNote, document);
+				ship = GetShipMiscInfo(ship, hasNote, document);
 
 				return ship;
 			}
@@ -75,11 +90,17 @@ namespace AzurLaneAPI.Scrapers
 			}
 		}
 
+		/// <summary>
+		/// Get wether the main ship page has a note which could switch around some Xpaths later on
+		/// </summary>
 		public static Boolean GetShipHasNoteState(HtmlDocument document)
 		{
 			return document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]").Descendants("div").First().HasClass("hatnote");
 		}
 
+		/// <summary>
+		/// Get the id of a ship
+		/// </summary>
 		public static Ship GetShipId(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
 			if (hasNote)
@@ -93,12 +114,18 @@ namespace AzurLaneAPI.Scrapers
 			return ship;
 		}
 
+		/// <summary>
+		/// Get the name of a ship
+		/// </summary>
 		public static Ship GetShipName(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
 			ship.Name = document.DocumentNode.SelectSingleNode("//*[@id=\"firstHeading\"]").InnerText;
 			return ship;
 		}
-
+		
+		/// <summary>
+		/// Get the rarity and stars of a ship
+		/// </summary>
 		public static Ship GetShipRarityAndStars(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
 			String[] rarityParts;
@@ -120,6 +147,9 @@ namespace AzurLaneAPI.Scrapers
 			return ship;
 		}
 
+		/// <summary>
+		/// Get the ship nation
+		/// </summary>		
 		public static Ship GetShipNation(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
 			if (hasNote)
@@ -133,6 +163,9 @@ namespace AzurLaneAPI.Scrapers
 			return ship;
 		}
 
+		/// <summary>
+		/// Get the ship type
+		/// </summary>
 		public static Ship GetShipType(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
 			if (hasNote)
@@ -147,6 +180,9 @@ namespace AzurLaneAPI.Scrapers
 			return ship;
 		}
 
+		/// <summary>
+		/// Get the ship thumbnail image
+		/// </summary>
 		public static Ship GetThumbnailImage(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
 			if (hasNote)
@@ -160,6 +196,9 @@ namespace AzurLaneAPI.Scrapers
 			return ship;
 		}
 
+		/// <summary>
+		/// Get the ship construction information
+		/// </summary>
 		public static Ship GetConstruction(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
 			ship.Construction = new ShipConstruction();
@@ -213,24 +252,49 @@ namespace AzurLaneAPI.Scrapers
 			return ship;
 		}
 
+		/// <summary>
+		/// Get the ship's skins
+		/// </summary>
 		public static Ship GetShipSkins(Ship ship, String baseUrl)
 		{
 			String skinsPageContent = new WebClient().DownloadString(baseUrl + "/Gallery");
 			HtmlDocument document = new HtmlDocument();
 			document.LoadHtml(skinsPageContent);
 
-			HtmlNode tabberNode = document.DocumentNode.Descendants().First(n => n.HasClass("tabber"));
 			ship.Skins = new List<ShipSkin>();
+
+			HtmlNode tabberNode = document.DocumentNode.Descendants().First(n => n.HasClass("tabber"));
 
 			foreach (var skinTab in tabberNode.ChildNodes.Where(n => n.Name == "div"))
 			{
 				ShipSkin skin = new ShipSkin();
-				List<HtmlNode> skinImageDescendants = skinTab.Descendants("img").ToList();
+				HtmlNode[] skinImageDescendants = skinTab.Descendants("img").ToArray();
 
 				skin.Id = Guid.NewGuid();
-				skin.ChibiUrl = ImageBaseUrl + skinImageDescendants[0].Attributes["src"].Value;
-				skin.ImageUrl = ImageBaseUrl + skinImageDescendants[1].Attributes["src"].Value;
-				skin.BackgroundUrl = ImageBaseUrl + skinImageDescendants[2].Attributes["src"].Value;
+				skin.Name = skinTab.Descendants("div").First().FirstChild.InnerText.Replace(ship.Name + ": ", "");
+
+				switch (skinImageDescendants.Count())
+				{
+					case 1:
+						skin.ImageUrl = skinImageDescendants[0].Attributes["src"].Value;
+						break;
+					case 2:
+						skin.ImageUrl = skinImageDescendants[0].Attributes["src"].Value;
+						skin.BackgroundUrl = skinImageDescendants[1].Attributes["src"].Value;
+						break;
+					case 3:
+						skin.ChibiUrl = ImageBaseUrl + skinImageDescendants[0].Attributes["src"].Value;
+						skin.ImageUrl = ImageBaseUrl + skinImageDescendants[1].Attributes["src"].Value;
+						skin.BackgroundUrl = ImageBaseUrl + skinImageDescendants[2].Attributes["src"].Value;
+						break;
+				}
+
+
+				HtmlNode skintableDescendants = skinTab.Descendants("table").First();
+				HtmlNode[] tablevalues = skintableDescendants.Descendants("td").ToArray();
+
+				skin.ObtainedFrom = tablevalues[0].InnerText;
+				if (tablevalues[1].InnerHtml == "Yes") skin.Live2dModel = true;
 
 				if (skinTab.Attributes["Title"].Value == "Default")
 				{
@@ -239,8 +303,80 @@ namespace AzurLaneAPI.Scrapers
 
 				ship.Skins.Add(skin);
 			}
-
 			return ship;
 		}
+
+		/// <summary>
+		/// Get all the ship's skills
+		/// </summary>
+		public static Ship GetShipSkills(Ship ship, Boolean hasNote, HtmlDocument document)
+		{
+			return ship;
+		}
+
+		/// <summary>
+		/// Get all the ship's limit breaks
+		/// </summary>
+		public static Ship GetShipLimitBreaks(Ship ship, Boolean hasNote, HtmlDocument document)
+		{
+			return ship;
+		}
+
+		/// <summary>
+		/// Get all the ship's gallery items
+		/// </summary>
+		public static Ship GetShipGallery(Ship ship, Boolean hasNote, HtmlDocument document)
+		{
+			return ship;
+		}
+		
+		/// <summary>
+		/// get all the ship's equippable slots
+		/// </summary>
+		public static Ship GetShipEquippableSlots(Ship ship, Boolean hasNote, HtmlDocument document)
+		{
+			return ship;
+		}
+
+		/// <summary>
+		/// Get all the ship's statistics
+		/// </summary>
+		public static Ship GetShipStatistics(Ship ship, Boolean hasNote, HtmlDocument document)
+		{
+			return ship;
+		}
+
+		/// <summary>
+		/// Get the ship's enhance values
+		/// </summary>
+		public static Ship GetShipEnhanceValue(Ship ship, Boolean hasNote, HtmlDocument document)
+		{
+			return ship;
+		}
+
+		/// <summary>
+		/// Get the ship's scrap values
+		/// </summary>
+		public static Ship GetShipScrapValue(Ship ship, Boolean hasNote, HtmlDocument document)
+		{
+			return ship;
+		}
+
+		/// <summary>
+		/// Get all the ship's consctruction values
+		/// </summary>
+		public static Ship GetShipConstruction(Ship ship, Boolean hasNote, HtmlDocument document)
+		{
+			return ship;
+		}
+
+		/// <summary>
+		/// get all the ship's misc info
+		/// </summary>
+		public static Ship GetShipMiscInfo(Ship ship, Boolean hasNote, HtmlDocument document)
+		{
+			return ship;
+		}
+
 	}
 }
