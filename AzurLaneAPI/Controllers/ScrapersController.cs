@@ -29,7 +29,7 @@ namespace AzurLaneAPI.Controllers
 			// Neptune
 			// Ritsuko Akizuki
 
-			// Scrapers.ShipsScraper.GetShip("https://azurlane.koumakan.jp/Laffey");
+			// Scrapers.ShipsScraper.GetShip("https://azurlane.koumakan.jp/Ryuujou");
 			// return Ok();
 			foreach (var ship in Scrapers.ShipsScraper.GetShipWikiUrls())
 			{

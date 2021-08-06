@@ -52,6 +52,8 @@ namespace AzurLaneAPI.Scrapers
 		{
 			if (GetShipWikiUrls().Contains(url))
 			{
+				Console.WriteLine($"Processing URL: {url}");
+
 				Ship ship = new Ship();
 				String shipBaseInfoPageContents = new WebClient().DownloadString(url);
 				HtmlDocument document = new HtmlDocument();
@@ -70,7 +72,7 @@ namespace AzurLaneAPI.Scrapers
 				ship = GetConstruction(ship, hasNote, document);
 
 				ship = GetShipSkins(ship, url); /* Very Resource Heavy */
-				ship = GetShipGallery(ship, url); 
+				ship = GetShipGallery(ship, url);
 
 				// ! not finished
 				// ship = GetShipSkills(ship, hasNote, document);
@@ -80,7 +82,7 @@ namespace AzurLaneAPI.Scrapers
 				// ship = GetShipEnhanceValue(ship, hasNote, document);
 				// ship = GetShipScrapValue(ship, hasNote, document);
 				// ship = GetShipConstruction(ship, hasNote, document);
-				// ship = GetShipMiscInfo(ship, hasNote, document);
+				ship = GetShipMiscInfo(ship, hasNote, document);
 
 				return ship;
 			}
@@ -95,6 +97,7 @@ namespace AzurLaneAPI.Scrapers
 		/// </summary>
 		public static Boolean GetShipHasNoteState(HtmlDocument document)
 		{
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]").Descendants("div").First().HasClass("hatnote");
 		}
 
@@ -111,6 +114,8 @@ namespace AzurLaneAPI.Scrapers
 			{
 				ship.ShipId = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[4]/table/tbody/tr[1]/td").InnerText.Replace("\n", "");
 			}
+
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -120,6 +125,8 @@ namespace AzurLaneAPI.Scrapers
 		public static Ship GetShipName(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
 			ship.Name = document.DocumentNode.SelectSingleNode("//*[@id=\"firstHeading\"]").InnerText;
+
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -144,6 +151,8 @@ namespace AzurLaneAPI.Scrapers
 				Stars = rarityParts[1],
 				Count = rarityParts[1].ToCharArray().Count()
 			};
+
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -160,6 +169,8 @@ namespace AzurLaneAPI.Scrapers
 			{
 				ship.Nation = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[4]/table/tbody/tr[2]/td/a[2]").InnerText;
 			}
+
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -177,6 +188,7 @@ namespace AzurLaneAPI.Scrapers
 				ship.Type = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[4]/table/tbody/tr[3]/td/a[2]").InnerText;
 			}
 
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -193,6 +205,8 @@ namespace AzurLaneAPI.Scrapers
 			{
 				ship.ThumbnailImage = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[2]/a/img").Attributes["src"].Value;
 			}
+
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -249,6 +263,8 @@ namespace AzurLaneAPI.Scrapers
 					}
 				}
 			}
+
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -303,6 +319,8 @@ namespace AzurLaneAPI.Scrapers
 
 				ship.Skins.Add(skin);
 			}
+
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -316,79 +334,30 @@ namespace AzurLaneAPI.Scrapers
 			document.LoadHtml(skinsPageContent);
 
 			List<ShipGalleryItem> galleryItems = new List<ShipGalleryItem>();
-			HtmlNode artWorkgalleryNode = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[3]");
-			HtmlNode[] artWorkFrameNodes = artWorkgalleryNode.ChildNodes.Where(n => n.Name == "div").ToArray();
 
-			foreach (var artworkFrameNode in artWorkFrameNodes)
+			try
 			{
-				ShipGalleryItem item = new ShipGalleryItem();
+				HtmlNode artWorkgalleryNode = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[3]");
+				HtmlNode[] artWorkFrameNodes = artWorkgalleryNode.ChildNodes.Where(n => n.Name == "div").ToArray();
 
-				HtmlNode imageNode = artworkFrameNode.Descendants("img").First();
-				HtmlNode descriptionNode = artworkFrameNode.Descendants("div").Skip(1).First();
+				foreach (var artworkFrameNode in artWorkFrameNodes)
+				{
+					ShipGalleryItem item = new ShipGalleryItem();
 
-				item.Id = Guid.NewGuid();
-				item.Description = descriptionNode.InnerText;
-				item.Url = ImageBaseUrl + imageNode.Attributes["src"].Value;
+					HtmlNode imageNode = artworkFrameNode.Descendants("img").First();
+					HtmlNode descriptionNode = artworkFrameNode.Descendants("div").Skip(1).First();
 
-				ship.Gallery.Add(item);
+					item.Id = Guid.NewGuid();
+					item.Description = descriptionNode.InnerText;
+					item.Url = ImageBaseUrl + imageNode.Attributes["src"].Value;
+
+					ship.Gallery.Add(item);
+				}
+
 			}
+			catch { }
 
-			return ship;
-		}
-
-		/// <summary>
-		/// Get all the ship's skills
-		/// </summary>
-		public static Ship GetShipSkills(Ship ship, Boolean hasNote, HtmlDocument document)
-		{
-			return ship;
-		}
-
-		/// <summary>
-		/// Get all the ship's limit breaks
-		/// </summary>
-		public static Ship GetShipLimitBreaks(Ship ship, Boolean hasNote, HtmlDocument document)
-		{
-			return ship;
-		}
-
-		/// <summary>
-		/// get all the ship's equippable slots
-		/// </summary>
-		public static Ship GetShipEquippableSlots(Ship ship, Boolean hasNote, HtmlDocument document)
-		{
-			return ship;
-		}
-
-		/// <summary>
-		/// Get all the ship's statistics
-		/// </summary>
-		public static Ship GetShipStatistics(Ship ship, Boolean hasNote, HtmlDocument document)
-		{
-			return ship;
-		}
-
-		/// <summary>
-		/// Get the ship's enhance values
-		/// </summary>
-		public static Ship GetShipEnhanceValue(Ship ship, Boolean hasNote, HtmlDocument document)
-		{
-			return ship;
-		}
-
-		/// <summary>
-		/// Get the ship's scrap values
-		/// </summary>
-		public static Ship GetShipScrapValue(Ship ship, Boolean hasNote, HtmlDocument document)
-		{
-			return ship;
-		}
-
-		/// <summary>
-		/// Get all the ship's consctruction values
-		/// </summary>
-		public static Ship GetShipConstruction(Ship ship, Boolean hasNote, HtmlDocument document)
-		{
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -397,8 +366,167 @@ namespace AzurLaneAPI.Scrapers
 		/// </summary>
 		public static Ship GetShipMiscInfo(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
+			ship.Artist = new ShipArtist();
+			ship.VoiceActor = new ShipVoiceActor();
+			ship.Pixiv = new ShipPixiv();
+			ship.Twitter = new ShipTwitter();
+			ship.Web = new ShipWeb();
+
+			ship.Artist.Id = Guid.NewGuid();
+			ship.VoiceActor.Id = Guid.NewGuid();
+			ship.Pixiv.Id = Guid.NewGuid();
+			ship.Twitter.Id = Guid.NewGuid();
+			ship.Web.Id = Guid.NewGuid();
+
+			String artistNodeX, vaNodeX, pixivNodeX, twitterNodeX, webNodeX = "";
+
+			if (hasNote)
+			{
+				artistNodeX = "/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[2]/div[2]/table[1]/tbody/tr[2]/td[2]/a";
+				vaNodeX = "/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[2]/div[2]/table[1]/tbody/tr[6]/td[2]";
+				pixivNodeX = "/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[2]/div[2]/table[1]/tbody/tr[3]/td[2]/a";
+				twitterNodeX = "/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[2]/div[2]/table[1]/tbody/tr[4]/td[2]/a";
+				webNodeX = "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[3]/div[2]/table[1]/tbody/tr[5]/td[2]/a";
+			}
+			else
+			{
+				artistNodeX = "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[1]/tbody/tr[2]/td[2]/a";
+				vaNodeX = "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[1]/tbody/tr[6]/td[2]";
+				pixivNodeX = "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[1]/tbody/tr[3]/td[2]/a";
+				twitterNodeX = "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[1]/tbody/tr[4]/td[2]/a";
+				webNodeX = "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[1]/tbody/tr[5]/td[2]/a";
+			}
+
+			// Artist
+			HtmlNode artistNode = document.DocumentNode.SelectSingleNode(artistNodeX);
+			if (artistNode != null)
+			{
+				ship.Artist.Name = artistNode.InnerText.Replace("\n", "");
+				ship.Artist.Url = ImageBaseUrl + artistNode.Attributes["href"].Value.TrimStart('/');
+			}
+			else { ship.Artist = null; }
+
+			// Voice Actor
+			try
+			{
+				HtmlNode voiceActorTableNode = document.DocumentNode.SelectSingleNode(vaNodeX);
+				HtmlNode voiceActorNode = null;
+
+				int descCount = voiceActorTableNode.Descendants("a").Count();
+				var desc = voiceActorTableNode.Descendants("a");
+				if (descCount == 0) voiceActorNode = voiceActorTableNode;
+				if (descCount > 0)
+				{
+					voiceActorNode = voiceActorTableNode.Descendants("a").Where(n => n.InnerText != "Play").First();
+				}
+
+				ship.VoiceActor.Name = voiceActorNode.InnerText;
+				if (descCount > 0) ship.VoiceActor.Url = voiceActorNode.Attributes["href"].Value;
+
+			}
+			catch { ship.VoiceActor = null; }
+
+			// Pixiv
+			HtmlNode pixivNode = document.DocumentNode.SelectSingleNode(pixivNodeX);
+			if (pixivNode != null)
+			{
+				ship.Pixiv.Name = pixivNode.InnerText;
+				ship.Pixiv.Url = pixivNode.Attributes["href"].Value;
+			}
+			else { ship.Pixiv = null; }
+
+
+			// Twitter
+			HtmlNode twitterNode = document.DocumentNode.SelectSingleNode(twitterNodeX);
+			if (twitterNode != null)
+			{
+				ship.Twitter.Name = twitterNode.InnerText;
+				ship.Twitter.Url = twitterNode.Attributes["href"].Value;
+			}
+			else { ship.Twitter = null; }
+
+
+			// Web
+			HtmlNode webNode = document.DocumentNode.SelectSingleNode(webNodeX);
+			if (webNode != null)
+			{
+				ship.Web.Name = webNode.InnerText;
+				ship.Web.Url = webNode.Attributes["href"].Value;
+			}
+			else { ship.Web = null; }
+
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
+		/// <summary>
+		/// Get all the ship's skills
+		/// </summary>
+		public static Ship GetShipSkills(Ship ship, Boolean hasNote, HtmlDocument document)
+		{
+
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+			return ship;
+		}
+
+		/// <summary>
+		/// Get all the ship's limit breaks
+		/// </summary>
+		public static Ship GetShipLimitBreaks(Ship ship, Boolean hasNote, HtmlDocument document)
+		{
+
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+			return ship;
+		}
+
+		/// <summary>
+		/// get all the ship's equippable slots
+		/// </summary>
+		public static Ship GetShipEquippableSlots(Ship ship, Boolean hasNote, HtmlDocument document)
+		{
+
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+			return ship;
+		}
+
+		/// <summary>
+		/// Get all the ship's statistics
+		/// </summary>
+		public static Ship GetShipStatistics(Ship ship, Boolean hasNote, HtmlDocument document)
+		{
+
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+			return ship;
+		}
+
+		/// <summary>
+		/// Get the ship's enhance values
+		/// </summary>
+		public static Ship GetShipEnhanceValue(Ship ship, Boolean hasNote, HtmlDocument document)
+		{
+
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+			return ship;
+		}
+
+		/// <summary>
+		/// Get the ship's scrap values
+		/// </summary>
+		public static Ship GetShipScrapValue(Ship ship, Boolean hasNote, HtmlDocument document)
+		{
+
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+			return ship;
+		}
+
+		/// <summary>
+		/// Get all the ship's consctruction values
+		/// </summary>
+		public static Ship GetShipConstruction(Ship ship, Boolean hasNote, HtmlDocument document)
+		{
+
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+			return ship;
+		}
 	}
 }
