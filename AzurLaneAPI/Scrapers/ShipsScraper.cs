@@ -48,7 +48,7 @@ namespace AzurLaneAPI.Scrapers
 		/// <summary>
 		/// Retrieve information about a ship
 		/// </summary>
-		public static Ship GetShipBaseInfo(String url)
+		public static Ship GetShip(String url)
 		{
 			if (GetShipWikiUrls().Contains(url))
 			{
@@ -68,13 +68,13 @@ namespace AzurLaneAPI.Scrapers
 				ship = GetShipType(ship, hasNote, document);
 				ship = GetThumbnailImage(ship, hasNote, document);
 				ship = GetConstruction(ship, hasNote, document);
-				
+
 				ship = GetShipSkins(ship, url); /* Very Resource Heavy */
+				ship = GetShipGallery(ship, url); 
 
 				// ! not finished
 				// ship = GetShipSkills(ship, hasNote, document);
 				// ship = GetShipLimitBreaks(ship, hasNote, document);
-				// ship = GetShipGallery(ship, hasNote, document);
 				// ship = GetShipEquippableSlots(ship, hasNote, document);
 				// ship = GetShipStatistics(ship, hasNote, document);
 				// ship = GetShipEnhanceValue(ship, hasNote, document);
@@ -122,7 +122,7 @@ namespace AzurLaneAPI.Scrapers
 			ship.Name = document.DocumentNode.SelectSingleNode("//*[@id=\"firstHeading\"]").InnerText;
 			return ship;
 		}
-		
+
 		/// <summary>
 		/// Get the rarity and stars of a ship
 		/// </summary>
@@ -307,6 +307,36 @@ namespace AzurLaneAPI.Scrapers
 		}
 
 		/// <summary>
+		/// Get all the ship's gallery items
+		/// </summary>
+		public static Ship GetShipGallery(Ship ship, String baseUrl)
+		{
+			String skinsPageContent = new WebClient().DownloadString(baseUrl + "/Gallery");
+			HtmlDocument document = new HtmlDocument();
+			document.LoadHtml(skinsPageContent);
+
+			List<ShipGalleryItem> galleryItems = new List<ShipGalleryItem>();
+			HtmlNode artWorkgalleryNode = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[3]");
+			HtmlNode[] artWorkFrameNodes = artWorkgalleryNode.ChildNodes.Where(n => n.Name == "div").ToArray();
+
+			foreach (var artworkFrameNode in artWorkFrameNodes)
+			{
+				ShipGalleryItem item = new ShipGalleryItem();
+
+				HtmlNode imageNode = artworkFrameNode.Descendants("img").First();
+				HtmlNode descriptionNode = artworkFrameNode.Descendants("div").Skip(1).First();
+
+				item.Id = Guid.NewGuid();
+				item.Description = descriptionNode.InnerText;
+				item.Url = ImageBaseUrl + imageNode.Attributes["src"].Value;
+
+				ship.Gallery.Add(item);
+			}
+
+			return ship;
+		}
+
+		/// <summary>
 		/// Get all the ship's skills
 		/// </summary>
 		public static Ship GetShipSkills(Ship ship, Boolean hasNote, HtmlDocument document)
@@ -322,14 +352,6 @@ namespace AzurLaneAPI.Scrapers
 			return ship;
 		}
 
-		/// <summary>
-		/// Get all the ship's gallery items
-		/// </summary>
-		public static Ship GetShipGallery(Ship ship, Boolean hasNote, HtmlDocument document)
-		{
-			return ship;
-		}
-		
 		/// <summary>
 		/// get all the ship's equippable slots
 		/// </summary>
