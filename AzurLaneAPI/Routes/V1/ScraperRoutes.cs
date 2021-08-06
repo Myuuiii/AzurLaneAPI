@@ -9,6 +9,7 @@ namespace AzurLaneAPI.Routes.V1
 			public static class Ships 
 			{
 				public const String GetPageUrls = "/scrapers/ships/urls";
+				public const String GetShips = "/scrapers/ships";
 			}
 		}
     }
