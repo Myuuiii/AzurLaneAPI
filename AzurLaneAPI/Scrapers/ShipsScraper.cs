@@ -75,13 +75,13 @@ namespace AzurLaneAPI.Scrapers
 				ship = GetShipGallery(ship, url);
 				ship = GetShipMiscInfo(ship, hasNote, document);
 				ship = GetShipScrapValue(ship, hasNote, document);
+				ship = GetShipEnhanceValue(ship, hasNote, document);
 
 				// ! not finished
 				// ship = GetShipSkills(ship, hasNote, document);
 				// ship = GetShipLimitBreaks(ship, hasNote, document);
 				// ship = GetShipEquippableSlots(ship, hasNote, document);
 				// ship = GetShipStatistics(ship, hasNote, document);
-				// ship = GetShipEnhanceValue(ship, hasNote, document);
 				// ship = GetShipConstruction(ship, hasNote, document);
 
 				return ship;
@@ -483,9 +483,43 @@ namespace AzurLaneAPI.Scrapers
 					Medals = Convert.ToInt32(scrapNode.Descendants("#text").Skip(2).First().InnerText.Replace("\n", "")),
 				};
 			}
-			catch 
+			catch
 			{
 				ship.ScrapValue = null;
+			}
+
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+			return ship;
+		}
+
+		/// <summary>
+		/// Get the ship's enhance values
+		/// </summary>
+		public static Ship GetShipEnhanceValue(Ship ship, Boolean hasNote, HtmlDocument document)
+		{
+			HtmlNode enhanceNode = null;
+			if (hasNote)
+			{
+				enhanceNode = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[2]/div[2]/table[4]/tbody/tr[2]/td[1]");
+			}
+			else
+			{
+				enhanceNode = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[4]/tbody/tr[2]/td[1]");
+			}
+
+			try
+			{
+				ship.EnhanceValue = new ShipEnhanceValues
+				{
+					Firepower = Convert.ToInt32(enhanceNode.Descendants("#text").First().InnerText.Replace("\n", "")),
+					Torpedo = Convert.ToInt32(enhanceNode.Descendants("#text").Skip(1).First().InnerText.Replace("\n", "")),
+					Aviation = Convert.ToInt32(enhanceNode.Descendants("#text").Skip(2).First().InnerText.Replace("\n", "")),
+					Reload = Convert.ToInt32(enhanceNode.Descendants("#text").Skip(3).First().InnerText.Replace("\n", "")),
+				};
+			}
+			catch
+			{
+				ship.EnhanceValue = null;
 			}
 
 			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
@@ -526,16 +560,6 @@ namespace AzurLaneAPI.Scrapers
 		/// Get all the ship's statistics
 		/// </summary>
 		public static Ship GetShipStatistics(Ship ship, Boolean hasNote, HtmlDocument document)
-		{
-
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
-			return ship;
-		}
-
-		/// <summary>
-		/// Get the ship's enhance values
-		/// </summary>
-		public static Ship GetShipEnhanceValue(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
 
 			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
