@@ -72,15 +72,15 @@ namespace AzurLaneAPI.Scrapers
 				ship = GetShipSkins(ship, url); /* Very Resource Heavy */
 
 				// ! not finished
-				ship = GetShipSkills(ship, hasNote, document);
-				ship = GetShipLimitBreaks(ship, hasNote, document);
-				ship = GetShipGallery(ship, hasNote, document);
-				ship = GetShipEquippableSlots(ship, hasNote, document);
-				ship = GetShipStatistics(ship, hasNote, document);
-				ship = GetShipEnhanceValue(ship, hasNote, document);
-				ship = GetShipScrapValue(ship, hasNote, document);
-				ship = GetShipConstruction(ship, hasNote, document);
-				ship = GetShipMiscInfo(ship, hasNote, document);
+				// ship = GetShipSkills(ship, hasNote, document);
+				// ship = GetShipLimitBreaks(ship, hasNote, document);
+				// ship = GetShipGallery(ship, hasNote, document);
+				// ship = GetShipEquippableSlots(ship, hasNote, document);
+				// ship = GetShipStatistics(ship, hasNote, document);
+				// ship = GetShipEnhanceValue(ship, hasNote, document);
+				// ship = GetShipScrapValue(ship, hasNote, document);
+				// ship = GetShipConstruction(ship, hasNote, document);
+				// ship = GetShipMiscInfo(ship, hasNote, document);
 
 				return ship;
 			}
