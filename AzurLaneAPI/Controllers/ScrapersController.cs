@@ -14,7 +14,7 @@ namespace AzurLaneAPI.Controllers
 		public ScrapersController(AzurLaneDbContext context)
 		{
 			_context = context;
-		}
+		} 
 
 		[HttpGet(Routes.V1.Routes.Scrapers.Ships.GetPageUrls)]
 		public async Task<ActionResult<List<String>>> ScrapeShips()
@@ -29,11 +29,11 @@ namespace AzurLaneAPI.Controllers
 			// Neptune
 			// Ritsuko Akizuki
 
-			// Scrapers.ShipsScraper.GetShipBaseInfo("https://azurlane.koumakan.jp/Ritsuko_Akizuki");
+			// Scrapers.ShipsScraper.GetShip("https://azurlane.koumakan.jp/Laffey");
 			// return Ok();
 			foreach (var ship in Scrapers.ShipsScraper.GetShipWikiUrls())
 			{
-				Scrapers.ShipsScraper.GetShipBaseInfo(ship);
+				Scrapers.ShipsScraper.GetShip(ship);
 			}
 			
 			return Ok();
