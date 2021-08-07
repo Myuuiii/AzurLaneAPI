@@ -22,18 +22,6 @@ namespace AzurLaneClasses.Ship
             this.Type = importModel.hullType;
             this.ThumbnailImage = importModel.thumbnail;
 
-            // Default skin import
-            var defSkin = importModel.skins.First(s => s.name == "Default");
-            this.DefaultSkin = new ShipSkin
-            {
-                Name = defSkin.name,
-                ImageUrl = defSkin.image,
-                BackgroundUrl = defSkin.background,
-                ChibiUrl = defSkin.chibi,
-                Live2dModel = defSkin.info.live2dModel,
-                ObtainedFrom = defSkin.info.obtainedFrom
-            };
-
             if (importModel.skins != null)
             {
                 foreach (var skin in importModel.skins)
@@ -167,7 +155,6 @@ namespace AzurLaneClasses.Ship
 
         // ? Images
         public String ThumbnailImage { get; set; }
-        public ShipSkin DefaultSkin { get; set; } = null;
 
         // ? Lists
         public List<ShipSkin> Skins { get; set; } = new List<ShipSkin>();
