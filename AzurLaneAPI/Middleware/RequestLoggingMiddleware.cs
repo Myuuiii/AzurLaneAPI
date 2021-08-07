@@ -8,12 +8,10 @@ namespace AzurLaneAPI.Middleware
 	public class RequestLoggingMiddleware
 	{
 		private readonly RequestDelegate _next;
-		private AzurLaneDbContext _context;
 
 		public RequestLoggingMiddleware(RequestDelegate next)
 		{
 			_next = next;
-			_context = new AzurLaneDbContext();
 		}
 
 		public async Task Invoke(HttpContext context)
@@ -24,6 +22,7 @@ namespace AzurLaneAPI.Middleware
 			}
 			finally
 			{
+				AzurLaneDbContext ctx = new AzurLaneDbContext();
 				RequestLog log = new RequestLog();
 				log.Method = context.Request?.Method;
 				log.Path = context.Request?.Path;
@@ -37,8 +36,8 @@ namespace AzurLaneAPI.Middleware
 					log.AppliedToken = context.Request.Headers["Authorization"];
 				}
 
-				await _context.RequestLogs.AddAsync(log);
-				await _context.SaveChangesAsync();
+				await ctx.RequestLogs.AddAsync(log);
+				await ctx.SaveChangesAsync();
 			}
 		}
 	}

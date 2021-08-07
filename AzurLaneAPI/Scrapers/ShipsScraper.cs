@@ -13,6 +13,70 @@ namespace AzurLaneAPI.Scrapers
 		private const String ImageBaseUrl = "https://azurlane.koumakan.jp/";
 
 		/// <summary>
+		/// Retrieve information about a ship
+		/// </summary>
+		public static Ship GetShip(String url)
+		{
+			if (GetShipWikiUrls().Contains(url))
+			{
+				Console.WriteLine($"Processing URL: {url}");
+
+				Ship ship = new Ship();
+				String shipBaseInfoPageContents = new WebClient().DownloadString(url);
+				HtmlDocument document = new HtmlDocument();
+				document.LoadHtml(shipBaseInfoPageContents);
+
+				Boolean hasNote = GetShipHasNoteState(document);
+
+				// ? General Data
+				ship.Id = Guid.NewGuid();
+				ship = GetShipId(ship, hasNote, document);
+				ship = GetShipName(ship, hasNote, document);
+				ship = GetShipRarityAndStars(ship, hasNote, document);
+				ship = GetShipNation(ship, hasNote, document);
+				ship = GetShipType(ship, hasNote, document);
+				ship = GetThumbnailImage(ship, hasNote, document);
+				ship = GetConstruction(ship, hasNote, document);
+				ship = GetShipMiscInfo(ship, hasNote, document);
+				ship = GetShipScrapValue(ship, hasNote, document);
+				ship = GetShipEnhanceValue(ship, hasNote, document);
+
+				// ? Gallery Page (Mopre Resource Heavy)
+				ship = GetShipSkins(ship, url); /* Very Resource Heavy */
+				ship = GetShipGallery(ship, url);
+
+				// ! not finished
+				// ship = GetShipSkills(ship, hasNote, document);
+				// ship = GetShipLimitBreaks(ship, hasNote, document);
+				// ship = GetShipEquippableSlots(ship, hasNote, document);
+				// ship = GetShipStatistics(ship, hasNote, document);
+				// ship = GetShipConstruction(ship, hasNote, document);
+
+				return ship;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		/// <summary>
+		/// Translate the XPath in case the ship page has a note which changes the structure
+		/// Please do only provide XPaths of ships that do not have a note
+		/// </summary>
+		public static HtmlNode GetXPathNode(HtmlDocument document, String xPath, Boolean hasNote)
+		{
+			if (hasNote)
+			{
+				return document.DocumentNode.SelectSingleNode(xPath.Replace("/html/body/div[3]/div[3]/div[5]/div[1]/div[2]", "/html/body/div[3]/div[3]/div[5]/div[1]/div[3]"));
+			}
+			else
+			{
+				return document.DocumentNode.SelectSingleNode(xPath);
+			}
+		}
+
+		/// <summary>
 		/// Get all the wiki urls for all the ships
 		/// </summary>
 		public static List<String> GetShipWikiUrls()
@@ -46,53 +110,6 @@ namespace AzurLaneAPI.Scrapers
 		}
 
 		/// <summary>
-		/// Retrieve information about a ship
-		/// </summary>
-		public static Ship GetShip(String url)
-		{
-			if (GetShipWikiUrls().Contains(url))
-			{
-				Console.WriteLine($"Processing URL: {url}");
-
-				Ship ship = new Ship();
-				String shipBaseInfoPageContents = new WebClient().DownloadString(url);
-				HtmlDocument document = new HtmlDocument();
-				document.LoadHtml(shipBaseInfoPageContents);
-
-				Boolean hasNote = GetShipHasNoteState(document);
-
-				// ? Set database id
-				ship.Id = Guid.NewGuid();
-				ship = GetShipId(ship, hasNote, document);
-				ship = GetShipName(ship, hasNote, document);
-				ship = GetShipRarityAndStars(ship, hasNote, document);
-				ship = GetShipNation(ship, hasNote, document);
-				ship = GetShipType(ship, hasNote, document);
-				ship = GetThumbnailImage(ship, hasNote, document);
-				ship = GetConstruction(ship, hasNote, document);
-
-				ship = GetShipSkins(ship, url); /* Very Resource Heavy */
-				ship = GetShipGallery(ship, url);
-				ship = GetShipMiscInfo(ship, hasNote, document);
-				ship = GetShipScrapValue(ship, hasNote, document);
-				ship = GetShipEnhanceValue(ship, hasNote, document);
-
-				// ! not finished
-				// ship = GetShipSkills(ship, hasNote, document);
-				// ship = GetShipLimitBreaks(ship, hasNote, document);
-				// ship = GetShipEquippableSlots(ship, hasNote, document);
-				// ship = GetShipStatistics(ship, hasNote, document);
-				// ship = GetShipConstruction(ship, hasNote, document);
-
-				return ship;
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		/// <summary>
 		/// Get wether the main ship page has a note which could switch around some Xpaths later on
 		/// </summary>
 		public static Boolean GetShipHasNoteState(HtmlDocument document)
@@ -106,15 +123,7 @@ namespace AzurLaneAPI.Scrapers
 		/// </summary>
 		public static Ship GetShipId(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
-			if (hasNote)
-			{
-				ship.ShipId = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[1]/div[4]/table/tbody/tr[1]/td").InnerText.Replace("\n", "");
-			}
-			else
-			{
-				ship.ShipId = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[4]/table/tbody/tr[1]/td").InnerText.Replace("\n", "");
-			}
-
+			ship.ShipId = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[4]/table/tbody/tr[1]/td", hasNote).InnerText.Replace("\n", "");
 			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
@@ -136,14 +145,8 @@ namespace AzurLaneAPI.Scrapers
 		public static Ship GetShipRarityAndStars(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
 			String[] rarityParts;
-			if (hasNote)
-			{
-				rarityParts = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[1]/div[3]/table/tbody/tr[2]/td/div").InnerHtml.Split("<br>");
-			}
-			else
-			{
-				rarityParts = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[3]/table/tbody/tr[2]/td/div").InnerHtml.Split("<br>");
-			}
+
+			rarityParts = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[3]/table/tbody/tr[2]/td/div", hasNote).InnerHtml.Split("<br>");
 
 			ship.Rarity = rarityParts[0];
 			ship.Stars = new ShipStars
@@ -161,14 +164,7 @@ namespace AzurLaneAPI.Scrapers
 		/// </summary>		
 		public static Ship GetShipNation(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
-			if (hasNote)
-			{
-				ship.Nation = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[1]/div[4]/table/tbody/tr[2]/td/a[2]").InnerText;
-			}
-			else
-			{
-				ship.Nation = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[4]/table/tbody/tr[2]/td/a[2]").InnerText;
-			}
+			ship.Nation = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[4]/table/tbody/tr[2]/td/a[2]", hasNote).InnerText;
 
 			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
@@ -179,14 +175,7 @@ namespace AzurLaneAPI.Scrapers
 		/// </summary>
 		public static Ship GetShipType(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
-			if (hasNote)
-			{
-				ship.Type = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[1]/div[4]/table/tbody/tr[3]/td/a[2]").InnerText;
-			}
-			else
-			{
-				ship.Type = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[4]/table/tbody/tr[3]/td/a[2]").InnerText;
-			}
+			ship.Type = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[4]/table/tbody/tr[3]/td/a[2]", hasNote).InnerText;
 
 			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
@@ -197,14 +186,7 @@ namespace AzurLaneAPI.Scrapers
 		/// </summary>
 		public static Ship GetThumbnailImage(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
-			if (hasNote)
-			{
-				ship.ThumbnailImage = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[1]/div[2]/a/img").Attributes["src"].Value;
-			}
-			else
-			{
-				ship.ThumbnailImage = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[2]/a/img").Attributes["src"].Value;
-			}
+			ship.ThumbnailImage = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[2]/a/img", hasNote).Attributes["src"].Value;
 
 			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
@@ -219,48 +201,22 @@ namespace AzurLaneAPI.Scrapers
 			ship.Construction.Availability = new ConstructionAvailability();
 			try
 			{
-				if (hasNote)
-				{
-					ship.Construction.ConstructionTime = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[3]/table/tbody/tr[2]/td[1]/a").InnerText.Replace("\n", "");
-					ship.Construction.Availability.Light = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[3]/table/tbody/tr[4]/td[1]").InnerText.Replace("\n", "");
-					ship.Construction.Availability.Heavy = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[3]/table/tbody/tr[4]/td[2]").InnerText.Replace("\n", "");
-					ship.Construction.Availability.Special = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[3]/table/tbody/tr[4]/td[3]").InnerText.Replace("\n", "");
-					ship.Construction.Availability.Limited = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[3]/table/tbody/tr[4]/td[4]").InnerText.Replace("\n", "");
-				}
-				else
-				{
-					ship.Construction.ConstructionTime = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[3]/table/tbody/tr[2]/td[1]/a").InnerText.Replace("\n", "");
-					ship.Construction.Availability.Light = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[3]/table/tbody/tr[4]/td[1]").InnerText.Replace("\n", "");
-					ship.Construction.Availability.Heavy = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[3]/table/tbody/tr[4]/td[2]").InnerText.Replace("\n", "");
-					ship.Construction.Availability.Special = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[3]/table/tbody/tr[4]/td[3]").InnerText.Replace("\n", "");
-					ship.Construction.Availability.Limited = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[3]/table/tbody/tr[4]/td[4]").InnerText.Replace("\n", "");
-				}
+				ship.Construction.ConstructionTime = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[3]/table/tbody/tr[2]/td[1]/a", hasNote).InnerText.Replace("\n", "");
+				ship.Construction.Availability.Light = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[3]/table/tbody/tr[4]/td[1]", hasNote).InnerText.Replace("\n", "");
+				ship.Construction.Availability.Heavy = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[3]/table/tbody/tr[4]/td[2]", hasNote).InnerText.Replace("\n", "");
+				ship.Construction.Availability.Special = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[3]/table/tbody/tr[4]/td[3]", hasNote).InnerText.Replace("\n", "");
+				ship.Construction.Availability.Limited = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[3]/table/tbody/tr[4]/td[4]", hasNote).InnerText.Replace("\n", "");
 			}
 			catch
 			{
-				if (hasNote)
+				try
 				{
-					try
-					{
-						ship.Construction.ConstructionTime = ship.Construction.ConstructionTime = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[1]/div[3]/table/tbody/tr[1]/td/a").InnerText.Replace("\n", "");
-					}
-					catch
-					{
-						// Construction time was not set on the wiki page
-						ship.Construction.ConstructionTime = "";
-					}
+					ship.Construction.ConstructionTime = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[3]/table/tbody/tr[1]/td/a", hasNote).InnerText.Replace("\n", "");
 				}
-				else
+				catch
 				{
-					try
-					{
-						ship.Construction.ConstructionTime = ship.Construction.ConstructionTime = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[3]/table/tbody/tr[1]/td/a").InnerText.Replace("\n", "");
-					}
-					catch
-					{
-						// Construction time was not set on the wiki page
-						ship.Construction.ConstructionTime = "";
-					}
+					// Construction time was not set on the wiki page
+					ship.Construction.ConstructionTime = "";
 				}
 			}
 
@@ -378,27 +334,8 @@ namespace AzurLaneAPI.Scrapers
 			ship.Twitter.Id = Guid.NewGuid();
 			ship.Web.Id = Guid.NewGuid();
 
-			String artistNodeX, vaNodeX, pixivNodeX, twitterNodeX, webNodeX = "";
-
-			if (hasNote)
-			{
-				artistNodeX = "/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[2]/div[2]/table[1]/tbody/tr[2]/td[2]/a";
-				vaNodeX = "/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[2]/div[2]/table[1]/tbody/tr[6]/td[2]";
-				pixivNodeX = "/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[2]/div[2]/table[1]/tbody/tr[3]/td[2]/a";
-				twitterNodeX = "/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[2]/div[2]/table[1]/tbody/tr[4]/td[2]/a";
-				webNodeX = "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[3]/div[2]/table[1]/tbody/tr[5]/td[2]/a";
-			}
-			else
-			{
-				artistNodeX = "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[1]/tbody/tr[2]/td[2]/a";
-				vaNodeX = "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[1]/tbody/tr[6]/td[2]";
-				pixivNodeX = "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[1]/tbody/tr[3]/td[2]/a";
-				twitterNodeX = "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[1]/tbody/tr[4]/td[2]/a";
-				webNodeX = "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[1]/tbody/tr[5]/td[2]/a";
-			}
-
 			// Artist
-			HtmlNode artistNode = document.DocumentNode.SelectSingleNode(artistNodeX);
+			HtmlNode artistNode = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[1]/tbody/tr[2]/td[2]/a", hasNote);
 			if (artistNode != null)
 			{
 				ship.Artist.Name = artistNode.InnerText.Replace("\n", "");
@@ -409,7 +346,7 @@ namespace AzurLaneAPI.Scrapers
 			// Voice Actor
 			try
 			{
-				HtmlNode voiceActorTableNode = document.DocumentNode.SelectSingleNode(vaNodeX);
+				HtmlNode voiceActorTableNode = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[1]/tbody/tr[6]/td[2]", hasNote);
 				HtmlNode voiceActorNode = null;
 
 				int descCount = voiceActorTableNode.Descendants("a").Count();
@@ -417,17 +354,26 @@ namespace AzurLaneAPI.Scrapers
 				if (descCount == 0) voiceActorNode = voiceActorTableNode;
 				if (descCount > 0)
 				{
-					voiceActorNode = voiceActorTableNode.Descendants("a").Where(n => n.InnerText != "Play").First();
+					var c = voiceActorTableNode.Descendants("a").Where(n => n.InnerText != "Play").Count();
+					if (c == 0)
+					{
+						voiceActorNode =  voiceActorTableNode.Descendants("#text").Where(n => n.InnerText != "Play").First();
+					}
+					else
+					{
+						voiceActorNode = voiceActorTableNode.Descendants("a").Where(n => n.InnerText != "Play").First();
+						ship.VoiceActor.Url = voiceActorNode.Attributes["href"].Value;
+					}
+
 				}
 
-				ship.VoiceActor.Name = voiceActorNode.InnerText;
-				if (descCount > 0) ship.VoiceActor.Url = voiceActorNode.Attributes["href"].Value;
+				ship.VoiceActor.Name = voiceActorNode.InnerText.Trim().Replace("\n", "");
 
 			}
 			catch { ship.VoiceActor = null; }
 
 			// Pixiv
-			HtmlNode pixivNode = document.DocumentNode.SelectSingleNode(pixivNodeX);
+			HtmlNode pixivNode = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[1]/tbody/tr[3]/td[2]/a", hasNote);
 			if (pixivNode != null)
 			{
 				ship.Pixiv.Name = pixivNode.InnerText;
@@ -437,7 +383,7 @@ namespace AzurLaneAPI.Scrapers
 
 
 			// Twitter
-			HtmlNode twitterNode = document.DocumentNode.SelectSingleNode(twitterNodeX);
+			HtmlNode twitterNode = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[1]/tbody/tr[4]/td[2]/a", hasNote);
 			if (twitterNode != null)
 			{
 				ship.Twitter.Name = twitterNode.InnerText;
@@ -447,7 +393,7 @@ namespace AzurLaneAPI.Scrapers
 
 
 			// Web
-			HtmlNode webNode = document.DocumentNode.SelectSingleNode(webNodeX);
+			HtmlNode webNode = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[1]/tbody/tr[5]/td[2]/a", hasNote);
 			if (webNode != null)
 			{
 				ship.Web.Name = webNode.InnerText;
@@ -464,15 +410,7 @@ namespace AzurLaneAPI.Scrapers
 		/// </summary>
 		public static Ship GetShipScrapValue(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
-			HtmlNode scrapNode = null;
-			if (hasNote)
-			{
-				scrapNode = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[2]/div[2]/table[4]/tbody/tr[2]/td[2]");
-			}
-			else
-			{
-				scrapNode = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[4]/tbody/tr[2]/td[2]");
-			}
+			HtmlNode scrapNode = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[4]/tbody/tr[2]/td[2]", hasNote);
 
 			try
 			{
@@ -497,15 +435,7 @@ namespace AzurLaneAPI.Scrapers
 		/// </summary>
 		public static Ship GetShipEnhanceValue(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
-			HtmlNode enhanceNode = null;
-			if (hasNote)
-			{
-				enhanceNode = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[3]/div[2]/div[2]/table[4]/tbody/tr[2]/td[1]");
-			}
-			else
-			{
-				enhanceNode = document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[4]/tbody/tr[2]/td[1]");
-			}
+			HtmlNode enhanceNode = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[4]/tbody/tr[2]/td[1]", hasNote);
 
 			try
 			{
@@ -527,8 +457,49 @@ namespace AzurLaneAPI.Scrapers
 		}
 
 		/// <summary>
-		/// Get all the ship's skills
+		/// get all the ship's equippable slots
 		/// </summary>
+		public static Ship GetShipEquippableSlots(Ship ship, Boolean hasNote, HtmlDocument document)
+		{
+			HtmlNode[] slotNodes = new HtmlNode[3];
+
+			slotNodes[0] = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[2]/tbody/tr[3]", hasNote);
+			slotNodes[1] = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[2]/tbody/tr[4]", hasNote);
+			slotNodes[2] = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[2]/tbody/tr[5]", hasNote);
+
+			ship.EquippableSlots = new List<ShipEquippableSlot>();
+
+			foreach (HtmlNode slotNode in slotNodes)
+			{
+				var desc = slotNode.Descendants("td");
+				ShipEquippableSlot slot = new ShipEquippableSlot();
+				slot.Id = Guid.NewGuid();
+
+				string nodeContent = slotNode.Descendants("td").Skip(1).First().InnerText.Split('→').First().Replace("\n", "").Replace("%", "");
+				if (nodeContent != "None")
+				{
+					slot.MinEfficiency = Convert.ToInt32(nodeContent);
+				}
+
+				nodeContent = slotNode.Descendants("td").Skip(1).First().InnerText.Split('→').Last().Replace("\n", "").Replace("%", "");
+				if (nodeContent != "None")
+				{
+					slot.MaxEfficiency = Convert.ToInt32(nodeContent);
+				}
+
+				slot.Type = slotNode.Descendants("td").Skip(2).First().InnerText.Replace("\n", "");
+				slot.Max = Convert.ToInt32(slotNode.Descendants("td").Skip(3).First().InnerText.Split('→').Last().Replace("\n", ""));
+
+				ship.EquippableSlots.Add(slot);
+			}
+
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+			return ship;
+		}
+
+		/// <summary>
+		/// Get all the ship's skills
+		/// </summary>1
 		public static Ship GetShipSkills(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
 
@@ -540,16 +511,6 @@ namespace AzurLaneAPI.Scrapers
 		/// Get all the ship's limit breaks
 		/// </summary>
 		public static Ship GetShipLimitBreaks(Ship ship, Boolean hasNote, HtmlDocument document)
-		{
-
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
-			return ship;
-		}
-
-		/// <summary>
-		/// get all the ship's equippable slots
-		/// </summary>
-		public static Ship GetShipEquippableSlots(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
 
 			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
