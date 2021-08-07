@@ -299,7 +299,9 @@ namespace AzurLaneAPI.Scrapers
 
 					item.Id = Guid.NewGuid();
 					item.Description = descriptionNode.InnerText;
-					item.Url = BaseUrl + imageNode.Attributes["src"].Value;
+
+					String[] urlParts = imageNode.Attributes["src"].Value.Replace("thumb/", "").Split('/');
+					item.Url = BaseUrl + String.Join('/', urlParts.Take(urlParts.Count() -1));
 
 					ship.Gallery.Add(item);
 				}
