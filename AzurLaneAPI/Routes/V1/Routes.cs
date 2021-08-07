@@ -15,6 +15,7 @@ namespace AzurLaneAPI.Routes.V1
 			public const String GetName = "/ships/name/{name}";
 			public const String GetMinimalName = "/ships/name/{name}/minimal";
 			public const String Import = "/ships/";
+			public const String ImportScraper = "/ships/scrape";
 
 			public static class ShipGallery
 			{

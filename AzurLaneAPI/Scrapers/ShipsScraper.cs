@@ -10,7 +10,7 @@ namespace AzurLaneAPI.Scrapers
 {
 	public static class ShipsScraper
 	{
-		private const String ImageBaseUrl = "https://azurlane.koumakan.jp/";
+		private const String BaseUrl = "https://azurlane.koumakan.jp";
 
 		/// <summary>
 		/// Retrieve information about a ship
@@ -43,16 +43,12 @@ namespace AzurLaneAPI.Scrapers
 				ship = GetShipEnhanceValue(ship, hasNote, document);
 				ship = GetShipStatistics(ship, hasNote, document);
 				ship = GetShipEquippableSlots(ship, hasNote, document);
-
-				// ? Gallery Page (More Resource Heavy)
-				ship = GetShipSkins(ship, url); /* Very Resource Heavy */
-				ship = GetShipGallery(ship, url);
-
-				// ! not finished
 				ship = GetShipSkills(ship, hasNote, document);
 				ship = GetShipLimitBreaks(ship, hasNote, document);
-				// ship = GetShipConstruction(ship, hasNote, document);
 
+				// ? Gallery Page
+				ship = GetShipSkins(ship, url);
+				ship = GetShipGallery(ship, url);
 
 				return ship;
 			}
@@ -94,7 +90,7 @@ namespace AzurLaneAPI.Scrapers
 			List<HtmlNode> tbodyNodes = new List<HtmlNode>();
 
 
-			foreach (var tableNode in tableNodes)
+			foreach (var tableNode in tableNodes.Take(tableNodes.Count() - 1))
 			{
 				foreach (var tbodyNode in tableNode.Descendants("tbody"))
 				{
@@ -188,7 +184,7 @@ namespace AzurLaneAPI.Scrapers
 		/// </summary>
 		public static Ship GetThumbnailImage(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
-			ship.ThumbnailImage = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[2]/a/img", hasNote).Attributes["src"].Value;
+			ship.ThumbnailImage = BaseUrl + GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[2]/a/img", hasNote).Attributes["src"].Value;
 
 			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
@@ -257,9 +253,10 @@ namespace AzurLaneAPI.Scrapers
 						skin.BackgroundUrl = skinImageDescendants[1].Attributes["src"].Value;
 						break;
 					case 3:
-						skin.ChibiUrl = ImageBaseUrl + skinImageDescendants[0].Attributes["src"].Value;
-						skin.ImageUrl = ImageBaseUrl + skinImageDescendants[1].Attributes["src"].Value;
-						skin.BackgroundUrl = ImageBaseUrl + skinImageDescendants[2].Attributes["src"].Value;
+					default:
+						skin.ChibiUrl = BaseUrl + skinImageDescendants[0].Attributes["src"].Value;
+						skin.ImageUrl = BaseUrl + skinImageDescendants[1].Attributes["src"].Value;
+						skin.BackgroundUrl = BaseUrl + skinImageDescendants[2].Attributes["src"].Value;
 						break;
 				}
 
@@ -269,11 +266,6 @@ namespace AzurLaneAPI.Scrapers
 
 				skin.ObtainedFrom = tablevalues[0].InnerText;
 				if (tablevalues[1].InnerHtml == "Yes") skin.Live2dModel = true;
-
-				if (skinTab.Attributes["Title"].Value == "Default")
-				{
-					ship.DefaultSkin = skin;
-				}
 
 				ship.Skins.Add(skin);
 			}
@@ -307,7 +299,7 @@ namespace AzurLaneAPI.Scrapers
 
 					item.Id = Guid.NewGuid();
 					item.Description = descriptionNode.InnerText;
-					item.Url = ImageBaseUrl + imageNode.Attributes["src"].Value;
+					item.Url = BaseUrl + imageNode.Attributes["src"].Value;
 
 					ship.Gallery.Add(item);
 				}
@@ -342,7 +334,7 @@ namespace AzurLaneAPI.Scrapers
 			if (artistNode != null)
 			{
 				ship.Artist.Name = artistNode.InnerText.Replace("\n", "");
-				ship.Artist.Url = ImageBaseUrl + artistNode.Attributes["href"].Value.TrimStart('/');
+				ship.Artist.Url = BaseUrl + artistNode.Attributes["href"].Value.TrimStart('/');
 			}
 			else { ship.Artist = null; }
 
@@ -640,18 +632,8 @@ namespace AzurLaneAPI.Scrapers
 				});
 			}
 
-				Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
-				return ship;
-			}
-
-			/// <summary>
-			/// Get all the ship's consctruction values
-			/// </summary>
-			public static Ship GetShipConstruction(Ship ship, Boolean hasNote, HtmlDocument document)
-			{
-
-				Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
-				return ship;
-			}
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+			return ship;
 		}
 	}
+}

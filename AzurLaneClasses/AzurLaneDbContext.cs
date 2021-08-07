@@ -84,6 +84,7 @@ namespace AzurLaneClasses
 		{
 			if (!String.IsNullOrEmpty(ConnString))
 			{
+				optionsBuilder.EnableSensitiveDataLogging();
 				optionsBuilder.UseMySql(ConnString, ServerVersion.AutoDetect(ConnString));
 			}
 			else

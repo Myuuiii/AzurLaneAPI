@@ -50,5 +50,11 @@ namespace AzurLaneTests
 		{
 			Assert.IsNotNull(AzurLaneAPI.Scrapers.ShipsScraper.GetShip("https://azurlane.koumakan.jp/I-19"));
 		}
+
+		[TestMethod("Get ship without misc info")]
+		public void Test8()
+		{
+			Assert.IsNotNull(AzurLaneAPI.Scrapers.ShipsScraper.GetShip("https://azurlane.koumakan.jp/Ritsuko_Akizuki"));
+		}
 	}
 }
