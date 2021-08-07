@@ -19,7 +19,7 @@ namespace AzurLaneAPI.Scrapers
 		{
 			if (GetShipWikiUrls().Contains(url))
 			{
-				
+
 				Console.WriteLine($"Processing URL: {url}");
 
 				Ship ship = new Ship();
@@ -41,6 +41,7 @@ namespace AzurLaneAPI.Scrapers
 				ship = GetShipMiscInfo(ship, hasNote, document);
 				ship = GetShipScrapValue(ship, hasNote, document);
 				ship = GetShipEnhanceValue(ship, hasNote, document);
+				ship = GetShipStatistics(ship, hasNote, document);
 
 				// ? Gallery Page (More Resource Heavy)
 				ship = GetShipSkins(ship, url); /* Very Resource Heavy */
@@ -50,8 +51,8 @@ namespace AzurLaneAPI.Scrapers
 				// ship = GetShipSkills(ship, hasNote, document);
 				// ship = GetShipLimitBreaks(ship, hasNote, document);
 				// ship = GetShipEquippableSlots(ship, hasNote, document);
-				// ship = GetShipStatistics(ship, hasNote, document);
 				// ship = GetShipConstruction(ship, hasNote, document);
+
 
 				return ship;
 			}
@@ -314,6 +315,7 @@ namespace AzurLaneAPI.Scrapers
 			}
 			catch { }
 
+
 			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
@@ -358,7 +360,7 @@ namespace AzurLaneAPI.Scrapers
 					var c = voiceActorTableNode.Descendants("a").Where(n => n.InnerText != "Play").Count();
 					if (c == 0)
 					{
-						voiceActorNode =  voiceActorTableNode.Descendants("#text").Where(n => n.InnerText != "Play").First();
+						voiceActorNode = voiceActorTableNode.Descendants("#text").Where(n => n.InnerText != "Play").First();
 					}
 					else
 					{
@@ -371,7 +373,10 @@ namespace AzurLaneAPI.Scrapers
 				ship.VoiceActor.Name = voiceActorNode.InnerText.Trim().Replace("\n", "");
 
 			}
-			catch { ship.VoiceActor = null; }
+			catch
+			{
+				ship.VoiceActor = null;
+			}
 
 			// Pixiv
 			HtmlNode pixivNode = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/table[1]/tbody/tr[3]/td[2]/a", hasNote);
@@ -380,7 +385,10 @@ namespace AzurLaneAPI.Scrapers
 				ship.Pixiv.Name = pixivNode.InnerText;
 				ship.Pixiv.Url = pixivNode.Attributes["href"].Value;
 			}
-			else { ship.Pixiv = null; }
+			else
+			{
+				ship.Pixiv = null;
+			}
 
 
 			// Twitter
@@ -390,7 +398,10 @@ namespace AzurLaneAPI.Scrapers
 				ship.Twitter.Name = twitterNode.InnerText;
 				ship.Twitter.Url = twitterNode.Attributes["href"].Value;
 			}
-			else { ship.Twitter = null; }
+			else
+			{
+				ship.Twitter = null;
+			}
 
 
 			// Web
@@ -400,7 +411,10 @@ namespace AzurLaneAPI.Scrapers
 				ship.Web.Name = webNode.InnerText;
 				ship.Web.Url = webNode.Attributes["href"].Value;
 			}
-			else { ship.Web = null; }
+			else
+			{
+				ship.Web = null;
+			}
 
 			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
@@ -499,6 +513,72 @@ namespace AzurLaneAPI.Scrapers
 		}
 
 		/// <summary>
+		/// Get all the ship's statistics
+		/// </summary>
+		public static Ship GetShipStatistics(Ship ship, Boolean hasNote, HtmlDocument document)
+		{
+			HtmlNode tabberNode = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/div/div", hasNote);
+			HtmlNode[] statTabs = tabberNode.Descendants("div").ToArray();
+
+			List<ShipStats> shipStats = new List<ShipStats>();
+
+
+			foreach (var statTab in statTabs)
+			{
+				ShipStats stats = new ShipStats();
+				HtmlNode[] trs = statTab.Descendants("td").ToArray();
+
+				try
+				{
+					stats.Health = Convert.ToInt32(trs[0].InnerText.Replace("\n", ""));
+					stats.Armor = trs[1].InnerText.Replace("\n", "");
+					stats.Reload = Convert.ToInt32(trs[2].InnerText.Replace("\n", ""));
+					stats.Luck = Convert.ToInt32(trs[3].InnerText.Replace("\n", ""));
+
+					stats.Firepower = Convert.ToInt32(trs[4].InnerText.Replace("\n", ""));
+					stats.Torpedo = Convert.ToInt32(trs[5].InnerText.Replace("\n", ""));
+					stats.Evasion = Convert.ToInt32(trs[6].InnerText.Replace("\n", ""));
+					stats.Speed = Convert.ToInt32(trs[7].InnerText.Replace("\n", ""));
+
+					stats.AntiAir = Convert.ToInt32(trs[8].InnerText.Replace("\n", ""));
+					stats.Aviation = Convert.ToInt32(trs[9].InnerText.Replace("\n", ""));
+					stats.OilConsumption = Convert.ToInt32(trs[10].InnerText.Replace("\n", ""));
+					stats.Accuracy = Convert.ToInt32(trs[11].InnerText.Replace("\n", ""));
+
+					stats.AntiSubmarine = Convert.ToInt32(trs[12].InnerText.Replace("\n", ""));
+
+					if (trs.Length == 66)
+					{
+						stats.Oxygen = Convert.ToInt32(trs[13].InnerText.Replace("\n", ""));
+						stats.Ammunition = Convert.ToInt32(trs[14].InnerText.Replace("\n", ""));
+					}
+
+					shipStats.Add(stats);
+				}
+				catch { }
+			}
+
+			if (shipStats.Count == 3)
+			{
+				ship.Level120Stats = shipStats[0];
+				ship.Level100Stats = shipStats[1];
+				ship.BaseStats = shipStats[2];
+			}
+			else if (shipStats.Count == 5)
+			{
+				ship.Level120RetrofitStats = shipStats[0];
+				ship.Level120Stats = shipStats[1];
+				ship.Level100RetrofitStats = shipStats[2];
+				ship.Level100Stats = shipStats[3];
+				ship.BaseStats = shipStats[4];
+			}
+
+
+			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+			return ship;
+		}
+
+		/// <summary>
 		/// Get all the ship's skills
 		/// </summary>1
 		public static Ship GetShipSkills(Ship ship, Boolean hasNote, HtmlDocument document)
@@ -512,16 +592,6 @@ namespace AzurLaneAPI.Scrapers
 		/// Get all the ship's limit breaks
 		/// </summary>
 		public static Ship GetShipLimitBreaks(Ship ship, Boolean hasNote, HtmlDocument document)
-		{
-
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
-			return ship;
-		}
-
-		/// <summary>
-		/// Get all the ship's statistics
-		/// </summary>
-		public static Ship GetShipStatistics(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
 
 			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);

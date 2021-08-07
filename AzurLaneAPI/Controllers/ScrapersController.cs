@@ -29,16 +29,16 @@ namespace AzurLaneAPI.Controllers
 			// Neptune
 			// Ritsuko Akizuki
 
-			// Scrapers.ShipsScraper.GetShip("https://azurlane.koumakan.jp/Shirakami_Fubuki");
+			// Scrapers.ShipsScraper.GetShip("https://azurlane.koumakan.jp/I-19");
 			// return Ok();
 
 			String[] shipLinks = Scrapers.ShipsScraper.GetShipWikiUrls().ToArray();
 
 			Int32 ProcessingShip = 0;
-			for (ProcessingShip = 0; ProcessingShip < Scrapers.ShipsScraper.GetShipWikiUrls().Count-1; ProcessingShip++)
+			for (int i = ProcessingShip; i < Scrapers.ShipsScraper.GetShipWikiUrls().Count-1; i++)
 			{
-				Console.WriteLine($"{ProcessingShip}/{shipLinks.Length-1}");
-				Scrapers.ShipsScraper.GetShip(shipLinks[ProcessingShip]);
+				Console.WriteLine($"{i}/{shipLinks.Length-1}");
+				Scrapers.ShipsScraper.GetShip(shipLinks[i]);
 			}
 			
 			return Ok();
