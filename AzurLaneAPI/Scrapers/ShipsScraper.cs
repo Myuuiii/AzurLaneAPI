@@ -42,6 +42,7 @@ namespace AzurLaneAPI.Scrapers
 				ship = GetShipScrapValue(ship, hasNote, document);
 				ship = GetShipEnhanceValue(ship, hasNote, document);
 				ship = GetShipStatistics(ship, hasNote, document);
+				ship = GetShipEquippableSlots(ship, hasNote, document);
 
 				// ? Gallery Page (More Resource Heavy)
 				ship = GetShipSkins(ship, url); /* Very Resource Heavy */
@@ -49,8 +50,7 @@ namespace AzurLaneAPI.Scrapers
 
 				// ! not finished
 				// ship = GetShipSkills(ship, hasNote, document);
-				// ship = GetShipLimitBreaks(ship, hasNote, document);
-				// ship = GetShipEquippableSlots(ship, hasNote, document);
+				ship = GetShipLimitBreaks(ship, hasNote, document);
 				// ship = GetShipConstruction(ship, hasNote, document);
 
 
@@ -579,19 +579,35 @@ namespace AzurLaneAPI.Scrapers
 		}
 
 		/// <summary>
-		/// Get all the ship's skills
-		/// </summary>1
-		public static Ship GetShipSkills(Ship ship, Boolean hasNote, HtmlDocument document)
+		/// Get all the ship's limit breaks
+		/// </summary>
+		public static Ship GetShipLimitBreaks(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
+			ship.LimitBreaks = new List<ShipLimitBreaks>();
+
+			ship.LimitBreaks.Add(new ShipLimitBreaks
+			{
+				LimitBreaks = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/table/tbody/tr[2]/td[1]", hasNote).InnerText.Replace("\n", "").Split(" / ")
+			});
+
+			ship.LimitBreaks.Add(new ShipLimitBreaks
+			{
+				LimitBreaks = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/table/tbody/tr[3]/td[1]", hasNote).InnerText.Replace("\n", "").Split(" / ")
+			});
+
+			ship.LimitBreaks.Add(new ShipLimitBreaks
+			{
+				LimitBreaks = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/table/tbody/tr[4]/td[1]", hasNote).InnerText.Replace("\n", "").Split(" / ")
+			});
 
 			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
 		/// <summary>
-		/// Get all the ship's limit breaks
-		/// </summary>
-		public static Ship GetShipLimitBreaks(Ship ship, Boolean hasNote, HtmlDocument document)
+		/// Get all the ship's skills
+		/// </summary>1
+		public static Ship GetShipSkills(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
 
 			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
