@@ -313,6 +313,12 @@ namespace AzurLaneAPI.Controllers
 			{
 				if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
 
+				List<Ship> ships = new List<Ship>();
+				foreach (String url in Scrapers.ShipsScraper.GetShipWikiUrls())
+				{
+					ships.Add(Scrapers.ShipsScraper.GetShip(url));
+				}
+
 				_context.Ships.RemoveRange(_context.Ships
 						.Include(s => s.Stars)
 					.Include(s => s.Skins)
@@ -336,11 +342,7 @@ namespace AzurLaneAPI.Controllers
 					.Include(s => s.VoiceActor));
 				_context.SaveChanges();
 
-				foreach (String url in Scrapers.ShipsScraper.GetShipWikiUrls())
-				{
-					_context.Ships.Add(Scrapers.ShipsScraper.GetShip(url));
-                    _context.SaveChanges();
-				}
+				_context.AddRange(ships);
 
 				await _context.SaveChangesAsync();
 				return Ok("API Data was successfully updated");
