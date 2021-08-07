@@ -8,7 +8,7 @@ using HtmlAgilityPack;
 
 namespace AzurLaneAPI.Scrapers
 {
-	public class ShipsScraper
+	public static class ShipsScraper
 	{
 		private const String ImageBaseUrl = "https://azurlane.koumakan.jp/";
 
@@ -19,6 +19,7 @@ namespace AzurLaneAPI.Scrapers
 		{
 			if (GetShipWikiUrls().Contains(url))
 			{
+				
 				Console.WriteLine($"Processing URL: {url}");
 
 				Ship ship = new Ship();
@@ -41,7 +42,7 @@ namespace AzurLaneAPI.Scrapers
 				ship = GetShipScrapValue(ship, hasNote, document);
 				ship = GetShipEnhanceValue(ship, hasNote, document);
 
-				// ? Gallery Page (Mopre Resource Heavy)
+				// ? Gallery Page (More Resource Heavy)
 				ship = GetShipSkins(ship, url); /* Very Resource Heavy */
 				ship = GetShipGallery(ship, url);
 

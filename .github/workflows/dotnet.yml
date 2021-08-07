@@ -20,5 +20,5 @@ jobs:
       working-directory: "./AzurLaneAPI"
       run: dotnet build --no-restore
     - name: Test
-      working-directory: "./AzurLaneAPI.Tests"
+      working-directory: "./AzurLaneTests"
       run: dotnet test
