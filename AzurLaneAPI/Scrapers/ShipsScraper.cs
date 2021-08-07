@@ -49,7 +49,7 @@ namespace AzurLaneAPI.Scrapers
 				ship = GetShipGallery(ship, url);
 
 				// ! not finished
-				// ship = GetShipSkills(ship, hasNote, document);
+				ship = GetShipSkills(ship, hasNote, document);
 				ship = GetShipLimitBreaks(ship, hasNote, document);
 				// ship = GetShipConstruction(ship, hasNote, document);
 
@@ -609,19 +609,49 @@ namespace AzurLaneAPI.Scrapers
 		/// </summary>1
 		public static Ship GetShipSkills(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
+			ship.Skills = new List<ShipSkill>();
 
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
-			return ship;
-		}
+			if (GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/table/tbody/tr[2]/td[2]/b", hasNote) != null)
+			{
+				ship.Skills.Add(new ShipSkill
+				{
+					Name = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/table/tbody/tr[2]/td[2]/b", hasNote).InnerText.Replace("\n", ""),
+					Description = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/table/tbody/tr[2]/td[3]", hasNote).InnerText.Replace("\n", "")
 
-		/// <summary>
-		/// Get all the ship's consctruction values
-		/// </summary>
-		public static Ship GetShipConstruction(Ship ship, Boolean hasNote, HtmlDocument document)
-		{
+				});
+			}
 
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
-			return ship;
+			if (GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/table/tbody/tr[3]/td[2]/b", hasNote) != null)
+			{
+				ship.Skills.Add(new ShipSkill
+				{
+					Name = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/table/tbody/tr[3]/td[2]/b", hasNote).InnerText.Replace("\n", ""),
+					Description = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/table/tbody/tr[3]/td[3]", hasNote).InnerText.Replace("\n", "")
+				});
+			}
+
+
+			if (GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/table/tbody/tr[4]/td[2]/b", hasNote) != null)
+			{
+				ship.Skills.Add(new ShipSkill
+				{
+					Name = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/table/tbody/tr[4]/td[2]/b", hasNote).InnerText.Replace("\n", ""),
+					Description = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/table/tbody/tr[4]/td[3]", hasNote).InnerText.Replace("\n", "")
+				});
+			}
+
+				Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+				return ship;
+			}
+
+			/// <summary>
+			/// Get all the ship's consctruction values
+			/// </summary>
+			public static Ship GetShipConstruction(Ship ship, Boolean hasNote, HtmlDocument document)
+			{
+
+				Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+				return ship;
+			}
 		}
 	}
-}
