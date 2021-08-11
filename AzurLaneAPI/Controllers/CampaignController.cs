@@ -97,5 +97,21 @@ namespace AzurLaneAPI.Controllers
                 return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
             }
         }
+
+        /// <summary>
+		/// (Developer Only) Import campaign using scraper
+		/// </summary>
+		[HttpGet(Routes.V1.Routes.Campaign.ImportScraper)]
+		public async Task<ActionResult> ImportScraper()
+		{
+			try
+			{
+				return StatusCode(501, "This scraper has not yet been implemented");
+			}
+			catch
+			{
+				return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
+			}
+		}
     }
 }
