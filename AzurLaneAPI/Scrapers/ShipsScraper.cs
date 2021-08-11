@@ -99,7 +99,7 @@ namespace AzurLaneAPI.Scrapers
 						HtmlNode td = trNode.Descendants("td").First();
 						HtmlNode a = td.Descendants("a").First();
 						String anchorAttributeValue = a.Attributes["href"].Value;
-						urls.Add("https://azurlane.koumakan.jp" + anchorAttributeValue);
+						urls.Add($"https://azurlane.koumakan.jp/w/index.php?title={anchorAttributeValue.Replace("/", "")}&mobileaction=toggle_view_desktop");
 					}
 				}
 			}

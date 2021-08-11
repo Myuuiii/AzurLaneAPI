@@ -313,6 +313,8 @@ namespace AzurLaneAPI.Controllers
 			{
 				if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
 
+				int failedShips = 0;
+
 				List<Ship> ships = new List<Ship>();
 				foreach (String url in Scrapers.ShipsScraper.GetShipWikiUrls())
 				{
@@ -322,6 +324,7 @@ namespace AzurLaneAPI.Controllers
 					}
 					catch
 					{
+						failedShips++;
 					}
 				}
 
@@ -349,6 +352,7 @@ namespace AzurLaneAPI.Controllers
 				_context.SaveChanges();
 
 				_context.AddRange(ships);
+				HttpContext.Response.Headers.Add("Failed Imports", failedShips.ToString());
 
 				await _context.SaveChangesAsync();
 				return Ok("API Data was successfully updated");
