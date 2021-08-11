@@ -11,6 +11,11 @@ namespace AzurLaneAPI.Routes.V1
 				public const String GetPageUrls = "/scrapers/ships/urls";
 				public const String GetShips = "/scrapers/ships";
 			}
+
+			public static class Barrages 
+			{
+				public const String GetBarrages = "/scrapers/barrages";
+			}
 		}
     }
 }

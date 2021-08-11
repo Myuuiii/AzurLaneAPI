@@ -43,6 +43,16 @@ namespace AzurLaneClasses
 
 	public class Round
 	{
+		public Round(){}
+		public Round(String type, Double dmgL, Double dmgM, Double dmgH, String note)
+		{
+			this.Type = type;
+			this.DmgL = dmgL;
+			this.DmgM = dmgM;
+			this.DmgH = dmgH;
+			this.Note = note;
+		}
+		
 		[JsonIgnore]
 		public Guid Id { get; set; }
         public String Type { get; set; }

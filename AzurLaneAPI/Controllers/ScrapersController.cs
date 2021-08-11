@@ -45,5 +45,16 @@ namespace AzurLaneAPI.Controllers
 
 			return ships;
 		}
+
+		/// <summary>
+		/// (Developer Only) Retrieve all the barrages, uses our webscraper
+		/// </summary>
+		[HttpGet(Routes.V1.Routes.Scrapers.Barrages.GetBarrages)]
+		public async Task<ActionResult<List<Barrage>>> GetBarrages()
+		{
+			if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
+
+			return Scrapers.BarragesScraper.GetBarrages();
+		}
 	}
 }
