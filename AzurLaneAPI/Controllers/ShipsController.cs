@@ -316,7 +316,13 @@ namespace AzurLaneAPI.Controllers
 				List<Ship> ships = new List<Ship>();
 				foreach (String url in Scrapers.ShipsScraper.GetShipWikiUrls())
 				{
-					ships.Add(Scrapers.ShipsScraper.GetShip(url));
+					try
+					{
+						ships.Add(Scrapers.ShipsScraper.GetShip(url));
+					}
+					catch
+					{
+					}
 				}
 
 				_context.Ships.RemoveRange(_context.Ships
