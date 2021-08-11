@@ -19,10 +19,10 @@ namespace AzurLaneAPI.Controllers
 		}
 
 		/// <summary>
-		/// Retrieve all ships, limited to 20 per page for users without API key
+		/// Retrieve all ships
 		/// </summary>
 		/// <param name="page">Page Number</param>
-		/// <param name="itemsPerPage">Items to display per page, limited to 20 without API key</param>
+		/// <param name="itemsPerPage">Items to display per page</param>
 		[HttpGet(Routes.V1.Routes.Ships.GetAll)]
 		public async Task<ActionResult<List<Ship>>> GetShips(Int32? page = null, Int32? itemsPerPage = null)
 		{
