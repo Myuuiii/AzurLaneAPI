@@ -91,7 +91,7 @@ namespace AzurLaneAPI.Controllers
         /// </summary>
         /// <param name="name">Ship Name</param>
         [HttpGet(Routes.V1.Routes.Barrages.GetAllByName)]
-        public async Task<ActionResult> GetAllByName(string name)
+        public async Task<ActionResult<List<Barrage>>> GetAllByName(string name)
         {
             try 
             {
