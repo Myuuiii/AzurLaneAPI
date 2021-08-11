@@ -16,6 +16,11 @@ namespace AzurLaneAPI.Routes.V1
 			{
 				public const String GetBarrages = "/scrapers/barrages";
 			}
+
+			public static class Campaigns
+			{
+				public const String GetCampaigns = "/scrapers/campaigns";
+			}
 		}
     }
 }

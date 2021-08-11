@@ -61,9 +61,7 @@ namespace AzurLaneAPI.Routes.V1
 		{
 			public const String GetAll = "/events";
 			public const String GetId = "/events/{id}";
-			public const String Create = "/events";
-			public const String Update = "/events/{eventId}";
-			public const String Delete = "/events/{eventId}";
+			public const String ImportScraper = "/events/scrape";
 		}
 
 		public static class Campaign
@@ -71,6 +69,7 @@ namespace AzurLaneAPI.Routes.V1
 			public const String GetAll = "/campaign";
 			public const String GetId = "/campaign/{id}";
 			public const String GetSelect = "/campaign/{chapter}/{level}";
+			public const String ImportScraper = "campaign/scrape";
 		}
 
 		public static class Construction
