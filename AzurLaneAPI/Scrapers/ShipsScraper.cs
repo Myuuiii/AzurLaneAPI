@@ -23,7 +23,7 @@ namespace AzurLaneAPI.Scrapers
 				Console.WriteLine($"Processing URL: {url}");
 
 				Ship ship = new Ship();
-				String shipBaseInfoPageContents = new WebClient().DownloadString(url);
+				String shipBaseInfoPageContents = new WebClient().DownloadString($"https://azurlane.koumakan.jp/w/index.php?title={url.Split('/').Last()}&mobileaction=toggle_view_desktop");
 				HtmlDocument document = new HtmlDocument();
 				document.LoadHtml(shipBaseInfoPageContents);
 
