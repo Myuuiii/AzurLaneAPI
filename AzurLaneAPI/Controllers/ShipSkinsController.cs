@@ -22,7 +22,7 @@ namespace AzurLaneAPI.Controllers
 		/// Retrieve all the ship skins
 		/// </summary>
 		/// <param name="page">Page Number</param>
-		/// <param name="itemsPerPage">Items to display per page, limited to 20 without API key</param>
+		/// <param name="itemsPerPage">Items to display per page</param>
 		[HttpGet(Routes.V1.Routes.Ships.ShipSkins.GetAll)]
         public async Task<ActionResult<List<ShipSkin>>> GetAll(Int32? page = null, Int32? itemsPerPage = null)
         {
