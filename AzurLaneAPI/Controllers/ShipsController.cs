@@ -352,7 +352,6 @@ namespace AzurLaneAPI.Controllers
 				_context.SaveChanges();
 
 				_context.AddRange(ships);
-				HttpContext.Response.Headers.Add("Failed Imports", failedShips.ToString());
 
 				await _context.SaveChangesAsync();
 				return Ok("API Data was successfully updated");
