@@ -1,6 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations;
-using AzurLaneClasses.Import;
 using System.Text.Json.Serialization;
 
 namespace AzurLaneClasses.Ship

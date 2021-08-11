@@ -44,36 +44,42 @@ namespace AzurLaneAPI.Scrapers
 					}
 					else
 					{
-						barrage.Id = tableNodeRow.Attributes["id"].Value;
-						if (tableNodeRowEntries[0].ChildNodes.Any(n => n.OriginalName == "img"))
+						if (!barrages.Any(b => b.Id == tableNodeRow.Attributes["id"].Value))
 						{
-							barrage.IconUrl = BaseUrl + tableNodeRowEntries[0].ChildNodes.First(n => n.OriginalName == "img").Attributes["src"].Value;
+							barrage.Id = tableNodeRow.Attributes["id"].Value;
+							if (tableNodeRowEntries[0].ChildNodes.Any(n => n.OriginalName == "img"))
+							{
+								barrage.IconUrl = BaseUrl + tableNodeRowEntries[0].ChildNodes.First(n => n.OriginalName == "img").Attributes["src"].Value;
+							}
+
+							barrage.Name = tableNodeRowEntries[1].InnerText.Replace("\n", "");
+							barrage.Type = barrageTypeNodes[barrageTypeLevelIndicator].InnerText.Replace(" barrages", "");
+
+							HtmlNode[] anchors = tableNodeRowEntries[2].Descendants("a").ToArray();
+							if (anchors.Length != 0)
+							{
+								HtmlDocument barrageFileDocument = new HtmlDocument();
+								barrageFileDocument.LoadHtml(new WebClient().DownloadString(BaseUrl + anchors[0].Attributes["href"].Value));
+
+								barrage.ImageUrl = BaseUrl + barrageFileDocument.DocumentNode.Descendants("img").First().Attributes["src"].Value;
+							}
+
+							barrage.Ships = tableNodeRowEntries[3].InnerText.Replace("\n", "").Split(", ");
+							barrage.Hull = tableNodeRowEntries[4].InnerText.Replace("\n", "");
+
+							barrage.Rounds = new List<Round>();
+							barrage.Rounds.Add(new Round(
+								tableNodeRowEntries[5].InnerText.Replace("\n", ""),
+								Convert.ToDouble(tableNodeRowEntries[6].InnerText.Replace("\n", "")),
+								Convert.ToDouble(tableNodeRowEntries[7].InnerText.Replace("\n", "")),
+								Convert.ToDouble(tableNodeRowEntries[8].InnerText.Replace("\n", "")),
+								tableNodeRowEntries[9].InnerText.Replace("\n", "")));
+
+							barrages.Add(barrage);
 						}
-
-						barrage.Name = tableNodeRowEntries[1].InnerText.Replace("\n", "");
-						barrage.Type = barrageTypeNodes[barrageTypeLevelIndicator].InnerText.Replace(" barrages", "");
-
-						HtmlNode[] anchors = tableNodeRowEntries[2].Descendants("a").ToArray();
-						if (anchors.Length != 0)
-						{
-							barrage.ImageUrl = BaseUrl + anchors[0].Attributes["href"].Value;
-						}
-
-						barrage.Ships = tableNodeRowEntries[3].InnerText.Replace("\n", "").Split(", ");
-						barrage.Hull = tableNodeRowEntries[4].InnerText.Replace("\n", "");
-
-						barrage.Rounds = new List<Round>();
-						barrage.Rounds.Add(new Round(
-							tableNodeRowEntries[5].InnerText.Replace("\n", ""),
-							Convert.ToDouble(tableNodeRowEntries[6].InnerText.Replace("\n", "")),
-							Convert.ToDouble(tableNodeRowEntries[7].InnerText.Replace("\n", "")),
-							Convert.ToDouble(tableNodeRowEntries[8].InnerText.Replace("\n", "")),
-							tableNodeRowEntries[9].InnerText.Replace("\n", "")));
-
-						barrages.Add(barrage);
 					}
 				}
-                barrageTypeLevelIndicator++;
+				barrageTypeLevelIndicator++;
 			}
 
 			return barrages;

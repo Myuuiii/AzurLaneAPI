@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AzurLaneClasses;
-using AzurLaneClasses.Import;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -122,7 +121,7 @@ namespace AzurLaneAPI.Controllers
 
 
         /// <summary>
-        /// Import Barrages (Developer Only)
+        /// (Developer Only) Import barrages using scraper
         /// </summary>
         [HttpPut(Routes.V1.Routes.Barrages.Import)]
         public async Task<ActionResult<Barrage>> Import()
@@ -131,15 +130,13 @@ namespace AzurLaneAPI.Controllers
             {
                 if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
 
-                List<BarrageDataImportModel> barrageDataImportModels = JsonConvert.DeserializeObject<List<BarrageDataImportModel>>(new WebClient().DownloadString("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/dist/barrage.json").Replace("https://raw.githubusercontent.com/AzurAPI/azurapi-js-setup/master/", "http://cdn.mutedevs.nl/azurlaneapi/"));
-                
+                List<Barrage> importBarrages = Scrapers.BarragesScraper.GetBarrages();
+
                 _context.Barrages.RemoveRange(_context.Barrages.Include(b => b.Rounds));
                 _context.SaveChanges();
 
-                foreach (BarrageDataImportModel barrageDataImportModel in barrageDataImportModels)
-                {
-                    _context.Add(new Barrage(barrageDataImportModel));
-                }
+                _context.AddRange(importBarrages);
+
                 await _context.SaveChangesAsync();
                 return Ok("API Data was successfully updated");
             }

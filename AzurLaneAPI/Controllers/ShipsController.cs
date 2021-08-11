@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using AzurLaneClasses;
-using AzurLaneClasses.Import;
 using AzurLaneClasses.Ship;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 namespace AzurLaneAPI.Controllers
 {
