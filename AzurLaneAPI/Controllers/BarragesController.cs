@@ -123,7 +123,7 @@ namespace AzurLaneAPI.Controllers
         /// <summary>
         /// (Developer Only) Import barrages using scraper
         /// </summary>
-        [HttpPut(Routes.V1.Routes.Barrages.Import)]
+        [HttpPut(Routes.V1.Routes.Barrages.ImportScraper)]
         public async Task<ActionResult<Barrage>> Import()
         {
             try 

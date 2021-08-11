@@ -14,7 +14,6 @@ namespace AzurLaneAPI.Routes.V1
 			public const String GetMinimalId = "/ships/{id}/minimal";
 			public const String GetName = "/ships/name/{name}";
 			public const String GetMinimalName = "/ships/name/{name}/minimal";
-			public const String Import = "/ships/";
 			public const String ImportScraper = "/ships/scrape";
 
 			public static class ShipGallery
@@ -55,7 +54,7 @@ namespace AzurLaneAPI.Routes.V1
 			public const String GetAll = "/barrages";
 			public const String GetId = "/barrages/{id}";
 			public const String GetAllByName = "/barrages/ship/{name}";
-			public const String Import = "/barrages";
+			public const String ImportScraper = "/barrages/scrape";
 		}
 
 		public static class Events
