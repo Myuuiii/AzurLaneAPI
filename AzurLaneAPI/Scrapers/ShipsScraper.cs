@@ -600,7 +600,7 @@ namespace AzurLaneAPI.Scrapers
 
 		/// <summary>
 		/// Get all the ship's skills
-		/// </summary>1
+		/// </summary>
 		public static Ship GetShipSkills(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
 			ship.Skills = new List<ShipSkill>();
