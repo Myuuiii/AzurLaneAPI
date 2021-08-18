@@ -38,7 +38,7 @@ namespace AzurLaneAPI.Controllers
 		/// </summary>
 		/// <param name="id">Event Id</param>
 		[HttpGet(Routes.V1.Routes.Events.GetId)]
-		public async Task<ActionResult<ALEvent>> GetEvent(Guid id)
+		public async Task<ActionResult<ALEvent>> GetEvent(Int32 id)
 		{
 			try
 			{
@@ -61,12 +61,22 @@ namespace AzurLaneAPI.Controllers
 		/// <summary>
 		/// (Developer Only) Import events using scraper
 		/// </summary>
-		[HttpGet(Routes.V1.Routes.Events.ImportScraper)]
+		[HttpPut(Routes.V1.Routes.Events.ImportScraper)]
 		public async Task<ActionResult> ImportScraper()
 		{
 			try
 			{
-				return StatusCode(501, "This scraper has not yet been implemented");
+				if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
+
+                List<ALEvent> importEvents = Scrapers.EventsScraper.GetEvents();
+
+                _context.Events.RemoveRange(_context.Events);
+                _context.SaveChanges();
+
+                _context.AddRange(importEvents);
+
+                await _context.SaveChangesAsync();
+                return Ok("API Data was successfully updated");
 			}
 			catch
 			{
