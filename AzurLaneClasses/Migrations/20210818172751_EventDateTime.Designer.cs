@@ -3,14 +3,16 @@ using System;
 using AzurLaneClasses;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AzurLaneClasses.Migrations
 {
     [DbContext(typeof(AzurLaneDbContext))]
-    partial class AzurLaneDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210818172751_EventDateTime")]
+    partial class EventDateTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -19,9 +21,9 @@ namespace AzurLaneClasses.Migrations
 
             modelBuilder.Entity("AzurLaneClasses.ALEvent", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("CN_Period")
                         .HasColumnType("longtext");
