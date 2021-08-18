@@ -27,7 +27,7 @@ namespace AzurLaneAPI.Scrapers
 				eventItem.Id = itemId;
 
 				// Event Name
-				eventItem.Name = eventNode.Descendants("td").First().InnerText;
+				eventItem.Name = eventNode.Descendants("td").First().InnerText.Replace("\n", "");
 
 				// Event dates
 				if (eventNode.Descendants("td").Skip(1).First().Attributes["colspan"] == null)
@@ -60,9 +60,22 @@ namespace AzurLaneAPI.Scrapers
 
 				// Event note
 				eventItem.Notes = eventNode.Descendants("td").Last().InnerText;
+				eventItem.IsLimited = true;
 				events.Add(eventItem);
 				itemId++;
 			}
+
+			HtmlNode permanentEventsListNode = doc.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]/p[3]");
+			foreach (HtmlNode permaEventNode in permanentEventsListNode.Descendants("a"))
+			{
+				ALEvent eventItem = new ALEvent();
+				eventItem.Id = itemId + 10000;
+				eventItem.Name = permaEventNode.Attributes["title"].Value;
+				eventItem.BannerUrl = BaseUrl + permaEventNode.Descendants("img").First().Attributes["src"].Value;
+				events.Add(eventItem);
+				itemId++;
+			}
+
 			return events;
 		}
 	}
