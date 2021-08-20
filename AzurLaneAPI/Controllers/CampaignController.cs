@@ -101,7 +101,7 @@ namespace AzurLaneAPI.Controllers
         /// <summary>
 		/// (Developer Only) Import campaign using scraper
 		/// </summary>
-		[HttpGet(Routes.V1.Routes.Campaign.ImportScraper)]
+		[HttpPut(Routes.V1.Routes.Campaign.ImportScraper)]
 		public async Task<ActionResult> ImportScraper()
 		{
 			try
