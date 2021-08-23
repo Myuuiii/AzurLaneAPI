@@ -33,22 +33,25 @@ namespace AzurLaneAPI.Scrapers
 				ship.Id = Guid.NewGuid();
 				ship = GetShipId(ship, hasNote, document);
 				ship = GetShipName(ship, hasNote, document);
-				ship = GetShipRarityAndStars(ship, hasNote, document);
-				ship = GetShipNation(ship, hasNote, document);
-				ship = GetShipType(ship, hasNote, document);
-				ship = GetThumbnailImage(ship, hasNote, document);
-				ship = GetConstruction(ship, hasNote, document);
-				ship = GetShipMiscInfo(ship, hasNote, document);
-				ship = GetShipScrapValue(ship, hasNote, document);
-				ship = GetShipEnhanceValue(ship, hasNote, document);
-				ship = GetShipStatistics(ship, hasNote, document);
-				ship = GetShipEquippableSlots(ship, hasNote, document);
-				ship = GetShipSkills(ship, hasNote, document);
-				ship = GetShipLimitBreaks(ship, hasNote, document);
+				// ship = GetShipRarityAndStars(ship, hasNote, document);
+				// ship = GetShipNation(ship, hasNote, document);
+				// ship = GetShipType(ship, hasNote, document);
+				// ship = GetThumbnailImage(ship, hasNote, document);
+				// ship = GetConstruction(ship, hasNote, document);
+				// ship = GetShipMiscInfo(ship, hasNote, document);
+				// ship = GetShipScrapValue(ship, hasNote, document);
+				// ship = GetShipEnhanceValue(ship, hasNote, document);
+				// ship = GetShipStatistics(ship, hasNote, document);
+				// ship = GetShipEquippableSlots(ship, hasNote, document);
+				// ship = GetShipSkills(ship, hasNote, document);
+				// ship = GetShipLimitBreaks(ship, hasNote, document);
 
 				// ? Gallery Page
-				ship = GetShipSkins(ship, url);
-				ship = GetShipGallery(ship, url);
+				// ship = GetShipSkins(ship, url);
+				// ship = GetShipGallery(ship, url);
+
+				// ? Quotes Page
+				ship = GetShipQuotes(ship, url);
 
 				return ship;
 			}
@@ -57,6 +60,7 @@ namespace AzurLaneAPI.Scrapers
 				return null;
 			}
 		}
+
 
 		/// <summary>
 		/// Translate the XPath in case the ship page has a note which changes the structure
@@ -301,7 +305,7 @@ namespace AzurLaneAPI.Scrapers
 					item.Description = descriptionNode.InnerText;
 
 					String[] urlParts = imageNode.Attributes["src"].Value.Replace("thumb/", "").Split('/');
-					item.Url = BaseUrl + String.Join('/', urlParts.Take(urlParts.Count() -1));
+					item.Url = BaseUrl + String.Join('/', urlParts.Take(urlParts.Count() - 1));
 
 					ship.Gallery.Add(item);
 				}
@@ -635,6 +639,100 @@ namespace AzurLaneAPI.Scrapers
 			}
 
 			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+			return ship;
+		}
+
+		private static Ship GetShipQuotes(Ship ship, string url)
+		{
+			HtmlDocument doc = new HtmlDocument();
+			doc.LoadHtml(new WebClient().DownloadString(url + "/Quotes"));
+
+			// The item that contains all the lists for all the servers
+			HtmlNode tabber = doc.DocumentNode.Descendants().Where(n => n.HasClass("tabber")).First();
+
+			// 0 = English Server
+			// 1 = Chinese Server
+			// 2 = Japanese Server
+			HtmlNode[] serverTabs = tabber.ChildNodes.Where(n => n.OriginalName == "div").Take(3).ToArray();
+
+			// ! This will error on the ship called "22" because there is no english server tab
+			// ! Please also note that this entry has a "CN" column, sort on this by checking the amount of columns
+			// ! and select the right one depending on the number of columns
+			HtmlNode englishServer = serverTabs.Single(n => n.Attributes["title"].Value.ToLower() == "english server");
+			HtmlNode chineseServer = serverTabs.Single(n => n.Attributes["title"].Value.ToLower() == "chinese server");
+			HtmlNode japaneseServer = serverTabs.Single(n => n.Attributes["title"].Value.ToLower() == "japanese server");
+
+			// Get the amount of tables to loop over
+			Int32 tableCount = englishServer.ChildNodes.Where(n => n.OriginalName == "table").Count();
+
+
+			for (int tableNr = 0; tableNr < tableCount; tableNr++)
+			{
+				// The innertext of this headerNode is equal to the skin name
+				String skinName = englishServer.ChildNodes.Where(n => n.OriginalName == "h3").ToArray()[tableNr].InnerText.Replace("\n", "");
+				HtmlNode tableNode = englishServer.ChildNodes.Where(n => n.OriginalName == "table").ToArray()[tableNr];
+
+				// Skip the first TR as it contains the headers
+				if (tableNode.Descendants().Where(n => n.OriginalName == "tr").Count() > 1)
+				{
+					HtmlNode[] rows = tableNode.Descendants().Where(n => n.OriginalName == "tr").ToArray();
+					for (int rowNr = 1; rowNr < rows.Count(); rowNr++)
+					{
+						ShipQuote quote = new ShipQuote();
+						HtmlNode[] nodeColumns = rows[rowNr].ChildNodes.Where(n => n.OriginalName == "td").ToArray();
+
+						quote.Id = Guid.NewGuid();
+						quote.Event = nodeColumns[0].InnerText.Replace("\n", "");
+
+						if (nodeColumns[1].ChildNodes.Where(n => n.OriginalName == "a").Count() > 0)
+						{
+							quote.AudioUrl = nodeColumns[1].ChildNodes.Where(n => n.OriginalName == "a").ToArray()[0].Attributes["href"].Value;
+						}
+						else
+						{
+							quote.AudioUrl = "";
+						}
+
+						quote.EN_Transcription = englishServer.Descendants("table").ToArray()[tableNr].Descendants("tr").ToArray()[rowNr].Descendants("td").ToArray()[2].InnerText.Replace("\n", "");
+
+
+						HtmlNode[] cnTables = chineseServer.Descendants("table").ToArray();
+						if (cnTables.Count() > tableNr)
+						{
+							HtmlNode[] cnTrs = chineseServer.Descendants("table").ToArray()[tableNr].Descendants("tr").ToArray();
+							if (cnTrs.Count() > rowNr)
+							{
+								quote.CN_Transcription = cnTrs[rowNr].Descendants("td").ToArray()[2].InnerText.Replace("\n", "");
+							}
+							else
+							{
+								quote.CN_Transcription = "";
+							}
+						}
+
+						HtmlNode[] jpTables = japaneseServer.Descendants("table").ToArray();
+						if (jpTables.Count() > tableNr)
+						{
+							HtmlNode[] jpTrs = japaneseServer.Descendants("table").ToArray()[tableNr].Descendants("tr").ToArray();
+							if (jpTrs.Count() > rowNr)
+							{
+								quote.JP_Transcription = jpTrs[rowNr].Descendants("td").ToArray()[2].InnerText.Replace("\n", "");
+							}
+							else
+							{
+								quote.JP_Transcription = "";
+							}
+						}
+
+						quote.Notes = nodeColumns[3].InnerText.Replace("\n", "");
+						quote.Skin = skinName;
+						ship.Quotes.Add(quote);
+					}
+				}
+
+			}
+
+
 			return ship;
 		}
 	}
