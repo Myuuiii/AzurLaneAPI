@@ -35,13 +35,14 @@ namespace AzurLaneAPI.Controllers
 		{
 			if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
 
-			String[] shipLinks = Scrapers.ShipsScraper.GetShipWikiUrls().ToArray();
 			List<Ship> ships = new List<Ship>();
 
-			foreach (var ship in shipLinks)
+			foreach (var ship in Scrapers.ShipsScraper.GetShipWikiUrls().ToArray())
 			{
 				ships.Add(Scrapers.ShipsScraper.GetShip(ship));
 			}
+
+			// return new List<Ship> { Scrapers.ShipsScraper.GetShip("https://azurlane.koumakan.jp/Surcouf") };
 
 			return ships;
 		}

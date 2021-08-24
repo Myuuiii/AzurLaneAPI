@@ -12,6 +12,40 @@ namespace AzurLaneAPI.Scrapers
 	{
 		private const String BaseUrl = "https://azurlane.koumakan.jp";
 
+		static void Processing(string name)
+		{
+			try
+			{
+				Console.SetCursorPosition(0, Console.CursorTop);
+				Console.ResetColor();
+				Console.Write(name + ": ");
+				Console.ForegroundColor = ConsoleColor.Red;
+				Console.Write("Processing");
+				Console.ResetColor();
+			}
+			catch
+			{
+				Console.WriteLine("You are debugging and the console can not be modified");
+			}
+		}
+
+		static void Done(string name)
+		{
+			try
+			{
+				Console.SetCursorPosition(0, Console.CursorTop);
+				Console.ResetColor();
+				Console.Write(name + ": ");
+				Console.ForegroundColor = ConsoleColor.Green;
+				Console.WriteLine("✔ Completed");
+				Console.ResetColor();
+			}
+			catch
+			{
+				Console.WriteLine("You are debugging and the console can not be modified");
+			}
+		}
+
 		/// <summary>
 		/// Retrieve information about a ship
 		/// </summary>
@@ -19,8 +53,7 @@ namespace AzurLaneAPI.Scrapers
 		{
 			if (GetShipWikiUrls().Contains(url))
 			{
-
-				Console.WriteLine($"Processing URL: {url}");
+				Processing(url);
 
 				Ship ship = new Ship();
 				String shipBaseInfoPageContents = new WebClient().DownloadString($"https://azurlane.koumakan.jp/w/index.php?title={url.Split('/').Last()}&mobileaction=toggle_view_desktop");
@@ -50,6 +83,10 @@ namespace AzurLaneAPI.Scrapers
 				ship = GetShipSkins(ship, url);
 				ship = GetShipGallery(ship, url);
 
+				// ? Quotes Page
+				ship = GetShipQuotes(ship, url);
+
+				Done(url);
 				return ship;
 			}
 			else
@@ -112,7 +149,6 @@ namespace AzurLaneAPI.Scrapers
 		/// </summary>
 		public static Boolean GetShipHasNoteState(HtmlDocument document)
 		{
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return document.DocumentNode.SelectSingleNode("/html/body/div[3]/div[3]/div[5]/div[1]").Descendants("div").First().HasClass("hatnote");
 		}
 
@@ -122,7 +158,6 @@ namespace AzurLaneAPI.Scrapers
 		public static Ship GetShipId(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
 			ship.ShipId = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[4]/table/tbody/tr[1]/td", hasNote).InnerText.Replace("\n", "");
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -132,8 +167,6 @@ namespace AzurLaneAPI.Scrapers
 		public static Ship GetShipName(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
 			ship.Name = document.DocumentNode.SelectSingleNode("//*[@id=\"firstHeading\"]").InnerText;
-
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -152,8 +185,6 @@ namespace AzurLaneAPI.Scrapers
 				Stars = rarityParts[1],
 				Count = rarityParts[1].ToCharArray().Count()
 			};
-
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -163,8 +194,6 @@ namespace AzurLaneAPI.Scrapers
 		public static Ship GetShipNation(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
 			ship.Nation = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[4]/table/tbody/tr[2]/td/a[2]", hasNote).InnerText;
-
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -174,8 +203,6 @@ namespace AzurLaneAPI.Scrapers
 		public static Ship GetShipType(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
 			ship.Type = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[4]/table/tbody/tr[3]/td/a[2]", hasNote).InnerText;
-
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -185,8 +212,6 @@ namespace AzurLaneAPI.Scrapers
 		public static Ship GetThumbnailImage(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
 			ship.ThumbnailImage = BaseUrl + GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[2]/a/img", hasNote).Attributes["src"].Value;
-
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -217,8 +242,6 @@ namespace AzurLaneAPI.Scrapers
 					ship.Construction.ConstructionTime = "";
 				}
 			}
-
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -269,8 +292,6 @@ namespace AzurLaneAPI.Scrapers
 
 				ship.Skins.Add(skin);
 			}
-
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -301,16 +322,13 @@ namespace AzurLaneAPI.Scrapers
 					item.Description = descriptionNode.InnerText;
 
 					String[] urlParts = imageNode.Attributes["src"].Value.Replace("thumb/", "").Split('/');
-					item.Url = BaseUrl + String.Join('/', urlParts.Take(urlParts.Count() -1));
+					item.Url = BaseUrl + String.Join('/', urlParts.Take(urlParts.Count() - 1));
 
 					ship.Gallery.Add(item);
 				}
 
 			}
 			catch { }
-
-
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -409,8 +427,6 @@ namespace AzurLaneAPI.Scrapers
 			{
 				ship.Web = null;
 			}
-
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -434,8 +450,6 @@ namespace AzurLaneAPI.Scrapers
 			{
 				ship.ScrapValue = null;
 			}
-
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -460,8 +474,6 @@ namespace AzurLaneAPI.Scrapers
 			{
 				ship.EnhanceValue = null;
 			}
-
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -501,8 +513,6 @@ namespace AzurLaneAPI.Scrapers
 
 				ship.EquippableSlots.Add(slot);
 			}
-
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -566,9 +576,6 @@ namespace AzurLaneAPI.Scrapers
 				ship.Level100Stats = shipStats[3];
 				ship.BaseStats = shipStats[4];
 			}
-
-
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -593,8 +600,6 @@ namespace AzurLaneAPI.Scrapers
 			{
 				LimitBreaks = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/table/tbody/tr[4]/td[1]", hasNote).InnerText.Replace("\n", "").Split(" / ")
 			});
-
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
 		}
 
@@ -633,9 +638,156 @@ namespace AzurLaneAPI.Scrapers
 					Description = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/table/tbody/tr[4]/td[3]", hasNote).InnerText.Replace("\n", "")
 				});
 			}
-
-			Console.WriteLine("✓ " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 			return ship;
+		}
+
+		private static Ship GetShipQuotes(Ship ship, string url)
+		{
+			HtmlDocument doc = new HtmlDocument();
+			doc.LoadHtml(new WebClient().DownloadString(url + "/Quotes?mobileaction=toggle_view_mobile"));
+
+			// The item that contains all the lists for all the servers
+			HtmlNode tabber = doc.DocumentNode.Descendants().Where(n => n.HasClass("tabber")).First();
+			HtmlNode englishServer, chineseServer, japaneseServer;
+			englishServer = chineseServer = japaneseServer = null;
+
+			List<ShipQuote> quotes = new List<ShipQuote>();
+
+			if (tabber.ChildNodes.Where(n => n.OriginalName == "div" && n.Attributes["title"].Value.ToLower() == "english server").Count() > 0)
+			{
+				englishServer = tabber.ChildNodes.Where(n => n.OriginalName == "div" && n.Attributes["title"].Value.ToLower() == "english server").First();
+			}
+			if (tabber.ChildNodes.Where(n => n.OriginalName == "div" && n.Attributes["title"].Value.ToLower() == "chinese server").Count() > 0)
+			{
+				chineseServer = tabber.ChildNodes.Where(n => n.OriginalName == "div" && n.Attributes["title"].Value.ToLower() == "chinese server").First();
+			}
+			if (tabber.ChildNodes.Where(n => n.OriginalName == "div" && n.Attributes["title"].Value.ToLower() == "japanese server").Count() > 0)
+			{
+				japaneseServer = tabber.ChildNodes.Where(n => n.OriginalName == "div" && n.Attributes["title"].Value.ToLower() == "japanese server").First();
+			}
+
+
+			// English Server Quote Loops
+			if (englishServer != null)
+			{
+				IEnumerable<HtmlNode> enTables = englishServer.ChildNodes.Where(n => n.OriginalName == "table");
+				for (int tableNr = 0; tableNr < enTables.Count(); tableNr++)
+				{
+					foreach (HtmlNode table in enTables)
+					{
+						quotes = ProcessQuotesTable(quotes, table, englishServer.ChildNodes.Where(n => n.OriginalName == "h3").ToArray()[tableNr].InnerText, "EN");
+					}
+				}
+			}
+
+
+			// Chinese Server Quote Loops
+			if (chineseServer != null)
+			{
+				IEnumerable<HtmlNode> cnTables = chineseServer.ChildNodes.Where(n => n.OriginalName == "table");
+				for (int tableNr = 0; tableNr < cnTables.Count(); tableNr++)
+				{
+					foreach (HtmlNode table in cnTables)
+					{
+						quotes = ProcessQuotesTable(quotes, table, chineseServer.ChildNodes.Where(n => n.OriginalName == "h3").ToArray()[tableNr].InnerText, "CN");
+					}
+				}
+
+			}
+
+
+			// Japanese Server Quote Loops
+			if (japaneseServer != null)
+			{
+				IEnumerable<HtmlNode> jpTables = japaneseServer.ChildNodes.Where(n => n.OriginalName == "table");
+				for (int tableNr = 0; tableNr < jpTables.Count(); tableNr++)
+				{
+					foreach (HtmlNode table in jpTables)
+					{
+						quotes = ProcessQuotesTable(quotes, table, japaneseServer.ChildNodes.Where(n => n.OriginalName == "h3").ToArray()[tableNr].InnerText, "JP");
+					}
+				}
+			}
+
+			ship.Quotes = quotes;
+			return ship;
+		}
+
+
+		static List<ShipQuote> ProcessQuotesTable(List<ShipQuote> quotes, HtmlNode tableNode, String skinName, String language)
+		{
+			// Skip the first TR as it contains the headers
+			if (tableNode.Descendants("tr").Count() > 1)
+			{
+				HtmlNode[] rows = tableNode.Descendants("tr").ToArray();
+				for (int rowNr = 1; rowNr < rows.Count(); rowNr++)
+				{
+
+					ShipQuote quote = new ShipQuote();
+					HtmlNode[] nodeColumns = rows[rowNr].ChildNodes.Where(n => n.OriginalName == "td").ToArray();
+					nodeColumns.Last().InnerHtml = "";
+
+					if (quotes.Any(q => q.Event == nodeColumns[0].InnerText.Replace("\n", "")))
+					{
+						quote = quotes.Single(q => q.Event == nodeColumns[0].InnerText.Replace("\n", ""));
+					}
+					else
+					{
+						quote = new ShipQuote();
+						quote.Id = Guid.NewGuid();
+						quote.Skin = skinName;
+					}
+
+					quote.Event = nodeColumns[0].InnerText.Replace("\n", "");
+
+					if (nodeColumns.Count() == 4)
+					{
+						// English Table
+						quote.EN_Transcription = nodeColumns[2].InnerText.Replace("\n", "");
+
+						if (nodeColumns[3].ChildNodes.Where(n => n.OriginalName == "a").Count() > 0)
+						{
+							quote.AudioUrl = nodeColumns[1].ChildNodes.Where(n => n.OriginalName == "a").ToArray()[0].Attributes["href"].Value;
+						}
+					}
+					else if (nodeColumns.Count() == 5)
+					{
+						// Japanese or Chinese Table
+						if (language == "JP")
+						{
+							quote.JP_Transcription = nodeColumns[2].InnerText.Replace("\n", "");
+						}
+						else if (language == "CN")
+						{
+							quote.CN_Transcription = nodeColumns[2].InnerText.Replace("\n", "");
+						}
+						else if (language == "EN")
+						{
+							quote.EN_Transcription = nodeColumns[3].InnerText.Replace("\n", "");
+						}
+					}
+					else if (nodeColumns.Count() == 6)
+					{
+						// Chinese Table with chinese audio
+						quote.CN_Transcription = nodeColumns[3].InnerText.Replace("\n", "");
+					}
+
+					if (quote.AudioUrl == null)
+					{
+						if (nodeColumns[1].ChildNodes.Where(n => n.OriginalName == "a").Count() > 0)
+						{
+							quote.AudioUrl = nodeColumns[1].ChildNodes.Where(n => n.OriginalName == "a").ToArray()[0].Attributes["href"].Value;
+						}
+					}
+
+					if (!quotes.Any(q => q.Event == quote.Event))
+					{
+						quotes.Add(quote);
+					}
+				}
+			}
+
+			return quotes;
 		}
 	}
 }
