@@ -52,6 +52,7 @@ namespace AzurLaneAPI.Controllers
 					.Include(s => s.Twitter)
 					.Include(s => s.Web)
 					.Include(s => s.VoiceActor)
+						.AsSplitQuery()	
 						.ToListAsync();
 				}
 				else if (page == null && itemsPerPage != null) return BadRequest("You need to define a page number");
@@ -84,7 +85,8 @@ namespace AzurLaneAPI.Controllers
 					.Include(s => s.Twitter)
 					.Include(s => s.Web)
 					.Include(s => s.VoiceActor)
-					.Skip((Int32)skip).Take((Int32)itemsPerPage)
+						.AsSplitQuery()
+						.Skip((Int32)skip).Take((Int32)itemsPerPage)
 						.ToListAsync();
 				}
 				else
@@ -184,6 +186,7 @@ namespace AzurLaneAPI.Controllers
 					.Include(s => s.Twitter)
 					.Include(s => s.Web)
 					.Include(s => s.VoiceActor)
+						.AsSplitQuery()
 						.SingleAsync(ship => ship.ShipId == id);
 					return ship;
 				}
@@ -257,6 +260,7 @@ namespace AzurLaneAPI.Controllers
 					.Include(s => s.Twitter)
 					.Include(s => s.Web)
 					.Include(s => s.VoiceActor)
+						.AsSplitQuery()
 						.SingleAsync(ship => ship.Name == name);
 					return ship;
 				}
@@ -342,7 +346,8 @@ namespace AzurLaneAPI.Controllers
 					.Include(s => s.Pixiv)
 					.Include(s => s.Twitter)
 					.Include(s => s.Web)
-					.Include(s => s.VoiceActor));
+					.Include(s => s.VoiceActor)
+					.AsSplitQuery());
 				_context.SaveChanges();
 
 				_context.AddRange(ships);
