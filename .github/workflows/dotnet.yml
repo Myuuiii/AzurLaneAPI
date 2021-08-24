@@ -3,7 +3,7 @@ name: Build Validation
 on: push
 
 jobs:
-  Build-Validation:
+  Build:
     runs-on: self-hosted
 
     steps:
