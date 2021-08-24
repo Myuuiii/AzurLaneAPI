@@ -3,7 +3,7 @@ name: Build Validation
 on: push
 
 jobs:
-  build:
+  Build-Validation:
 
     runs-on: self-hosted
 
