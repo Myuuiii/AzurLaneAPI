@@ -14,6 +14,5 @@ namespace AzurLaneClasses.Ship
 		public String EN_Transcription { get; set; }
 		public String JP_Transcription { get; set; }
 		public String CN_Transcription { get; set; }
-		public String Notes { get; set; }
 	}
 }
