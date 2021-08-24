@@ -10,8 +10,6 @@ namespace AzurLaneAPI.Scrapers
 {
 	public static class ShipsScraper
 	{
-		private const String BaseUrl = "https://azurlane.koumakan.jp";
-
 		static void Processing(string name)
 		{
 			try
@@ -211,7 +209,7 @@ namespace AzurLaneAPI.Scrapers
 		/// </summary>
 		public static Ship GetThumbnailImage(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
-			ship.ThumbnailImage = BaseUrl + GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[2]/a/img", hasNote).Attributes["src"].Value;
+			ship.ThumbnailImage = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[1]/div[2]/a/img", hasNote).Attributes["src"].Value;
 			return ship;
 		}
 
@@ -277,9 +275,9 @@ namespace AzurLaneAPI.Scrapers
 						break;
 					case 3:
 					default:
-						skin.ChibiUrl = BaseUrl + skinImageDescendants[0].Attributes["src"].Value;
-						skin.ImageUrl = BaseUrl + skinImageDescendants[1].Attributes["src"].Value;
-						skin.BackgroundUrl = BaseUrl + skinImageDescendants[2].Attributes["src"].Value;
+						skin.ChibiUrl = skinImageDescendants[0].Attributes["src"].Value;
+						skin.ImageUrl = skinImageDescendants[1].Attributes["src"].Value;
+						skin.BackgroundUrl = skinImageDescendants[2].Attributes["src"].Value;
 						break;
 				}
 
@@ -322,7 +320,7 @@ namespace AzurLaneAPI.Scrapers
 					item.Description = descriptionNode.InnerText;
 
 					String[] urlParts = imageNode.Attributes["src"].Value.Replace("thumb/", "").Split('/');
-					item.Url = BaseUrl + String.Join('/', urlParts.Take(urlParts.Count() - 1));
+					item.Url = String.Join('/', urlParts.Take(urlParts.Count() - 1));
 
 					ship.Gallery.Add(item);
 				}
@@ -354,7 +352,7 @@ namespace AzurLaneAPI.Scrapers
 			if (artistNode != null)
 			{
 				ship.Artist.Name = artistNode.InnerText.Replace("\n", "");
-				ship.Artist.Url = BaseUrl + artistNode.Attributes["href"].Value.TrimStart('/');
+				ship.Artist.Url = artistNode.Attributes["href"].Value.TrimStart('/');
 			}
 			else { ship.Artist = null; }
 
