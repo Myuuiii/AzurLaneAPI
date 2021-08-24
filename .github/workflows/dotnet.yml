@@ -3,8 +3,7 @@ name: Build Validation
 on: push
 
 jobs:
-  Build-Validation:
-
+  Build:
     runs-on: self-hosted
 
     steps:
@@ -19,6 +18,15 @@ jobs:
     - name: Build
       working-directory: "./AzurLaneAPI"
       run: dotnet build --no-restore
+    
+  Test:
+    runs-on: self-hosted
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
     - name: Test
       working-directory: "./AzurLaneTests"
       run: dotnet test
