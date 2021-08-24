@@ -73,6 +73,8 @@ namespace AzurLaneClasses
 		public DbSet<Auxiliary> Auxiliaries { get; set; }
 		public DbSet<Cargo> Cargo { get; set; }
 
+		public DbSet<ShipQuote> ShipQuotes { get; set; }
+
 
 		// ! Authentication
 		public DbSet<ALToken> ALTokens { get; set; }
