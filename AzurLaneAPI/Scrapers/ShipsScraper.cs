@@ -519,45 +519,50 @@ namespace AzurLaneAPI.Scrapers
 		/// </summary>
 		public static Ship GetShipStatistics(Ship ship, Boolean hasNote, HtmlDocument document)
 		{
-			HtmlNode tabberNode = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/div/div", hasNote);
-			HtmlNode[] statTabs = tabberNode.Descendants("div").ToArray();
+			HtmlNode tableBodyNode = GetXPathNode(document, "/html/body/div[3]/div[3]/div[5]/div[1]/div[2]/div[2]/div[2]/div/table/tbody", hasNote);
+			HtmlNode[] statRows = tableBodyNode.ChildNodes.Where(n => n.Name == "tr").Skip(1).Take(tableBodyNode.ChildNodes.Where(n => n.Name == "tr").Skip(1).Count() - 1).ToArray();
 
 			List<ShipStats> shipStats = new List<ShipStats>();
 
-
-			foreach (var statTab in statTabs)
+			for (int i = 0; i < statRows.Count(); i++)
 			{
-				ShipStats stats = new ShipStats();
-				HtmlNode[] trs = statTab.Descendants("td").ToArray();
+				HtmlNode statRow = statRows[i];
 
-				try
+				ShipStats stat = new ShipStats();
+				stat.Id = Guid.NewGuid();
+				var node = statRow.ChildNodes.Where(n => n.Name == "td").Skip(1).First();
+				stat.Health = Convert.ToInt32(node.InnerText.Replace("\n", ""));
+				stat.Firepower = Convert.ToInt32(statRow.Descendants("td").Skip(2).First().InnerText.Replace("\n", ""));
+				stat.Torpedo = Convert.ToInt32(statRow.Descendants("td").Skip(3).First().InnerText.Replace("\n", ""));
+				stat.Evasion = Convert.ToInt32(statRow.Descendants("td").Skip(4).First().InnerText.Replace("\n", ""));
+				stat.Speed = Convert.ToInt32(statRow.Descendants("td").Skip(5).First().InnerText.Replace("\n", ""));
+
+				if (i == 0)
 				{
-					stats.Health = Convert.ToInt32(trs[0].InnerText.Replace("\n", ""));
-					stats.Armor = trs[1].InnerText.Replace("\n", "");
-					stats.Reload = Convert.ToInt32(trs[2].InnerText.Replace("\n", ""));
-					stats.Luck = Convert.ToInt32(trs[3].InnerText.Replace("\n", ""));
+					stat.Armor = statRow.Descendants("td").Skip(6).First().InnerText.Replace("\n", "");
 
-					stats.Firepower = Convert.ToInt32(trs[4].InnerText.Replace("\n", ""));
-					stats.Torpedo = Convert.ToInt32(trs[5].InnerText.Replace("\n", ""));
-					stats.Evasion = Convert.ToInt32(trs[6].InnerText.Replace("\n", ""));
-					stats.Speed = Convert.ToInt32(trs[7].InnerText.Replace("\n", ""));
-
-					stats.AntiAir = Convert.ToInt32(trs[8].InnerText.Replace("\n", ""));
-					stats.Aviation = Convert.ToInt32(trs[9].InnerText.Replace("\n", ""));
-					stats.OilConsumption = Convert.ToInt32(trs[10].InnerText.Replace("\n", ""));
-					stats.Accuracy = Convert.ToInt32(trs[11].InnerText.Replace("\n", ""));
-
-					stats.AntiSubmarine = Convert.ToInt32(trs[12].InnerText.Replace("\n", ""));
-
-					if (trs.Length == 66)
-					{
-						stats.Oxygen = Convert.ToInt32(trs[13].InnerText.Replace("\n", ""));
-						stats.Ammunition = Convert.ToInt32(trs[14].InnerText.Replace("\n", ""));
-					}
-
-					shipStats.Add(stats);
+					stat.Reload = Convert.ToInt32(statRow.Descendants("td").Skip(7).First().InnerText.Replace("\n", ""));
+					stat.AntiAir = Convert.ToInt32(statRow.Descendants("td").Skip(8).First().InnerText.Replace("\n", ""));
+					stat.Aviation = Convert.ToInt32(statRow.Descendants("td").Skip(9).First().InnerText.Replace("\n", ""));
+					stat.OilConsumption = Convert.ToInt32(statRow.Descendants("td").Skip(10).First().InnerText.Replace("\n", ""));
+					stat.Accuracy = Convert.ToInt32(statRow.Descendants("td").Skip(11).First().InnerText.Replace("\n", ""));
+					stat.Luck = Convert.ToInt32(statRow.Descendants("td").Skip(12).First().InnerText.Replace("\n", ""));
+					stat.AntiSubmarine = Convert.ToInt32(statRow.Descendants("td").Skip(13).First().InnerText.Replace("\n", ""));
 				}
-				catch { }
+				else
+				{
+					stat.Armor = statRows[0].Descendants("td").Skip(6).First().InnerText.Replace("\n", "");
+
+					stat.Reload = Convert.ToInt32(statRow.Descendants("td").Skip(6).First().InnerText.Replace("\n", ""));
+					stat.AntiAir = Convert.ToInt32(statRow.Descendants("td").Skip(7).First().InnerText.Replace("\n", ""));
+					stat.Aviation = Convert.ToInt32(statRow.Descendants("td").Skip(8).First().InnerText.Replace("\n", ""));
+					stat.OilConsumption = Convert.ToInt32(statRow.Descendants("td").Skip(9).First().InnerText.Replace("\n", ""));
+					stat.Accuracy = Convert.ToInt32(statRow.Descendants("td").Skip(10).First().InnerText.Replace("\n", ""));
+					stat.Luck = Convert.ToInt32(statRow.Descendants("td").Skip(11).First().InnerText.Replace("\n", ""));
+					stat.AntiSubmarine = Convert.ToInt32(statRow.Descendants("td").Skip(12).First().InnerText.Replace("\n", ""));
+				}
+
+				shipStats.Add(stat);
 			}
 
 			if (shipStats.Count == 3)
@@ -711,7 +716,9 @@ namespace AzurLaneAPI.Scrapers
 			return ship;
 		}
 
-
+		/// <summary>
+		/// Get all the ship's quotes
+		/// </summary>
 		static List<ShipQuote> ProcessQuotesTable(List<ShipQuote> quotes, HtmlNode tableNode, String skinName, String language)
 		{
 			// Skip the first TR as it contains the headers
