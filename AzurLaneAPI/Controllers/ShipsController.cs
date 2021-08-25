@@ -122,7 +122,6 @@ namespace AzurLaneAPI.Controllers
 
 				if (page == null && itemsPerPage == null)
 				{
-					if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
 
 					return minimalShips;
 				}
@@ -130,11 +129,6 @@ namespace AzurLaneAPI.Controllers
 				else if (page != null && itemsPerPage == null) return BadRequest("You need to define the amount of ships per page");
 				else if (page != null && itemsPerPage != null)
 				{
-					if (itemsPerPage > 20)
-					{
-						if (!Helpers.Authenticate(HttpContext)) return Unauthorized("You need an API key to retrieve more than 20 ships at a time");
-					}
-
 					var skip = (page - 1) * itemsPerPage;
 
 					HttpContext.Response.Headers.Add("TotalPages", Convert.ToString(_context.Ships.ToArray().Length / itemsPerPage));
