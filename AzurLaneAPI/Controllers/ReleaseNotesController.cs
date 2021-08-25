@@ -101,6 +101,8 @@ namespace AzurLaneAPI.Controllers
 		{
 			try
 			{
+                if (!Helpers.Authenticate(HttpContext)) return Unauthorized();
+                
                 if (await _context.ReleaseNotes.AnyAsync(r => r.Version == releaseNote.Version))
                 {
                     return BadRequest("A release note with that version already exists");
