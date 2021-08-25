@@ -48,30 +48,6 @@ namespace AzurLaneAPI.Controllers
 			}
 		}
 
-		/// <summary>
-		/// Get a release note by id
-		/// </summary>
-		/// <param name="id">Release note id</param>
-		[HttpGet(Routes.V1.Routes.ReleaseNotes.GetId)]
-		public async Task<ActionResult<ALReleaseNote>> GetReleaseNoteById(Int32 id)
-		{
-			try
-			{
-				if (await _context.ReleaseNotes.AnyAsync(r => r.Id == id))
-				{
-					return await _context.ReleaseNotes.SingleAsync(r => r.Id == id);
-				}
-				else
-				{
-					return NotFound(Errors.V1.Errors.X400.ResourceWithIdDoesNotExist);
-				}
-			}
-			catch
-			{
-				return StatusCode(500, Errors.V1.Errors.X500.RequestFailure);
-			}
-		}
-
 		[HttpGet(Routes.V1.Routes.ReleaseNotes.GetVersion)]
 		public async Task<ActionResult<ALReleaseNote>> GetReleaseNoteByVersion(String version)
 		{
