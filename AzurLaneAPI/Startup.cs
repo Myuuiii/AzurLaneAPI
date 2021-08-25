@@ -23,7 +23,7 @@ namespace AzurLaneAPI
         {
             Configuration = configuration;
         }
-
+        
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -41,7 +41,7 @@ namespace AzurLaneAPI
             services.AddSwaggerGen(c =>
             {
                 // c.DocumentFilter<RemoveSchemasDocumentFilter>();
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "AzurLaneAPI", Version = "v1.2.22" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "AzurLaneAPI", Version = "v1.2.25" });
                 c.IncludeXmlComments(xmlPath);
             });
         }
