@@ -12,7 +12,7 @@ namespace AzurLaneClasses
 {
 	public class AzurLaneDbContext : DbContext
 	{
-		
+
 		public AzurLaneDbContext()
 		{
 			try
@@ -73,6 +73,9 @@ namespace AzurLaneClasses
 
 		// ! Logging
 		public DbSet<RequestLog> RequestLogs { get; set; }
+
+		// ! Release Notes
+		public DbSet<ALReleaseNote> ReleaseNotes { get; set; }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
