@@ -12,20 +12,12 @@ namespace AzurLaneClasses
 {
 	public class AzurLaneDbContext : DbContext
 	{
-		private static String ConfigFileName = "./appConfiguration.json";
+		
 		public AzurLaneDbContext()
 		{
 			try
 			{
-				if (File.Exists(ConfigFileName))
-				{
-					this.ConnString = JsonConvert.DeserializeObject<ApplicationConfiguration>(File.ReadAllText(ConfigFileName)).GetConnString();
-				}
-				else
-				{
-					File.WriteAllText(ConfigFileName, JsonConvert.SerializeObject(new ApplicationConfiguration()));
-					throw new FileNotFoundException("A new configuration file has been created due to it not existing.");
-				}
+				this.ConnString = ConfigLoader.GetConfiguration().GetConnString();
 			}
 			catch
 			{
