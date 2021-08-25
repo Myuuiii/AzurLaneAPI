@@ -82,7 +82,6 @@ namespace AzurLaneAPI.Routes.V1
 		{
 			public const String GetAll = "/releasenotes";
 			public const String GetLatest = "/releasenotes/latest";
-			public const String GetId = "/releasenotes/{id}";
 			public const String GetVersion = "/releasenotes/version/{version}";
 			public const String Create = "/releasenotes";
 		}
