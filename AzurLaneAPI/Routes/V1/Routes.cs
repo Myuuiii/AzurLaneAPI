@@ -36,7 +36,7 @@ namespace AzurLaneAPI.Routes.V1
 				public const String BaseName = "/shipstats/base/name/{name}";
 
 				public const String Lvl100 = "/shipstats/100/{id}";
-				public const String Lvl100Name = "/shipstats/100/{name}";
+				public const String Lvl100Name = "/shipstats/100/name/{name}";
 
 				public const String Lvl100Retro = "/shipstats/100R/{id}";
 				public const String Lvl100RetroName = "/shipstats/100R/name/{name}";
