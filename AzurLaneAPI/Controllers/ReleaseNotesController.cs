@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AzurLaneClasses;
 using Microsoft.AspNetCore.Mvc;
@@ -36,11 +37,11 @@ namespace AzurLaneAPI.Controllers
 		/// Get the latest release note
 		/// </summary>
 		[HttpGet(Routes.V1.Routes.ReleaseNotes.GetLatest)]
-		public async Task<ActionResult<ALReleaseNote>> GetLatestReleaseNote()
+		public ActionResult<ALReleaseNote> GetLatestReleaseNote()
 		{
 			try
 			{
-				return await _context.ReleaseNotes.LastAsync();
+				return _context.ReleaseNotes.ToArray().Last();
 			}
 			catch
 			{
