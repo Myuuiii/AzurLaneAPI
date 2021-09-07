@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using AzurLaneAPI.Extensions;
+using static AzurLaneAPI.StaticHelpers;
 using AzurLaneClasses.Ship;
 using HtmlAgilityPack;
 
@@ -531,48 +532,51 @@ namespace AzurLaneAPI.Scrapers
 				ShipStats stat = new ShipStats();
 				stat.Id = Guid.NewGuid();
 				var node = statRow.ChildNodes.Where(n => n.Name == "td").Skip(1).First();
-				stat.Health = Convert.ToInt32(node.InnerText.Replace("\n", ""));
-				stat.Firepower = Convert.ToInt32(statRow.Descendants("td").Skip(2).First().InnerText.Replace("\n", ""));
-				stat.Torpedo = Convert.ToInt32(statRow.Descendants("td").Skip(3).First().InnerText.Replace("\n", ""));
-				stat.Aviation = Convert.ToInt32(statRow.Descendants("td").Skip(4).First().InnerText.Replace("\n", ""));
-				stat.AntiAir = Convert.ToInt32(statRow.Descendants("td").Skip(5).First().InnerText.Replace("\n", ""));
-				stat.Reload = Convert.ToInt32(statRow.Descendants("td").Skip(6).First().InnerText.Replace("\n", ""));
-				stat.Evasion = Convert.ToInt32(statRow.Descendants("td").Skip(7).First().InnerText.Replace("\n", ""));
 
-
-				if (i == 0)
+				if (node.InnerText.Replace("\n", "").IsNumeric())
 				{
-					stat.Armor = statRow.Descendants("td").Skip(8).First().InnerText.Replace("\n", "");
-					stat.Speed = Convert.ToInt32(statRow.Descendants("td").Skip(9).First().InnerText.Replace("\n", ""));
-					stat.Accuracy = Convert.ToInt32(statRow.Descendants("td").Skip(10).First().InnerText.Replace("\n", ""));
-					stat.Luck = Convert.ToInt32(statRow.Descendants("td").Skip(11).First().InnerText.Replace("\n", ""));
-					stat.AntiSubmarine = Convert.ToInt32(statRow.Descendants("td").Skip(12).First().InnerText.Replace("\n", ""));
-					stat.OilConsumption = Convert.ToInt32(statRow.Descendants("td").Skip(13).First().InnerText.Replace("\n", ""));
+					stat.Health = Convert.ToInt32(node.InnerText.Replace("\n", ""));
+					stat.Firepower = statRow.Descendants("td").Skip(2).First().InnerText.Replace("\n", "").CheckStatfieldContent();
+					stat.Torpedo = statRow.Descendants("td").Skip(3).First().InnerText.Replace("\n", "").CheckStatfieldContent();
+					stat.Aviation = statRow.Descendants("td").Skip(4).First().InnerText.Replace("\n", "").CheckStatfieldContent();
+					stat.AntiAir = statRow.Descendants("td").Skip(5).First().InnerText.Replace("\n", "").CheckStatfieldContent();
+					stat.Reload = statRow.Descendants("td").Skip(6).First().InnerText.Replace("\n", "").CheckStatfieldContent();
+					stat.Evasion = statRow.Descendants("td").Skip(7).First().InnerText.Replace("\n", "").CheckStatfieldContent();
 
-					if (statRow.ChildNodes.Where(n => n.Name == "td").Count() > 14)
+					if (i == 0)
 					{
-						stat.Oxygen = Convert.ToInt32(statRow.Descendants("td").Skip(14).First().InnerText.Replace("\n", ""));
-						stat.Ammunition = Convert.ToInt32(statRow.Descendants("td").Skip(15).First().InnerText.Replace("\n", ""));
+						stat.Armor = statRow.Descendants("td").Skip(8).First().InnerText.Replace("\n", "");
+						stat.Speed = statRow.Descendants("td").Skip(9).First().InnerText.Replace("\n", "").CheckStatfieldContent();
+						stat.Accuracy = statRow.Descendants("td").Skip(10).First().InnerText.Replace("\n", "").CheckStatfieldContent();
+						stat.Luck = statRow.Descendants("td").Skip(11).First().InnerText.Replace("\n", "").CheckStatfieldContent();
+						stat.AntiSubmarine = statRow.Descendants("td").Skip(12).First().InnerText.Replace("\n", "").CheckStatfieldContent();
+						stat.OilConsumption = statRow.Descendants("td").Skip(13).First().InnerText.Replace("\n", "").CheckStatfieldContent();
+
+						if (statRow.ChildNodes.Where(n => n.Name == "td").Count() > 14)
+						{
+							stat.Oxygen = statRow.Descendants("td").Skip(14).First().InnerText.Replace("\n", "").CheckStatfieldContent();
+							stat.Ammunition = statRow.Descendants("td").Skip(15).First().InnerText.Replace("\n", "").CheckStatfieldContent();
+						}
 					}
-				}
-				else
-				{
-					stat.Armor = statRows[0].Descendants("td").Skip(6).First().InnerText.Replace("\n", "");
-
-					stat.Speed = Convert.ToInt32(statRow.Descendants("td").Skip(8).First().InnerText.Replace("\n", ""));
-					stat.Accuracy = Convert.ToInt32(statRow.Descendants("td").Skip(9).First().InnerText.Replace("\n", ""));
-					stat.Luck = Convert.ToInt32(statRow.Descendants("td").Skip(10).First().InnerText.Replace("\n", ""));
-					stat.AntiSubmarine = Convert.ToInt32(statRow.Descendants("td").Skip(11).First().InnerText.Replace("\n", ""));
-					stat.OilConsumption = Convert.ToInt32(statRow.Descendants("td").Skip(12).First().InnerText.Replace("\n", ""));
-
-					if (statRows[0].ChildNodes.Where(n => n.Name == "td").Count() > 14)
+					else
 					{
-						stat.Oxygen = Convert.ToInt32(statRows[0].Descendants("td").Skip(14).First().InnerText.Replace("\n", ""));
-						stat.Ammunition = Convert.ToInt32(statRows[0].Descendants("td").Skip(15).First().InnerText.Replace("\n", ""));
-					}
-				}
+						stat.Armor = statRows[0].Descendants("td").Skip(6).First().InnerText.Replace("\n", "");
 
-				shipStats.Add(stat);
+						stat.Speed = statRow.Descendants("td").Skip(8).First().InnerText.Replace("\n", "").CheckStatfieldContent();
+						stat.Accuracy = statRow.Descendants("td").Skip(9).First().InnerText.Replace("\n", "").CheckStatfieldContent();
+						stat.Luck = statRow.Descendants("td").Skip(10).First().InnerText.Replace("\n", "").CheckStatfieldContent();
+						stat.AntiSubmarine = statRow.Descendants("td").Skip(11).First().InnerText.Replace("\n", "").CheckStatfieldContent();
+						stat.OilConsumption = statRow.Descendants("td").Skip(12).First().InnerText.Replace("\n", "").CheckStatfieldContent();
+
+						if (statRows[0].ChildNodes.Where(n => n.Name == "td").Count() > 14)
+						{
+							stat.Oxygen = statRows[0].Descendants("td").Skip(14).First().InnerText.Replace("\n", "").CheckStatfieldContent();
+							stat.Ammunition = statRows[0].Descendants("td").Skip(15).First().InnerText.Replace("\n", "").CheckStatfieldContent();
+						}
+					}
+
+					shipStats.Add(stat);
+				}
 			}
 
 			if (shipStats.Count == 3)
