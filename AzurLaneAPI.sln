@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzurLaneAPI.Domain", "AzurLaneAPI.Domain\AzurLaneAPI.Domain.csproj", "{A87D93C2-9AAC-4373-B728-9A36E65AD0FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzurLaneAPI.API", "AzurLaneAPI.API\AzurLaneAPI.API.csproj", "{83B2EE3F-DF3A-41FD-9D8B-7FA17CBCB868}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A87D93C2-9AAC-4373-B728-9A36E65AD0FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A87D93C2-9AAC-4373-B728-9A36E65AD0FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A87D93C2-9AAC-4373-B728-9A36E65AD0FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A87D93C2-9AAC-4373-B728-9A36E65AD0FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83B2EE3F-DF3A-41FD-9D8B-7FA17CBCB868}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83B2EE3F-DF3A-41FD-9D8B-7FA17CBCB868}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83B2EE3F-DF3A-41FD-9D8B-7FA17CBCB868}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83B2EE3F-DF3A-41FD-9D8B-7FA17CBCB868}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

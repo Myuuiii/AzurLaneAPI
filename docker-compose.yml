@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./AzurLaneAPI.API/Dockerfile
+    image: azurlaneapi-api
+    hostname: azurlaneapi-api
+    container_name: azurlaneapi-api
+    depends_on:
+      - db
+    ports:
+      - "5001:80"
+      - "5002:443"
+    env_file:
+      - .env
+  db:
+    image: mariadb:latest
+    hostname: azurlaneapi-db
+    container_name: azurlaneapi-db
+    ports:
+      - "3306:3306"
+    env_file:
+        - .env
+    environment:
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "yes"
+    volumes:
+        - ./docker/db/init:/docker-entrypoint-initdb.d
+        - ./docker/db/data:/var/lib/mysql
