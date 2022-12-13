@@ -1,6 +1,7 @@
-﻿using HtmlAgilityPack;
+﻿using AzurLaneAPI.Scraper.Entities;
+using HtmlAgilityPack;
 
-namespace AzurLaneAPI.Scraper;
+namespace AzurLaneAPI.Scraper.Scrapers;
 
 public static class ShipListScraper
 {

@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using AzurLaneAPI.Scraper.Scrapers;
 
 namespace AzurLaneAPI.Scraper;
 
@@ -16,6 +16,7 @@ public static class ScraperEntry
 
 	public static async Task ScrapeShips()
 	{
-		Console.WriteLine(JsonSerializer.Serialize(await ShipListScraper.GetShipList()));
+		// Console.WriteLine(JsonSerializer.Serialize(await ShipListScraper.GetShipList()));
+		await ShipDetailsScraper.GetShipDetailsAsync();
 	}
 }
