@@ -1,4 +1,4 @@
-![](https://cdn.myuuiii.com/projects/azurlaneapi/dffda60e-2c52-40ea-a7ea-267345d018f2.png)
+![](https://cdn.myuuiii.com/projects/azurlaneapi/repo-header.jpg)
 
 ## Roadmap
 
