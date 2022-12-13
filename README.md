@@ -38,8 +38,8 @@
 
 ### Authentication
 
-- [ ] Basic user authentication using JWT
-- [ ] Require authorization for CUD routes
+- [x] Basic user authentication using JWT
+- [x] Require authorization for CUD routes
 
 ### Validation
 
