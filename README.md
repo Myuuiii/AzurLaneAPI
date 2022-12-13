@@ -1,4 +1,4 @@
-# Azur Lane API
+![](https://cdn.myuuiii.com/projects/azurlaneapi/dffda60e-2c52-40ea-a7ea-267345d018f2.png)
 
 ## Roadmap
 
