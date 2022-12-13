@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using AzurLaneAPI.Domain.Dtos.Auth;
 using AzurLaneAPI.Domain.Dtos.Faction;
+using AzurLaneAPI.Domain.Dtos.Identity;
 using AzurLaneAPI.Domain.Dtos.Ship;
 using AzurLaneAPI.Domain.Dtos.ShipStats;
 using AzurLaneAPI.Domain.Dtos.ShipType;
 using AzurLaneAPI.Domain.Dtos.ShipTypeSubclass;
 using AzurLaneAPI.Domain.Entities;
+using AzurLaneAPI.Domain.Identity;
 
 namespace AzurLaneAPI.Domain.Profiles;
 
@@ -44,5 +47,10 @@ public class AutoMapperProfiles : Profile
 		CreateMap<ShipTypeSubclass, ShipTypeSubclassDto>();
 		CreateMap<ShipTypeSubclassCreateDto, ShipTypeSubclass>();
 		CreateMap<ShipTypeSubclassUpdateDto, ShipTypeSubclass>();
+
+		// Auth
+		CreateMap<RegisterDto, APIUser>();
+		CreateMap<LoginDto, APIUser>();
+		CreateMap<APIUser, APIUserDto>();
 	}
 }
