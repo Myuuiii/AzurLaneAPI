@@ -1,34 +1,17 @@
-﻿using System.Text.Json;
-using AzurLaneAPI.Domain.Data;
-using HtmlAgilityPack;
+﻿using HtmlAgilityPack;
 
 namespace AzurLaneAPI.Scraper;
 
-public static class WikiScraper
+public static class ShipListScraper
 {
-	private static DataContext _context = new();
-	private static readonly HttpClient Client = new();
-
-	private const string UrlPrefix = "https://azurlane.koumakan.jp";
-
-	public static async Task Main(string[] args)
-	{
-		await ScrapeShips();
-	}
-
-	public static async Task ScrapeShips()
-	{
-		Console.WriteLine(JsonSerializer.Serialize(await GetShipList()));
-	}
-
 	/// <summary>
-	/// Retrieve all the ids, names and urls for the ships (retrofit table excluded)
+	///     Retrieve all the ids, names and urls for the ships (retrofit table excluded)
 	/// </summary>
 	/// <returns></returns>
-	private static async Task<ShipLinkContainer[]> GetShipList()
+	public static async Task<ShipLinkContainer[]> GetShipList()
 	{
 		HtmlDocument doc = new();
-		doc.LoadHtml(await Client.GetStringAsync(
+		doc.LoadHtml(await StaticData.Client.GetStringAsync(
 			"https://azurlane.koumakan.jp/w/index.php?title=List_of_Ships&mobileaction=toggle_view_desktop"));
 
 		// Retrieve all the table body nodes of the tables that contain ships
@@ -45,7 +28,7 @@ public static class WikiScraper
 	}
 
 	/// <summary>
-	/// Loop over all the table body nodes and retrieve the ship ids, names and urls from each row in them
+	///     Loop over all the table body nodes and retrieve the ship ids, names and urls from each row in them
 	/// </summary>
 	/// <param name="tableBodyNodes">Table Body Rows</param>
 	/// <param name="linkContainers"></param>
@@ -65,7 +48,7 @@ public static class WikiScraper
 	}
 
 	/// <summary>
-	/// Retrieve the ship id, name and url from a row node
+	///     Retrieve the ship id, name and url from a row node
 	/// </summary>
 	/// <param name="rowNode"></param>
 	/// <param name="linkContainers"></param>
@@ -77,7 +60,7 @@ public static class WikiScraper
 			// Select the 1st TD element in the row, of which the text content is the ship id
 			Id = rowNode.ChildNodes.First(n => n.OriginalName == "td").InnerText,
 			// Select the 2nd TD element in the row, of which the text content is the ship name
-			Name = rowNode.ChildNodes.Where(n => n.OriginalName == "td").Skip(1).First().InnerText,
+			Name = rowNode.ChildNodes.Where(n => n.OriginalName == "td").Skip(1).First().InnerText
 		};
 
 		// Select the first anchor element in the 2nd TD of the row
@@ -87,7 +70,7 @@ public static class WikiScraper
 			.First(n => n.OriginalName == "a");
 
 		// Get the href attribute of the anchor element
-		linkContainer.Url = UrlPrefix + anchorNode.Attributes["href"].Value;
+		linkContainer.Url = StaticData.UrlPrefix + anchorNode.Attributes["href"].Value;
 		linkContainers.Add(linkContainer);
 	}
 }
