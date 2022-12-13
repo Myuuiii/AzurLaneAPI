@@ -47,7 +47,7 @@ public class ShipTypesController : V1BaseController
 	{
 		if (!ModelState.IsValid)
 			return BadRequest(ModelState);
-		
+
 		if (await _shipTypeRepository.ExistsWithNameAsync(shipType.Name))
 			return Conflict("Ship type with that name already exists");
 
