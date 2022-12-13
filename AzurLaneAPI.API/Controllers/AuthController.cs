@@ -16,15 +16,18 @@ namespace AzurLaneAPI.API.Controllers;
 [Route(Auth.Base)]
 public class AuthController : ApiControllerBase
 {
+	private readonly RoleManager<APIRole> _roleManager;
 	private readonly ISignupCodeRepository _signupCodeRepository;
 	private readonly ITokenService _tokenService;
 	private readonly UserManager<APIUser> _userManager;
 	private readonly IUserRepository _userRepository;
 
 	public AuthController(DataContext ctx, IMapper mapper, ISignupCodeRepository signupCodeRepository,
-		UserManager<APIUser> userManager, IUserRepository userRepository, ITokenService tokenService) : base(ctx,
+		UserManager<APIUser> userManager, IUserRepository userRepository, ITokenService tokenService,
+		RoleManager<APIRole> roleManager) : base(ctx,
 		mapper)
 	{
+		_roleManager = roleManager;
 		_tokenService = tokenService;
 		_userRepository = userRepository;
 		_userManager = userManager;
@@ -62,8 +65,10 @@ public class AuthController : ApiControllerBase
 		IdentityResult result = await _userManager.CreateAsync(user, register.Password);
 		if (!result.Succeeded) return BadRequest(result.Errors);
 
-		IdentityResult roleResult = await _userManager.AddToRoleAsync(user, "Member");
+		IdentityResult roleResult = await _userManager.AddToRoleAsync(user, IdentityNames.Roles.MEMBER);
 		if (!roleResult.Succeeded) return BadRequest(result.Errors);
+
+		await _signupCodeRepository.UseCodeAsync(register.SignupCode, register.UserName);
 
 		return new APIUserDto
 		{

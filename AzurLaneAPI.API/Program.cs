@@ -1,5 +1,8 @@
+using AzurLaneAPI.API;
 using AzurLaneAPI.API.Services;
 using AzurLaneAPI.Domain.Data;
+using AzurLaneAPI.Domain.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -23,6 +26,9 @@ await using (ServiceProvider serviceProvider = builder.Services.BuildServiceProv
 		{
 			DataContext context = scopeServiceProvider.GetRequiredService<DataContext>();
 			context.Database.Migrate();
+
+			RoleManager<APIRole> roleManager = scopeServiceProvider.GetRequiredService<RoleManager<APIRole>>();
+			await Seeder.SeedAsync(context, roleManager);
 		}
 		catch (Exception)
 		{

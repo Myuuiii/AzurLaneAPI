@@ -32,10 +32,16 @@ public static class ApiIdentityService
 			};
 		});
 
-		// Policy based authorization
 		services.AddAuthorization(options =>
 		{
-			options.AddPolicy("RequireAdminRole", policy => { policy.RequireRole("Admin"); });
+			options.AddPolicy(IdentityNames.Policies.RequireAdminRole,
+				policy => { policy.RequireRole(IdentityNames.Roles.ADMIN); });
+			options.AddPolicy(IdentityNames.Policies.RequireModeratorRole,
+				policy => { policy.RequireRole(IdentityNames.Roles.MODERATOR); });
+			options.AddPolicy(IdentityNames.Policies.RequireContributorRole,
+				policy => { policy.RequireRole(IdentityNames.Roles.CONTRIBUTOR); });
+			options.AddPolicy(IdentityNames.Policies.RequireMemberRole,
+				policy => { policy.RequireRole(IdentityNames.Roles.MEMBER); });
 		});
 
 		services.AddScoped<ITokenService, TokenService>();

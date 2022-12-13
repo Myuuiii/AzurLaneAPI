@@ -16,6 +16,15 @@ public class SignupCodeRepository : Repository<SignupCode, int>, ISignupCodeRepo
 		return await Context.SignupCodes.AnyAsync(x =>
 			x.Used == false &&
 			x.Code == code &&
-			x.Expiration < DateTime.UtcNow);
+			x.Expiration > DateTime.UtcNow);
+	}
+
+	public async Task<bool> UseCodeAsync(string code, string userName)
+	{
+		SignupCode signupCode = await Context.SignupCodes.FirstAsync(x => x.Code == code);
+		signupCode.Used = true;
+		signupCode.UsedBy = userName;
+		signupCode.UsedAt = DateTime.UtcNow;
+		return await Context.SaveChangesAsync() > 0;
 	}
 }
