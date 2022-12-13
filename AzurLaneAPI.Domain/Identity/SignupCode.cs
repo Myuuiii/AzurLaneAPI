@@ -7,5 +7,5 @@ public class SignupCode
 	public DateTime Expiration { get; set; }
 	public bool Used { get; set; }
 	public DateTime? UsedAt { get; set; }
-	public string? UsedBy { get; set; }
+	public string? UsedBy { get; set; } = "";
 }

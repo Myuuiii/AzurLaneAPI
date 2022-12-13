@@ -15,7 +15,7 @@ public class EnumInfoController : V1BaseController
 	public EnumInfoController(DataContext ctx, IMapper mapper) : base(ctx, mapper)
 	{
 	}
-	
+
 	[AllowAnonymous]
 	[HttpGet(Routes.V1.EnumInfo.Armor)]
 	public async Task<ActionResult<IEnumerable<string>>> GetArmorType()

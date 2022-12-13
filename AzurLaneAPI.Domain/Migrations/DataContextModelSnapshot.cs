@@ -300,7 +300,6 @@ namespace AzurLaneAPI.Domain.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("UsedBy")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");

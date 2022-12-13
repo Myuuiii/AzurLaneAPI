@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using AzurLaneAPI.API.Controllers.V1;
 using AzurLaneAPI.API.Extensions;
-using AzurLaneAPI.API.Routes;
 using AzurLaneAPI.API.Services;
 using AzurLaneAPI.Domain.Data;
 using AzurLaneAPI.Domain.Dtos.Auth;
@@ -34,7 +33,7 @@ public class AuthController : V1BaseController
 		_userManager = userManager;
 		_signupCodeRepository = signupCodeRepository;
 	}
-	
+
 	[AllowAnonymous]
 	[HttpPost(Routes.V1.Auth.Login)]
 	public async Task<ActionResult<APIUserDto>> Login([FromBody] LoginDto login)
@@ -79,17 +78,14 @@ public class AuthController : V1BaseController
 			UserName = user.UserName
 		};
 	}
-	
+
 	[Authorize]
 	[HttpPost(Routes.V1.Auth.Refresh)]
 	public async Task<ActionResult<APIUserDto>> Refresh()
 	{
 		string username = User.GetUsername();
 		APIUser? user = await _userRepository.GetByUsernameAsync(username);
-		if (user == null) return NotFound();
-
 		string? token = await _tokenService.GenerateTokenAsync(user);
-		if (token == null) return Unauthorized();
 
 		return new APIUserDto
 		{

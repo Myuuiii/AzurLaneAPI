@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AzurLaneAPI.Domain.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221213082551_Identity")]
+    [Migration("20221213181757_Identity")]
     partial class Identity
     {
         /// <inheritdoc />
@@ -303,7 +303,6 @@ namespace AzurLaneAPI.Domain.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("UsedBy")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");

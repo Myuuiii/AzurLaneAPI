@@ -75,7 +75,7 @@ namespace AzurLaneAPI.Domain.Migrations
                     Expiration = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Used = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     UsedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    UsedBy = table.Column<string>(type: "longtext", nullable: false)
+                    UsedBy = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>

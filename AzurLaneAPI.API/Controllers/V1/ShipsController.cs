@@ -25,7 +25,7 @@ public class ShipsController : V1BaseController
 		_shipTypeRepository = shipTypeRepository;
 		_shipRepository = shipRepository;
 	}
-	
+
 	[AllowAnonymous]
 	[HttpGet(Routes.V1.Ships.GetAll)]
 	public async Task<ActionResult<IEnumerable<ShipDto>>> GetAll()

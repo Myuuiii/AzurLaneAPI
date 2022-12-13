@@ -2,7 +2,6 @@
 using AzurLaneAPI.Domain.Data;
 using AzurLaneAPI.Domain.Dtos.Faction;
 using AzurLaneAPI.Domain.Entities;
-using AzurLaneAPI.Domain.Migrations;
 using AzurLaneAPI.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +17,7 @@ public class FactionsController : V1BaseController
 	{
 		_factionRepository = factionRepository;
 	}
-	
+
 	[AllowAnonymous]
 	[HttpGet(Routes.V1.Factions.GetAll)]
 	public async Task<ActionResult<IEnumerable<FactionDto>>> GetAll()
