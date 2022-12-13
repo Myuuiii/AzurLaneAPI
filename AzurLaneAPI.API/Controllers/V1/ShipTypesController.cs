@@ -8,8 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AzurLaneAPI.API.Controllers.V1;
 
-[AllowAnonymous]
-[Route(Routes.V1.ShipTypes.Base)]
+[Route(Routes.V1.ShipTypes.Controller)]
 public class ShipTypesController : V1BaseController
 {
 	private readonly IShipTypeRepository _shipTypeRepository;
@@ -20,12 +19,14 @@ public class ShipTypesController : V1BaseController
 		_shipTypeRepository = shipTypeRepository;
 	}
 
+	[AllowAnonymous]
 	[HttpGet(Routes.V1.ShipTypes.GetAll)]
 	public async Task<ActionResult<IEnumerable<ShipTypeDto>>> GetAll()
 	{
 		return Ok(Mapper.Map<IEnumerable<ShipTypeDto>>(await _shipTypeRepository.GetAsync()));
 	}
 
+	[AllowAnonymous]
 	[HttpGet(Routes.V1.ShipTypes.GetSingleById)]
 	public async Task<ActionResult<ShipTypeDto>> GetSingleById(Guid id)
 	{
@@ -35,6 +36,7 @@ public class ShipTypesController : V1BaseController
 		return Ok(Mapper.Map<ShipTypeDto>(await _shipTypeRepository.GetAsync(id)));
 	}
 
+	[AllowAnonymous]
 	[HttpGet(Routes.V1.ShipTypes.GetSingleByName)]
 	public async Task<ActionResult<ShipTypeDto>> GetSingleByName(string name)
 	{
@@ -44,6 +46,7 @@ public class ShipTypesController : V1BaseController
 		return Ok(Mapper.Map<ShipTypeDto>(await _shipTypeRepository.GetByNameAsync(name)));
 	}
 
+	[Authorize(Policy = IdentityNames.Policies.RequireContributorRole)]
 	[HttpPost(Routes.V1.ShipTypes.Create)]
 	public async Task<ActionResult> Create([FromBody] ShipTypeCreateDto shipType)
 	{
@@ -60,6 +63,7 @@ public class ShipTypesController : V1BaseController
 		return CreatedAtAction(nameof(GetSingleById), new { id = shipTypeEntity.Id }, shipTypeEntity.Id);
 	}
 
+	[Authorize(Policy = IdentityNames.Policies.RequireContributorRole)]
 	[HttpPut(Routes.V1.ShipTypes.Update)]
 	public async Task<ActionResult> Update(Guid id, [FromBody] ShipTypeUpdateDto shipType)
 	{
@@ -84,6 +88,7 @@ public class ShipTypesController : V1BaseController
 		return AcceptedAtAction(nameof(GetSingleById), new { id }, id);
 	}
 
+	[Authorize(Policy = IdentityNames.Policies.RequireContributorRole)]
 	[HttpDelete(Routes.V1.ShipTypes.Delete)]
 	public async Task<ActionResult> Delete(Guid id)
 	{

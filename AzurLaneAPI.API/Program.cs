@@ -7,13 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services
-	.AddIdentityService()
-	.AddApiDataService();
+builder.Services.AddApiApplicationService();
+builder.Services.AddApiDataService();
+builder.Services.AddIdentityService();
 
 WebApplication app = builder.Build();
 
@@ -45,5 +41,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 app.Run("http://[::]:80");

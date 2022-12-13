@@ -2,14 +2,14 @@
 using AzurLaneAPI.Domain.Data;
 using AzurLaneAPI.Domain.Dtos.Faction;
 using AzurLaneAPI.Domain.Entities;
+using AzurLaneAPI.Domain.Migrations;
 using AzurLaneAPI.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AzurLaneAPI.API.Controllers.V1;
 
-[AllowAnonymous]
-[Route(Routes.V1.Factions.Base)]
+[Route(Routes.V1.Factions.Controller)]
 public class FactionsController : V1BaseController
 {
 	private readonly IFactionRepository _factionRepository;
@@ -18,13 +18,15 @@ public class FactionsController : V1BaseController
 	{
 		_factionRepository = factionRepository;
 	}
-
+	
+	[AllowAnonymous]
 	[HttpGet(Routes.V1.Factions.GetAll)]
 	public async Task<ActionResult<IEnumerable<FactionDto>>> GetAll()
 	{
 		return Ok(Mapper.Map<IEnumerable<FactionDto>>(await _factionRepository.GetAsync()));
 	}
 
+	[AllowAnonymous]
 	[HttpGet(Routes.V1.Factions.GetSingleById)]
 	public async Task<ActionResult<FactionDto>> GetSingleById(Guid id)
 	{
@@ -33,6 +35,7 @@ public class FactionsController : V1BaseController
 		return Ok(Mapper.Map<FactionDto>(await _factionRepository.GetAsync(id)));
 	}
 
+	[AllowAnonymous]
 	[HttpGet(Routes.V1.Factions.GetSingleByName)]
 	public async Task<ActionResult<FactionDto>> GetSingleByName(string name)
 	{
@@ -41,6 +44,7 @@ public class FactionsController : V1BaseController
 		return Ok(Mapper.Map<FactionDto>(await _factionRepository.GetByNameAsync(name)));
 	}
 
+	[Authorize(Policy = IdentityNames.Policies.RequireContributorRole)]
 	[HttpPost(Routes.V1.Factions.Create)]
 	public async Task<ActionResult> Create([FromBody] FactionCreateDto faction)
 	{
@@ -57,6 +61,7 @@ public class FactionsController : V1BaseController
 		return CreatedAtAction(nameof(GetSingleById), new { id = factionEntity.Id }, factionEntity.Id);
 	}
 
+	[Authorize(Policy = IdentityNames.Policies.RequireContributorRole)]
 	[HttpPut(Routes.V1.Factions.Update)]
 	public async Task<ActionResult> Update(Guid id, [FromBody] FactionUpdateDto faction)
 	{
@@ -81,6 +86,7 @@ public class FactionsController : V1BaseController
 		return AcceptedAtAction(nameof(GetSingleById), new { id }, id);
 	}
 
+	[Authorize(Policy = IdentityNames.Policies.RequireContributorRole)]
 	[HttpDelete(Routes.V1.Factions.Delete)]
 	public async Task<ActionResult> Delete(Guid id)
 	{

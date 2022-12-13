@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using AzurLaneAPI.API.Controllers.V1;
+using AzurLaneAPI.API.Extensions;
 using AzurLaneAPI.API.Routes;
 using AzurLaneAPI.API.Services;
 using AzurLaneAPI.Domain.Data;
@@ -12,9 +14,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AzurLaneAPI.API.Controllers;
 
-[AllowAnonymous]
-[Route(Auth.Base)]
-public class AuthController : ApiControllerBase
+[Route(Routes.V1.Auth.Controller)]
+public class AuthController : V1BaseController
 {
 	private readonly RoleManager<APIRole> _roleManager;
 	private readonly ISignupCodeRepository _signupCodeRepository;
@@ -33,8 +34,9 @@ public class AuthController : ApiControllerBase
 		_userManager = userManager;
 		_signupCodeRepository = signupCodeRepository;
 	}
-
-	[HttpPost(Auth.Login)]
+	
+	[AllowAnonymous]
+	[HttpPost(Routes.V1.Auth.Login)]
 	public async Task<ActionResult<APIUserDto>> Login([FromBody] LoginDto login)
 	{
 		if (!await _userRepository.ExistsWithNameAsync(login.UserName)) return NotFound();
@@ -50,7 +52,8 @@ public class AuthController : ApiControllerBase
 		};
 	}
 
-	[HttpPost(Auth.Register)]
+	[AllowAnonymous]
+	[HttpPost(Routes.V1.Auth.Register)]
 	public async Task<ActionResult<APIUserDto>> Register([FromBody] RegisterDto register)
 	{
 		if (!await _signupCodeRepository.IsValidAsync(register.SignupCode))
@@ -73,6 +76,24 @@ public class AuthController : ApiControllerBase
 		return new APIUserDto
 		{
 			Token = await _tokenService.GenerateTokenAsync(user),
+			UserName = user.UserName
+		};
+	}
+	
+	[Authorize]
+	[HttpPost(Routes.V1.Auth.Refresh)]
+	public async Task<ActionResult<APIUserDto>> Refresh()
+	{
+		string username = User.GetUsername();
+		APIUser? user = await _userRepository.GetByUsernameAsync(username);
+		if (user == null) return NotFound();
+
+		string? token = await _tokenService.GenerateTokenAsync(user);
+		if (token == null) return Unauthorized();
+
+		return new APIUserDto
+		{
+			Token = token,
 			UserName = user.UserName
 		};
 	}

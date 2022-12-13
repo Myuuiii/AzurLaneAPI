@@ -8,8 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AzurLaneAPI.API.Controllers.V1;
 
-[AllowAnonymous]
-[Route(Routes.V1.Ships.Base)]
+[Route(Routes.V1.Ships.Controller)]
 public class ShipsController : V1BaseController
 {
 	private readonly IFactionRepository _factionRepository;
@@ -26,13 +25,15 @@ public class ShipsController : V1BaseController
 		_shipTypeRepository = shipTypeRepository;
 		_shipRepository = shipRepository;
 	}
-
+	
+	[AllowAnonymous]
 	[HttpGet(Routes.V1.Ships.GetAll)]
 	public async Task<ActionResult<IEnumerable<ShipDto>>> GetAll()
 	{
 		return Ok(Mapper.Map<IEnumerable<ShipDto>>(await _shipRepository.GetAsync()));
 	}
 
+	[AllowAnonymous]
 	[HttpGet(Routes.V1.Ships.GetSingleById)]
 	public async Task<ActionResult<ShipDto>> GetSingleById(string id)
 	{
@@ -42,6 +43,7 @@ public class ShipsController : V1BaseController
 		return Ok(Mapper.Map<ShipDto>(await _shipRepository.GetAsync(id)));
 	}
 
+	[AllowAnonymous]
 	[HttpGet(Routes.V1.Ships.GetSingleByName)]
 	public async Task<ActionResult<ShipDto>> GetSingleByName(string name)
 	{
@@ -51,6 +53,7 @@ public class ShipsController : V1BaseController
 		return Ok(Mapper.Map<ShipDto>(await _shipRepository.GetByNameAsync(name)));
 	}
 
+	[Authorize(Policy = IdentityNames.Policies.RequireContributorRole)]
 	[HttpPost(Routes.V1.Ships.Create)]
 	public async Task<ActionResult> Create([FromBody] ShipCreateDto ship)
 	{
@@ -85,6 +88,7 @@ public class ShipsController : V1BaseController
 		return CreatedAtAction(nameof(GetSingleById), new { id = shipEntity.Id }, shipEntity.Id);
 	}
 
+	[Authorize(Policy = IdentityNames.Policies.RequireContributorRole)]
 	[HttpPut(Routes.V1.Ships.Update)]
 	public async Task<ActionResult> Update(string id, [FromBody] ShipUpdateDto ship)
 	{
@@ -127,6 +131,7 @@ public class ShipsController : V1BaseController
 		return AcceptedAtAction(nameof(GetSingleById), new { id }, id);
 	}
 
+	[Authorize(Policy = IdentityNames.Policies.RequireContributorRole)]
 	[HttpDelete(Routes.V1.Ships.Delete)]
 	public async Task<ActionResult> Delete(string id)
 	{

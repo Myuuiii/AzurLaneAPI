@@ -8,8 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AzurLaneAPI.API.Controllers.V1;
 
-[AllowAnonymous]
-[Route(Routes.V1.ShipTypeSubclasses.Base)]
+[Route(Routes.V1.ShipTypeSubclasses.Controller)]
 public class ShipTypeSubclassesController : V1BaseController
 {
 	private readonly IShipTypeRepository _shipTypeRepository;
@@ -23,12 +22,14 @@ public class ShipTypeSubclassesController : V1BaseController
 		_shipTypeSubclassRepository = shipTypeSubclassRepository;
 	}
 
+	[AllowAnonymous]
 	[HttpGet(Routes.V1.ShipTypeSubclasses.GetAll)]
 	public async Task<ActionResult<IEnumerable<ShipTypeSubclassDto>>> GetAll()
 	{
 		return Ok(Mapper.Map<IEnumerable<ShipTypeSubclassDto>>(await _shipTypeSubclassRepository.GetAsync()));
 	}
 
+	[AllowAnonymous]
 	[HttpGet(Routes.V1.ShipTypeSubclasses.GetSingleById)]
 	public async Task<ActionResult<ShipTypeSubclassDto>> GetSingleById(Guid id)
 	{
@@ -37,6 +38,7 @@ public class ShipTypeSubclassesController : V1BaseController
 		return Ok(Mapper.Map<ShipTypeSubclassDto>(await _shipTypeSubclassRepository.GetAsync(id)));
 	}
 
+	[AllowAnonymous]
 	[HttpGet(Routes.V1.ShipTypeSubclasses.GetSingleByName)]
 	public async Task<ActionResult<ShipTypeSubclassDto>> GetSingleByName(string name)
 	{
@@ -45,6 +47,7 @@ public class ShipTypeSubclassesController : V1BaseController
 		return Ok(Mapper.Map<ShipTypeSubclassDto>(await _shipTypeSubclassRepository.GetByNameAsync(name)));
 	}
 
+	[Authorize(Policy = IdentityNames.Policies.RequireContributorRole)]
 	[HttpPost(Routes.V1.ShipTypeSubclasses.Create)]
 	public async Task<ActionResult> Create([FromBody] ShipTypeSubclassCreateDto shipTypeSubclass)
 	{
@@ -67,6 +70,7 @@ public class ShipTypeSubclassesController : V1BaseController
 			shipTypeSubclassEntity.Id);
 	}
 
+	[Authorize(Policy = IdentityNames.Policies.RequireContributorRole)]
 	[HttpPut(Routes.V1.ShipTypeSubclasses.Update)]
 	public async Task<ActionResult> Update(Guid id, [FromBody] ShipTypeSubclassUpdateDto shipTypeSubclass)
 	{
@@ -97,6 +101,7 @@ public class ShipTypeSubclassesController : V1BaseController
 		return AcceptedAtAction(nameof(GetSingleById), new { id }, id);
 	}
 
+	[Authorize(Policy = IdentityNames.Policies.RequireContributorRole)]
 	[HttpDelete(Routes.V1.ShipTypeSubclasses.Delete)]
 	public async Task<ActionResult> Delete(Guid id)
 	{
