@@ -3,10 +3,12 @@ using AzurLaneAPI.Domain.Data;
 using AzurLaneAPI.Domain.Dtos.Faction;
 using AzurLaneAPI.Domain.Entities;
 using AzurLaneAPI.Domain.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AzurLaneAPI.API.Controllers.V1;
 
+[AllowAnonymous]
 [Route(Routes.V1.Factions.Base)]
 public class FactionsController : V1BaseController
 {
