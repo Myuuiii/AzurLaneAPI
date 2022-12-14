@@ -77,7 +77,7 @@ public class ClassScraper
 
 				if (subcategoryName == "A and B")
 				{
-					await CreateAandBCategoryFromJointItem(shipType);
+					await CreateAAndBCategoryFromJointItem(shipType);
 					continue;
 				}
 
@@ -98,7 +98,7 @@ public class ClassScraper
 		}
 	}
 
-	private static async Task CreateAandBCategoryFromJointItem(ShipType shipType)
+	private static async Task CreateAAndBCategoryFromJointItem(ShipType shipType)
 	{
 		DataContext scopedDbContext = new();
 		if (!await scopedDbContext.ShipTypeSubclasses.AnyAsync(x => x.Name == "A"))

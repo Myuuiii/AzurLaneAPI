@@ -15,6 +15,7 @@ public static class ShipDetailsScraper
 
 		List<ShipType> shipTypes = await StaticData._context.ShipTypes.ToListAsync();
 		List<ShipTypeSubclass> subclasses = await StaticData._context.ShipTypeSubclasses.ToListAsync();
+		List<Faction> factions = await StaticData._context.Factions.ToListAsync();
 
 		foreach (ShipLinkContainer shipContainer in shipLinkContainers)
 		{
@@ -55,18 +56,21 @@ public static class ShipDetailsScraper
 						ship.Type = shipTypes.FirstOrDefault(x => x.Name.Contains(data));
 						break;
 					case 3:
-						ship.Subclass = subclasses.FirstOrDefault(x => x.Name.Contains(data));
+						ship.Faction = factions.FirstOrDefault(x => x.Name.Contains(data)); // TODO: Scrape Factions
 						break;
 					case 4:
-						// Voice actor
+						ship.Subclass = subclasses.FirstOrDefault(x => x.Name.Contains(data));
 						break;
 					case 5:
-						// Illustrator
+						// VA
+						break;
+					case 6:
+						// Illust
 						break;
 				}
 			}
 		}
-		
+
 		// TODO: Depends on the subclasses and types already being scraped. 
 
 		return ships;
