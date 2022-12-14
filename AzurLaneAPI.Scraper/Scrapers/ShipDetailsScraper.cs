@@ -14,6 +14,7 @@ public static class ShipDetailsScraper
 		List<Ship> ships = new();
 
 		List<ShipType> shipTypes = await StaticData._context.ShipTypes.ToListAsync();
+		List<ShipTypeSubclass> subclasses = await StaticData._context.ShipTypeSubclasses.ToListAsync();
 
 		foreach (ShipLinkContainer shipContainer in shipLinkContainers)
 		{
@@ -28,14 +29,45 @@ public static class ShipDetailsScraper
 
 			// Card Headline (containing English, Japanese and Chinese name of ship) -> // TODO: Test for all ships
 			HtmlNode cardHeadingNode = shipCardContentNode.SelectSingleNode(".//div[@class=\"card-headline\"]");
-			HtmlNode[] cardHeadingNodes = cardHeadingNode.ChildNodes.Where(x=>x.OriginalName == "span").ToArray();
+			HtmlNode[] cardHeadingNodes = cardHeadingNode.ChildNodes.Where(x => x.OriginalName == "span").ToArray();
 			ship.EnglishName = string.Join(' ', cardHeadingNodes[0].InnerText.Cleanup().Split(" ").Skip(1));
 			ship.ChineseName = cardHeadingNodes[1].InnerText.Cleanup().Replace("CN: ", "");
 			ship.JapaneseName = cardHeadingNodes[2].InnerText.Cleanup().Replace("JP: ", "");
-			
+
 			// Card Info -> Table // TODO: Contains 7 rows (Construction, Rarity, Classification, Faction, Subclass, VA, Illustrator)
-			HtmlNode cardInfoTableBodyNode = shipCardContentNode.SelectSingleNode(".//div[@class=\"card-info\"]/table/tbody");
+			HtmlNodeCollection? dataNodes =
+				shipCardContentNode.SelectNodes(".//div[@class=\"card-info\"]/table/tbody/tr/td[last()]");
+
+			for (int index = 0; index < dataNodes.Count; index++)
+			{
+				HtmlNode? item = dataNodes[index];
+				string data = item.InnerText.Cleanup();
+				switch (index)
+				{
+					case 0:
+						ship.ConstructionTime = data;
+						break;
+					case 1:
+						Enum.TryParse(data.Split(' ')[0], out Rarity rarity);
+						ship.Rarity = rarity;
+						break;
+					case 2:
+						ship.Type = shipTypes.FirstOrDefault(x => x.Name.Contains(data));
+						break;
+					case 3:
+						ship.Subclass = subclasses.FirstOrDefault(x => x.Name.Contains(data));
+						break;
+					case 4:
+						// Voice actor
+						break;
+					case 5:
+						// Illustrator
+						break;
+				}
+			}
 		}
+		
+		// TODO: Depends on the subclasses and types already being scraped. 
 
 		return ships;
 	}
