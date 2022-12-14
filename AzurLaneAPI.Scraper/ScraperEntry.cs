@@ -17,8 +17,9 @@ public static class ScraperEntry
 
 	public static async Task ScrapeShips()
 	{
-		ShipLinkContainer[] data = await ShipListScraper.GetShipList();
-		await ClassScraper.GetShipClassesAsync();
-		await ShipDetailsScraper.GetShipDetailsAsync(data);
+		// ShipLinkContainer[] data = await ShipListScraper.GetShipList();
+		// await ClassScraper.GetShipClassesAsync();
+		// await ShipDetailsScraper.GetShipDetailsAsync(data);
+		await FactionsScraper.ScrapeFactionsAsync();
 	}
 }
