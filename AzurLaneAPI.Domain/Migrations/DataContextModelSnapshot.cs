@@ -43,7 +43,7 @@ namespace AzurLaneAPI.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Factions");
+                    b.ToTable("Factions", (string)null);
                 });
 
             modelBuilder.Entity("AzurLaneAPI.Domain.Entities.Ship", b =>
@@ -92,7 +92,7 @@ namespace AzurLaneAPI.Domain.Migrations
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("Ships");
+                    b.ToTable("Ships", (string)null);
                 });
 
             modelBuilder.Entity("AzurLaneAPI.Domain.Entities.ShipStats", b =>
@@ -142,7 +142,7 @@ namespace AzurLaneAPI.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ShipStats");
+                    b.ToTable("ShipStats", (string)null);
                 });
 
             modelBuilder.Entity("AzurLaneAPI.Domain.Entities.ShipType", b =>
@@ -161,7 +161,7 @@ namespace AzurLaneAPI.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ShipTypes");
+                    b.ToTable("ShipTypes", (string)null);
                 });
 
             modelBuilder.Entity("AzurLaneAPI.Domain.Entities.ShipTypeSubclass", b =>
@@ -185,7 +185,7 @@ namespace AzurLaneAPI.Domain.Migrations
 
                     b.HasIndex("ShipTypeId");
 
-                    b.ToTable("ShipTypeSubclasses");
+                    b.ToTable("ShipTypeSubclasses", (string)null);
                 });
 
             modelBuilder.Entity("AzurLaneAPI.Domain.Identity.APIRole", b =>
@@ -304,7 +304,7 @@ namespace AzurLaneAPI.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SignupCodes");
+                    b.ToTable("SignupCodes", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
