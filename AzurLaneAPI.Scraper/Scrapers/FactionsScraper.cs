@@ -49,6 +49,18 @@ public class FactionsScraper
 			}
 		}
 
+		if (!await scopedContext.Factions.AnyAsync(x => x.Name == "Universal"))
+		{
+			Faction universalFaction = new()
+			{
+				Name = "Universal",
+				Prefix = "UNIV",
+				Description = string.Empty,
+				IconUrl = "https://azurlane.netojuu.com/images/thumb/d/da/Cm_1.png/145px-Cm_1.png"
+			};
+			await scopedContext.Factions.AddAsync(universalFaction);
+		}
+
 		await scopedContext.SaveChangesAsync();
 	}
 }

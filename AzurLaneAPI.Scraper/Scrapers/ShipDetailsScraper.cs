@@ -1,4 +1,6 @@
-﻿using AzurLaneAPI.Domain.Entities;
+﻿using System.Text.Json;
+using AzurLaneAPI.Domain.Data;
+using AzurLaneAPI.Domain.Entities;
 using AzurLaneAPI.Scraper.Entities;
 using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +13,7 @@ public static class ShipDetailsScraper
 
 	public static async Task<IEnumerable<Ship>> GetShipDetailsAsync(ShipLinkContainer[] shipLinkContainers)
 	{
+		DataContext scopedContext = new();
 		List<Ship> ships = new();
 
 		List<ShipType> shipTypes = await StaticData._context.ShipTypes.ToListAsync();
@@ -21,6 +24,7 @@ public static class ShipDetailsScraper
 		{
 			HtmlDocument doc = await shipContainer.RequestDocumentAsync();
 			Ship ship = new Ship();
+			ship.Id = shipContainer.Id;
 
 			// Select the first div element on the page that has the class "ship-card"
 			HtmlNode shipCardNode = doc.DocumentNode.Descendants().FirstOrDefault(x => x.HasClass("ship-card"));
@@ -53,13 +57,13 @@ public static class ShipDetailsScraper
 						ship.Rarity = rarity;
 						break;
 					case 2:
-						ship.Type = shipTypes.FirstOrDefault(x => x.Name.Contains(data));
+						ship.TypeId = shipTypes.FirstOrDefault(x => x.Name.Contains(data)).Id;
 						break;
 					case 3:
-						ship.Faction = factions.FirstOrDefault(x => x.Name.Contains(data)); // TODO: Scrape Factions
+						ship.FactionId = factions.FirstOrDefault(x => x.Name.Contains(data)).Id; // TODO: Scrape Factions
 						break;
 					case 4:
-						ship.Subclass = subclasses.FirstOrDefault(x => x.Name.Contains(data));
+						ship.SubclassId = subclasses.FirstOrDefault(x => x.Name.Contains(data)).Id;
 						break;
 					case 5:
 						// VA
@@ -69,6 +73,8 @@ public static class ShipDetailsScraper
 						break;
 				}
 			}
+			await scopedContext.Ships.AddAsync(ship);
+			await scopedContext.SaveChangesAsync();
 		}
 
 		// TODO: Depends on the subclasses and types already being scraped. 

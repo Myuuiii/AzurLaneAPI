@@ -13,10 +13,16 @@ public class Ship
 	public string ConstructionTime { get; set; }
 
 	public Rarity Rarity { get; set; }
-
+	
+	
+	public Guid TypeId { get; set; }
 	public ShipType Type { get; set; }
+	
+	public Guid FactionId { get; set; }
 	public Faction Faction { get; set; }
+	
+	public Guid SubclassId { get; set; }
 	public ShipTypeSubclass Subclass { get; set; }
 
-	public ShipStats BaseStats { get; set; }
+	public ShipStats? BaseStats { get; set; }
 }
