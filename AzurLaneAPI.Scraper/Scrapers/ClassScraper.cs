@@ -37,7 +37,7 @@ public class ClassScraper
 
 		foreach (ShipType shipType in context.ShipTypes)
 		{
-			await Task.Delay(2000); // Artificial delay to not overload the server
+			await Task.Delay(500); // Artificial delay to not overload the server
 			
 			DataContext scopedDbContext = new();
 
@@ -78,7 +78,6 @@ public class ClassScraper
 				if (subcategoryName == "A and B")
 				{
 					await CreateAAndBCategoryFromJointItem(shipType);
-					continue;
 				}
 
 				if (await scopedDbContext.ShipTypeSubclasses.AnyAsync(x => x.Name == subcategoryName))
