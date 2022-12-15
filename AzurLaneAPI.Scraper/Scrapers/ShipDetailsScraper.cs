@@ -88,7 +88,22 @@ public static class ShipDetailsScraper
 								factions.FirstOrDefault(x => x.Name.Contains(data)).Id; // TODO: Scrape Factions
 							break;
 						case 4:
-							ship.SubclassId = subclasses.FirstOrDefault(x => x.Name.Contains(data)).Id;
+							if (scopedContext.ShipTypeSubclasses.Any(x => x.Name.Contains(data)))
+								ship.SubclassId = scopedContext.ShipTypeSubclasses.FirstOrDefault(x => x.Name.Contains(data)).Id;
+							else
+							{
+								Console.WriteLine($"Subclass {data} not found in database.");
+								ShipTypeSubclass subclass = new()
+								{
+									Id = Guid.NewGuid(),
+									Name = data,
+									Description ="",
+									ShipTypeId = ship.TypeId
+								};
+								await scopedContext.ShipTypeSubclasses.AddAsync(subclass);
+								await scopedContext.SaveChangesAsync();
+								ship.SubclassId = subclass.Id;
+							}
 							break;
 						case 5:
 							// VA
