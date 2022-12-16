@@ -11,7 +11,7 @@ namespace AzurLaneAPI.Scraper.Scrapers;
 public static class ShipDetailsScraper
 {
 	public static int[] TableLevels = { 1, 100, 120, 125 };
-	public const bool SkipExisting = false;
+	public const bool SkipExisting = true;
 
 	public const int LongestStatRow = 14;
 
@@ -19,6 +19,16 @@ public static class ShipDetailsScraper
 	{
 		DataContext scopedContext = new();
 		List<Ship> ships = new();
+
+		// shipLinkContainers = new[] // Quickly test a single ship
+		// {
+		// 	new ShipLinkContainer()
+		// 	{
+		// 		Id = "338",
+		// 		Name = "Jintsuu",
+		// 		Url = "https://azurlane.koumakan.jp/wiki/Jintsuu"
+		// 	}
+		// };
 
 		List<ShipType> shipTypes = await StaticData._context.ShipTypes.ToListAsync();
 		List<ShipTypeSubclass> subclasses = await StaticData._context.ShipTypeSubclasses.ToListAsync();
@@ -122,10 +132,6 @@ public static class ShipDetailsScraper
 
 				// Card Stats -> Table 
 				// has classes "ship-stats" and  "wikitable"
-
-				// Basic stats
-
-
 				HtmlNode statsTableNode =
 					doc.DocumentNode.SelectSingleNode(".//table[@class=\"ship-stats wikitable\"]");
 
@@ -134,7 +140,9 @@ public static class ShipDetailsScraper
 
 				// Of the TR that has LongestStatRow items, grab the 9th td's text content and convert it to the enum value (Armor)
 				// This value is to be used for all stats as it does not change with level
-				Enum.TryParse(statsTableRows.First(x=>x.SelectNodes(".//td").Count() == LongestStatRow).SelectNodes(".//td")[8].InnerText.Cleanup(), out Armor armor);
+				Enum.TryParse(
+					statsTableRows.First(x => x.SelectNodes(".//td").Count() == LongestStatRow).SelectNodes(".//td")[8]
+						.InnerText.Cleanup(), out Armor armor);
 
 				// In the list of rows, there are 4 rows we need to keep, the first td contains a name, if this name is 
 				// "Base" "Level 100" "Level 120" or "Level 125" we need to keep the row
@@ -181,20 +189,20 @@ public static class ShipDetailsScraper
 					// Remove the first element (the first TD) as it is the header
 					IEnumerable<HtmlNode> tableDataNodes = statsTableDataNodes.Skip(1).ToArray();
 					int modifier = 0;
-					if (statsTableDataNodes.Count() >= 14) modifier = 1; 
-						
-					stats.Health = int.Parse(tableDataNodes.ElementAt(0).InnerText.Cleanup());
-					stats.Firepower = int.Parse(tableDataNodes.ElementAt(1).InnerText.Cleanup());
-					stats.Torpedo = int.Parse(tableDataNodes.ElementAt(2).InnerText.Cleanup());
-					stats.Aviation = int.Parse(tableDataNodes.ElementAt(3).InnerText.Cleanup());
-					stats.AntiAir = int.Parse(tableDataNodes.ElementAt(4).InnerText.Cleanup());
-					stats.Reload = int.Parse(tableDataNodes.ElementAt(5).InnerText.Cleanup());
-					stats.Evasion = int.Parse(tableDataNodes.ElementAt(6).InnerText.Cleanup());
-					stats.Speed = int.Parse(tableDataNodes.ElementAt(7 + modifier).InnerText.Cleanup());
-					stats.Accuracy = int.Parse(tableDataNodes.ElementAt(8 + modifier).InnerText.Cleanup());
-					stats.Luck = int.Parse(tableDataNodes.ElementAt(9 + modifier).InnerText.Cleanup());
-					stats.AntiSub = int.Parse(tableDataNodes.ElementAt(10 + modifier).InnerText.Cleanup());
-					stats.OilConsumption = int.Parse(tableDataNodes.ElementAt(11 + modifier).InnerText.Cleanup());
+					if (statsTableDataNodes.Count() >= 14) modifier = 1;
+
+					stats.Health = GetStatIntValueOrDefault(tableDataNodes, 0);
+					stats.Firepower = GetStatIntValueOrDefault(tableDataNodes, 1);
+					stats.Torpedo = GetStatIntValueOrDefault(tableDataNodes, 2);
+					stats.Aviation = GetStatIntValueOrDefault(tableDataNodes, 3);
+					stats.AntiAir = GetStatIntValueOrDefault(tableDataNodes, 4);
+					stats.Reload = GetStatIntValueOrDefault(tableDataNodes, 5);
+					stats.Evasion = GetStatIntValueOrDefault(tableDataNodes, 6);
+					stats.Speed = GetStatIntValueOrDefault(tableDataNodes, 7 + modifier);
+					stats.Accuracy = GetStatIntValueOrDefault(tableDataNodes, 8 + modifier);
+					stats.Luck = GetStatIntValueOrDefault(tableDataNodes, 9 + modifier);
+					stats.AntiSub = GetStatIntValueOrDefault(tableDataNodes, 10 + modifier);
+					stats.OilConsumption = GetStatIntValueOrDefault(tableDataNodes, 11 + modifier);
 
 					switch (i)
 					{
@@ -230,5 +238,14 @@ public static class ShipDetailsScraper
 		// TODO: Depends on the subclasses and types already being scraped. 
 
 		return ships;
+	}
+
+	private static int GetStatIntValueOrDefault(IEnumerable<HtmlNode> nodes, int index)
+	{
+		if (nodes.Count() <= index) return 0;
+		string value = nodes.ElementAt(index).InnerText.Cleanup();
+		return int.TryParse(value, out int result)
+			? result
+			: 0;
 	}
 }
