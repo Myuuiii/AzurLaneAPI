@@ -1,4 +1,6 @@
-﻿using AzurLaneAPI.Domain.Data;
+﻿using AutoMapper;
+using AzurLaneAPI.Domain.Data;
+using AzurLaneAPI.Domain.Dtos.Ship;
 using AzurLaneAPI.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,8 +8,11 @@ namespace AzurLaneAPI.Domain.Repositories;
 
 public class ShipRepository : Repository<Ship, string>, IShipRepository
 {
-	public ShipRepository(DataContext context) : base(context)
+	private IMapper _mapper;
+
+	public ShipRepository(DataContext context, IMapper mapper) : base(context)
 	{
+		_mapper = mapper;
 	}
 
 	public new async Task<IEnumerable<Ship>> GetAsync()
@@ -54,4 +59,8 @@ public class ShipRepository : Repository<Ship, string>, IShipRepository
 			.Include(x => x.Subclass)
 			.FirstAsync(x => x.EnglishName == name || x.JapaneseName == name || x.ChineseName == name);
 	}
+
+	public async Task<IEnumerable<MinimalShipDataDto>> GetMinimalAsync() =>
+		await _mapper.ProjectTo<MinimalShipDataDto>(Context.Ships)
+			.ToListAsync();
 }

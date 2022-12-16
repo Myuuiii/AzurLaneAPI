@@ -29,6 +29,8 @@ public static class V1
 		public const string Create = "";
 		public const string Update = "{id}";
 		public const string Delete = "{id}";
+
+		public const string Minimal = "minimal";
 	}
 
 	public static class Factions
