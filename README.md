@@ -59,14 +59,14 @@
     - [x] Japanese
   - [x] Construction Time
   - [x] Rarity
-  - [ ] Classification (`ShipType`)
-  - [ ] Faction
-  - [ ] Class (`Subclass`)
-  - [ ] Statistics
-    - [ ] Base Stats
-    - [ ] Level 100 Stats
-    - [ ] Level 120 Stats
-    - [ ] Level 125 Stats
+  - [x] Classification (`ShipType`)
+  - [x] Faction
+  - [x] Class (`Subclass`)
+  - [x] Statistics
+    - [x] Base Stats
+    - [x] Level 100 Stats
+    - [x] Level 120 Stats
+    - [x] Level 125 Stats
   - [ ] Thumbnail Image
 - [ ] Ship Types
   - [x] Name
@@ -74,11 +74,11 @@
   - [ ] Subclasses
     - [x] Name
     - [ ] Description
-- [ ] Factions
-  - [ ] Name
+- [x] Factions
+  - [x] Name
   - [ ] Description
-  - [ ] Image Url
-  - [ ] Prefix
+  - [x] Image Url
+  - [x] Prefix
 
 ### Rendering
 
@@ -94,11 +94,6 @@
 - [ ] Faction HTML Template Render
   - [ ] Template
   - [ ] Styling
-
-### Data Fetching
-
-- [ ] Scrape Azur Lane Wiki for data
-  - [ ] Scrape basic ship data
 
 ## Possibly in future
 
