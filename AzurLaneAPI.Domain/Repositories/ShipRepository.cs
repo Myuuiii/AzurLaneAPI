@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AzurLaneAPI.Domain.APIQueryParameters;
 using AzurLaneAPI.Domain.Data;
 using AzurLaneAPI.Domain.Dtos.Ship;
 using AzurLaneAPI.Domain.Entities;
@@ -60,7 +61,23 @@ public class ShipRepository : Repository<Ship, string>, IShipRepository
 			.FirstAsync(x => x.EnglishName == name || x.JapaneseName == name || x.ChineseName == name);
 	}
 
-	public async Task<IEnumerable<MinimalShipDataDto>> GetMinimalAsync() =>
-		await _mapper.ProjectTo<MinimalShipDataDto>(Context.Ships)
+	public async Task<IEnumerable<MinimalShipDataDto>> GetMinimalAsync(PaginationParameters parameters) =>
+		await _mapper.ProjectTo<MinimalShipDataDto>(Context.Ships
+			.Skip((parameters.PageNumber - 1) * parameters.PageSize)
+			.Take(parameters.PageSize)).ToListAsync();
+
+	public async Task<IEnumerable<Ship>> GetAsync(PaginationParameters parameters)
+	{
+		return await Context.Ships
+			.Include(x => x.Faction)
+			.Include(x => x.BaseStats)
+			.Include(x => x.Level100Stats)
+			.Include(x => x.Level120Stats)
+			.Include(x => x.Level125Stats)
+			.Include(x => x.Type)
+			.Include(x => x.Subclass)
+			.Skip((parameters.PageNumber - 1) * parameters.PageSize)
+			.Take(parameters.PageSize)
 			.ToListAsync();
+	}
 }
