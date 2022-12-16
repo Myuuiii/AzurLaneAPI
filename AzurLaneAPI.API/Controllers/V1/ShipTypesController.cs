@@ -21,10 +21,8 @@ public class ShipTypesController : V1BaseController
 
 	[AllowAnonymous]
 	[HttpGet(Routes.V1.ShipTypes.GetAll)]
-	public async Task<ActionResult<IEnumerable<ShipTypeDto>>> GetAll()
-	{
-		return Ok(Mapper.Map<IEnumerable<ShipTypeDto>>(await _shipTypeRepository.GetAsync()));
-	}
+	public async Task<ActionResult<IEnumerable<ShipTypeDto>>> GetAll() =>
+		Ok(Mapper.Map<IEnumerable<ShipTypeDto>>(await _shipTypeRepository.GetAsync()));
 
 	[AllowAnonymous]
 	[HttpGet(Routes.V1.ShipTypes.GetSingleById)]
@@ -73,7 +71,7 @@ public class ShipTypesController : V1BaseController
 		if (!await _shipTypeRepository.Exists(id))
 			return NotFound();
 
-		if (await _shipTypeRepository.ExistsWithNameAsync(shipType.Name)) 
+		if (await _shipTypeRepository.ExistsWithNameAsync(shipType.Name))
 		{
 			ShipType possiblyConflictingShipType = await _shipTypeRepository.GetByNameAsync(shipType.Name);
 			if (possiblyConflictingShipType.Id != id)

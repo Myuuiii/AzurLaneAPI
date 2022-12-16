@@ -27,7 +27,8 @@ public class FactionsScraper
 
 				if (await scopedContext.Factions.AnyAsync(x => x.Name == cells[0].InnerText.Cleanup()))
 				{
-					Faction existingFaction = await scopedContext.Factions.FirstAsync(x => x.Name == cells[0].InnerText.Cleanup());
+					Faction existingFaction =
+						await scopedContext.Factions.FirstAsync(x => x.Name == cells[0].InnerText.Cleanup());
 					existingFaction.Name = cells[0].InnerText.Cleanup();
 					existingFaction.Prefix = cells[1].InnerText.Cleanup();
 					existingFaction.Description = string.Empty; // TODO: Fetch this later

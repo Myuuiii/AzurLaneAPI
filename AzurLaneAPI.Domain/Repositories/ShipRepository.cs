@@ -9,7 +9,7 @@ namespace AzurLaneAPI.Domain.Repositories;
 
 public class ShipRepository : Repository<Ship, string>, IShipRepository
 {
-	private IMapper _mapper;
+	private readonly IMapper _mapper;
 
 	public ShipRepository(DataContext context, IMapper mapper) : base(context)
 	{

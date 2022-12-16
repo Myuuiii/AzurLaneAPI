@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using AzurLaneAPI.Domain.Data;
+﻿using AzurLaneAPI.Domain.Data;
 using AzurLaneAPI.Domain.Entities;
 using HtmlAgilityPack;
 using Humanizer;
@@ -28,7 +27,7 @@ public class ClassScraper
 			ShipType newType = new()
 			{
 				Name = nodeText,
-				Description = "", // TODO: Fetch this later
+				Description = "" // TODO: Fetch this later
 			};
 			await context.ShipTypes.AddAsync(newType);
 		}
@@ -38,7 +37,7 @@ public class ClassScraper
 		foreach (ShipType shipType in context.ShipTypes)
 		{
 			await Task.Delay(500); // Artificial delay to not overload the server
-			
+
 			DataContext scopedDbContext = new();
 
 			HtmlDocument typeDoc = new();
@@ -65,20 +64,17 @@ public class ClassScraper
 			// //div[@id='mw-subcategories']
 			Console.WriteLine($"Getting subtypes for {shipType.Name}");
 			HtmlNode subcategoriesParentNode = typeDoc.DocumentNode.SelectSingleNode("//div[@id='mw-subcategories']");
-			
+
 			if (subcategoriesParentNode == null) continue; // No subcategories
-			
+
 			// Get all ul/li/a elements (subcategories)
 			IEnumerable<HtmlNode> subcategoryNodes = subcategoriesParentNode.SelectNodes(".//ul/li/a");
-			
+
 			foreach (HtmlNode item in subcategoryNodes)
 			{
 				string subcategoryName = item.InnerText.Cleanup().Replace(" class", string.Empty);
 
-				if (subcategoryName == "A and B")
-				{
-					await CreateAAndBCategoryFromJointItem(shipType);
-				}
+				if (subcategoryName == "A and B") await CreateAAndBCategoryFromJointItem(shipType);
 
 				if (await scopedDbContext.ShipTypeSubclasses.AnyAsync(x => x.Name == subcategoryName))
 					continue;

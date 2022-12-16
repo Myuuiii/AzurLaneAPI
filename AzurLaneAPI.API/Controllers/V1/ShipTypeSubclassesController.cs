@@ -24,10 +24,8 @@ public class ShipTypeSubclassesController : V1BaseController
 
 	[AllowAnonymous]
 	[HttpGet(Routes.V1.ShipTypeSubclasses.GetAll)]
-	public async Task<ActionResult<IEnumerable<ShipTypeSubclassDto>>> GetAll()
-	{
-		return Ok(Mapper.Map<IEnumerable<ShipTypeSubclassDto>>(await _shipTypeSubclassRepository.GetAsync()));
-	}
+	public async Task<ActionResult<IEnumerable<ShipTypeSubclassDto>>> GetAll() =>
+		Ok(Mapper.Map<IEnumerable<ShipTypeSubclassDto>>(await _shipTypeSubclassRepository.GetAsync()));
 
 	[AllowAnonymous]
 	[HttpGet(Routes.V1.ShipTypeSubclasses.GetSingleById)]

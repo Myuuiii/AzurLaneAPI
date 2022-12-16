@@ -13,20 +13,13 @@ public class Repository<TEntity, TIdType> : IRepository<TEntity, TIdType> where 
 		Context = context;
 	}
 
-	public async Task<TEntity> GetAsync(TIdType id)
-	{
-		return await Context.Set<TEntity>().FindAsync(id) ?? throw new KeyNotFoundException();
-	}
+	public async Task<TEntity> GetAsync(TIdType id) =>
+		await Context.Set<TEntity>().FindAsync(id) ?? throw new KeyNotFoundException();
 
-	public async Task<IEnumerable<TEntity>> GetAsync()
-	{
-		return await Context.Set<TEntity>().ToListAsync();
-	}
+	public async Task<IEnumerable<TEntity>> GetAsync() => await Context.Set<TEntity>().ToListAsync();
 
-	public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
-	{
-		return await Context.Set<TEntity>().Where(predicate).ToListAsync();
-	}
+	public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate) =>
+		await Context.Set<TEntity>().Where(predicate).ToListAsync();
 
 	public async Task AddAsync(TEntity entity)
 	{
@@ -53,13 +46,7 @@ public class Repository<TEntity, TIdType> : IRepository<TEntity, TIdType> where 
 		Context.Set<TEntity>().Update(entity);
 	}
 
-	public async Task<int> SaveChangesAsync()
-	{
-		return await Context.SaveChangesAsync();
-	}
+	public async Task<int> SaveChangesAsync() => await Context.SaveChangesAsync();
 
-	public async Task<bool> Exists(TIdType id)
-	{
-		return await Context.Set<TEntity>().FindAsync(id) != null;
-	}
+	public async Task<bool> Exists(TIdType id) => await Context.Set<TEntity>().FindAsync(id) != null;
 }

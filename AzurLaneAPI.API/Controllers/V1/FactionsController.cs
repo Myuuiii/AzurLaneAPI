@@ -20,10 +20,8 @@ public class FactionsController : V1BaseController
 
 	[AllowAnonymous]
 	[HttpGet(Routes.V1.Factions.GetAll)]
-	public async Task<ActionResult<IEnumerable<FactionDto>>> GetAll()
-	{
-		return Ok(Mapper.Map<IEnumerable<FactionDto>>(await _factionRepository.GetAsync()));
-	}
+	public async Task<ActionResult<IEnumerable<FactionDto>>> GetAll() =>
+		Ok(Mapper.Map<IEnumerable<FactionDto>>(await _factionRepository.GetAsync()));
 
 	[AllowAnonymous]
 	[HttpGet(Routes.V1.Factions.GetSingleById)]

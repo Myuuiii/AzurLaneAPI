@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-using System.Xml.Linq;
-using AzurLaneAPI.Domain.Data;
+﻿using AzurLaneAPI.Domain.Data;
 using AzurLaneAPI.Domain.Entities;
 using AzurLaneAPI.Scraper.Entities;
 using HtmlAgilityPack;
@@ -10,10 +8,10 @@ namespace AzurLaneAPI.Scraper.Scrapers;
 
 public static class ShipDetailsScraper
 {
-	public static int[] TableLevels = { 1, 100, 120, 125 };
 	public const bool SkipExisting = true;
 
 	public const int LongestStatRow = 14;
+	public static int[] TableLevels = { 1, 100, 120, 125 };
 
 	public static async Task<IEnumerable<Ship>> GetShipDetailsAsync(ShipLinkContainer[] shipLinkContainers)
 	{
@@ -104,7 +102,9 @@ public static class ShipDetailsScraper
 							break;
 						case 4:
 							if (scopedContext.ShipTypeSubclasses.Any(x => x.Name.Contains(data)))
+							{
 								ship.SubclassId = scopedContext.ShipTypeSubclasses.First(x => x.Name.Contains(data)).Id;
+							}
 							else
 							{
 								Console.WriteLine($"Subclass {data} not found in database.");
