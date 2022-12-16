@@ -1,54 +1,68 @@
 ![](https://cdn.myuuiii.com/projects/azurlaneapi/repo-header.jpg)
 
-## Roadmap
-
 ### Endpoints
 
-- [x] Factions CRUD
-  - [x] Get All
-  - [x] Get Single by Id
-  - [x] Get Single by Name
-  - [x] Create
-  - [x] Update
-  - [x] Delete
-- [x] Ships CRUD
-  - [x] Get All
-  - [x] Get Single by Id
-  - [x] Get Single by Name
-  - [x] Create
-  - [x] Update
-  - [x] Delete
-  - [x] Get Minimal Ship Information
-- [x] ShipTypes CRUD
-  - [x] Get All
-  - [x] Get Single by Id
-  - [x] Get Single by Name
-  - [x] Create
-  - [x] Update
-  - [x] Delete
-- [x] ShipTypeSubclasses CRUD
-  - [x] Get All
-  - [x] Get Single by Id
-  - [x] Get Single by Name
-  - [x] Create
-  - [x] Update
-  - [x] Delete
-- [x] Enum Information Routes
-  - [x] Armor
-  - [x] Rarity
+#### Factions
 
-### Authentication
+| Method | Endpoint               | Implementation |
+| ------ | ---------------------- | -------------- |
+| Get    | `/factions`            | ✅              |
+| Get    | `/factions/:id`        | ✅              |
+| Get    | `/factions/name/:name` | ✅              |
+| Post   | `/factions`            | ✅              |
+| Put    | `/factions/:id`        | ✅              |
+| Delete | `/factions/:id`        | ✅              |
 
-- [x] Basic user authentication using JWT
-- [x] Require authorization for CUD routes
+#### Ships
 
-### Validation
+| Method | Endpoint            | Implementation |
+| ------ | ------------------- | -------------- |
+| Get    | `/ships`            | ✅              |
+| Get    | `/ships/:id`        | ✅              |
+| Get    | `/ships/name/:name` | ✅              |
+| Get    | `/ships/minimal`    | ✅              |
+| Post   | `/ships`            | ✅              |
+| Put    | `/ships/:id`        | ✅              |
+| Delete | `/ships/:id`        | ✅              |
 
-- [x] Name update checking
-  - [x] Ships
-  - [x] Ship Types
-  - [x] Ship Type Subclasses
-  - [x] Factions
+#### Ship Types
+
+| Method | Endpoint                | Implementation |
+| ------ | ----------------------- | -------------- |
+| Get    | `/shiptypes`            | ✅              |
+| Get    | `/shiptypes:id`         | ✅              |
+| Get    | `/shiptypes/name/:name` | ✅              |
+| Post   | `/shiptypes`            | ✅              |
+| Put    | `/shiptypes/:id`        | ✅              |
+| Delete | `/shiptypes/:id`        | ✅              |
+
+#### Ship Type Subclasses
+
+| Method | Endpoint                         | Implementation |
+| ------ | -------------------------------- | -------------- |
+| Get    | `/shiptypesubclasses`            | ✅              |
+| Get    | `/shiptypesubclasses/:id`        | ✅              |
+| Get    | `/shiptypesubclasses/name/:name` | ✅              |
+| Post   | `/shiptypesubclasses`            | ✅              |
+| Put    | `/shiptypesubclasses/:id`        | ✅              |
+| Delete | `/shiptypesubclasses/:id`        | ✅              |
+
+#### Enum Information
+
+| Method | Endpoint       | Implementation |
+| ------ | -------------- | -------------- |
+| Get    | `/enum/armor`  | ✅              |
+| Get    | `/enum/rarity` | ✅              |
+
+#### Auth
+
+| Method | Endpoint         | Implementation |
+| ------ | ---------------- | -------------- |
+| Post   | `/auth/login`    | ✅              |
+| Post   | `/auth/refresh`  | ✅              |
+| Post   | `/auth/register` | ✅              |
+
+## Roadmap
 
 ### Scraping
 
