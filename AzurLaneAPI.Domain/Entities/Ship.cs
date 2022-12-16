@@ -24,5 +24,6 @@ public class Ship
 	public Guid SubclassId { get; set; }
 	public ShipTypeSubclass Subclass { get; set; }
 
+	public Guid BaseStatsId { get; set; }
 	public ShipStats? BaseStats { get; set; }
 }

@@ -479,3 +479,5 @@ $RECYCLE.BIN/
 .env
 
 docker/db/data
+
+.idea/

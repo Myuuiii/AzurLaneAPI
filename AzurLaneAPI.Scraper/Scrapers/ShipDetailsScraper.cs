@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Xml.Linq;
 using AzurLaneAPI.Domain.Data;
 using AzurLaneAPI.Domain.Entities;
 using AzurLaneAPI.Scraper.Entities;
@@ -10,7 +11,7 @@ namespace AzurLaneAPI.Scraper.Scrapers;
 public static class ShipDetailsScraper
 {
 	public static int[] TableLevels = { 1, 100, 120, 125 };
-	public const bool SkipExisting = true;
+	public const bool SkipExisting = false;
 
 	public static async Task<IEnumerable<Ship>> GetShipDetailsAsync(ShipLinkContainer[] shipLinkContainers)
 	{
@@ -23,8 +24,10 @@ public static class ShipDetailsScraper
 
 		foreach (IEnumerable<ShipLinkContainer> containerChunk in shipLinkContainers.Chunk(10))
 		{
-			IEnumerable<ShipLinkContainer> linkContainers = containerChunk as ShipLinkContainer[] ?? containerChunk.ToArray();
-			Console.WriteLine("Processing chunk containing ships: " + linkContainers.Select(x=>x.Name).Aggregate((x,y)=>x + ", " + y));
+			IEnumerable<ShipLinkContainer> linkContainers =
+				containerChunk as ShipLinkContainer[] ?? containerChunk.ToArray();
+			Console.WriteLine("Processing chunk containing ships: " +
+			                  linkContainers.Select(x => x.Name).Aggregate((x, y) => x + ", " + y));
 			foreach (ShipLinkContainer shipContainer in linkContainers)
 			{
 				bool shipWithIdExists = await scopedContext.Ships.AnyAsync(s => s.Id == shipContainer.Id);
@@ -33,15 +36,16 @@ public static class ShipDetailsScraper
 					Console.WriteLine($"Skipping {shipContainer.Name} as it already exists in the database.");
 					continue;
 				}
+
 				Ship ship;
 				if (shipWithIdExists)
-					ship = await scopedContext.Ships.FindAsync(shipContainer.Id);
+					ship = await scopedContext.Ships
+						.Include(x => x.BaseStats)
+						.FirstAsync(x=>x.Id == shipContainer.Id);
 				else
 					ship = new Ship();
-				
-				HtmlDocument doc = await shipContainer.RequestDocumentAsync();
 
-				
+				HtmlDocument doc = await shipContainer.RequestDocumentAsync();
 
 				Console.WriteLine("--- NOW PROCESSING ---");
 				Console.WriteLine($"Name: {shipContainer.Name}");
@@ -84,12 +88,11 @@ public static class ShipDetailsScraper
 							ship.TypeId = shipTypes.FirstOrDefault(x => x.Name.Contains(data)).Id;
 							break;
 						case 3:
-							ship.FactionId =
-								factions.FirstOrDefault(x => x.Name.Contains(data)).Id; // TODO: Scrape Factions
+							ship.FactionId = factions.FirstOrDefault(x => x.Name.Contains(data)).Id;
 							break;
 						case 4:
 							if (scopedContext.ShipTypeSubclasses.Any(x => x.Name.Contains(data)))
-								ship.SubclassId = scopedContext.ShipTypeSubclasses.FirstOrDefault(x => x.Name.Contains(data)).Id;
+								ship.SubclassId = scopedContext.ShipTypeSubclasses.First(x => x.Name.Contains(data)).Id;
 							else
 							{
 								Console.WriteLine($"Subclass {data} not found in database.");
@@ -97,13 +100,14 @@ public static class ShipDetailsScraper
 								{
 									Id = Guid.NewGuid(),
 									Name = data,
-									Description ="",
+									Description = "",
 									ShipTypeId = ship.TypeId
 								};
 								await scopedContext.ShipTypeSubclasses.AddAsync(subclass);
 								await scopedContext.SaveChangesAsync();
 								ship.SubclassId = subclass.Id;
 							}
+
 							break;
 						case 5:
 							// VA
@@ -114,18 +118,61 @@ public static class ShipDetailsScraper
 					}
 				}
 
+				// Card Stats -> Table 
+				// has classes "ship-stats" and  "wikitable"
+
+				// Basic stats
+				ShipStats stats;
+				if (scopedContext.ShipStats.Any(x => x.Id == ship.BaseStatsId))
+					stats = await scopedContext.ShipStats.FirstAsync(x => x.Id == ship.BaseStatsId);
+				else
+					stats = new();
+
+				HtmlNode statsTableNode =
+					doc.DocumentNode.SelectSingleNode(".//table[@class=\"ship-stats wikitable\"]");
+				
+				// Skip the first row as it is the header
+				HtmlNode[] statsTableRows = statsTableNode.SelectNodes(".//tr").Skip(1).ToArray();
+
+				// Of the first TR, grab the 9th td's text content and convert it to the enum value (Armor)
+				// This value is to be used for all stats as it does not change with level
+				Enum.TryParse(statsTableRows[0].SelectNodes(".//td")[8].InnerText.Cleanup(), out Armor armor);
+				stats.Armor = armor;
+
+				// Of the second last TR, take the first 12 and store them in an IEnumerable
+				IEnumerable<HtmlNode> statsTableDataNodes = statsTableRows[^2].SelectNodes(".//td");
+				
+
+				// Store the values for each TD (converted to int) into the stats object. The TDs are in the following order 
+				// Health, Firepower, Torpedo, Aviation, AntiAir, Reload, Evasion, Speed, Accuracy, Luck, AntiSub, OilConsumption
+				// Remove the first element (the first TD) as it is the header
+				IEnumerable<HtmlNode> tableDataNodes = statsTableDataNodes.Skip(1).ToArray();
+				stats.Health = int.Parse(tableDataNodes.ElementAt(0).InnerText.Cleanup());
+				stats.Firepower = int.Parse(tableDataNodes.ElementAt(1).InnerText.Cleanup());
+				stats.Torpedo = int.Parse(tableDataNodes.ElementAt(2).InnerText.Cleanup());
+				stats.Aviation = int.Parse(tableDataNodes.ElementAt(3).InnerText.Cleanup());
+				stats.AntiAir = int.Parse(tableDataNodes.ElementAt(4).InnerText.Cleanup());
+				stats.Reload = int.Parse(tableDataNodes.ElementAt(5).InnerText.Cleanup());
+				stats.Evasion = int.Parse(tableDataNodes.ElementAt(6).InnerText.Cleanup());
+				stats.Speed = int.Parse(tableDataNodes.ElementAt(7).InnerText.Cleanup());
+				stats.Accuracy = int.Parse(tableDataNodes.ElementAt(8).InnerText.Cleanup());
+				stats.Luck = int.Parse(tableDataNodes.ElementAt(9).InnerText.Cleanup());
+				stats.AntiSub = int.Parse(tableDataNodes.ElementAt(10).InnerText.Cleanup());
+				stats.OilConsumption = int.Parse(tableDataNodes.ElementAt(11).InnerText.Cleanup());
+				ship.BaseStats = stats;
+
 				if (!shipWithIdExists)
 					await scopedContext.Ships.AddAsync(ship);
 				else
 					scopedContext.Ships.Update(ship);
 				await scopedContext.SaveChangesAsync();
-				
+
 				Console.WriteLine("Success! Delaying next request by 1 second");
 				await Task.Delay(1000); // 1 second delay to prevent spamming the server
 			}
-			
+
 			Console.WriteLine("Chunk Success! Delaying next chunk by 3 seconds");
-			await Task.Delay(3000); // Longer delay to prevent spamming the server
+			// await Task.Delay(3000); // Longer delay to prevent spamming the server
 		}
 
 		// TODO: Depends on the subclasses and types already being scraped. 
