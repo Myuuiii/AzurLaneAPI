@@ -13,6 +13,8 @@ public static class ShipDetailsScraper
 	public static int[] TableLevels = { 1, 100, 120, 125 };
 	public const bool SkipExisting = false;
 
+	public const int LongestStatRow = 14;
+
 	public static async Task<IEnumerable<Ship>> GetShipDetailsAsync(ShipLinkContainer[] shipLinkContainers)
 	{
 		DataContext scopedContext = new();
@@ -41,7 +43,7 @@ public static class ShipDetailsScraper
 				if (shipWithIdExists)
 					ship = await scopedContext.Ships
 						.Include(x => x.BaseStats)
-						.FirstAsync(x=>x.Id == shipContainer.Id);
+						.FirstAsync(x => x.Id == shipContainer.Id);
 				else
 					ship = new Ship();
 
@@ -122,44 +124,94 @@ public static class ShipDetailsScraper
 				// has classes "ship-stats" and  "wikitable"
 
 				// Basic stats
-				ShipStats stats;
-				if (scopedContext.ShipStats.Any(x => x.Id == ship.BaseStatsId))
-					stats = await scopedContext.ShipStats.FirstAsync(x => x.Id == ship.BaseStatsId);
-				else
-					stats = new();
+
 
 				HtmlNode statsTableNode =
 					doc.DocumentNode.SelectSingleNode(".//table[@class=\"ship-stats wikitable\"]");
-				
+
 				// Skip the first row as it is the header
 				HtmlNode[] statsTableRows = statsTableNode.SelectNodes(".//tr").Skip(1).ToArray();
 
-				// Of the first TR, grab the 9th td's text content and convert it to the enum value (Armor)
+				// Of the TR that has LongestStatRow items, grab the 9th td's text content and convert it to the enum value (Armor)
 				// This value is to be used for all stats as it does not change with level
-				Enum.TryParse(statsTableRows[0].SelectNodes(".//td")[8].InnerText.Cleanup(), out Armor armor);
-				stats.Armor = armor;
+				Enum.TryParse(statsTableRows.First(x=>x.SelectNodes(".//td").Count() == LongestStatRow).SelectNodes(".//td")[8].InnerText.Cleanup(), out Armor armor);
 
-				// Of the second last TR, take the first 12 and store them in an IEnumerable
-				IEnumerable<HtmlNode> statsTableDataNodes = statsTableRows[^2].SelectNodes(".//td");
-				
+				// In the list of rows, there are 4 rows we need to keep, the first td contains a name, if this name is 
+				// "Base" "Level 100" "Level 120" or "Level 125" we need to keep the row
+				statsTableRows = statsTableRows.Where(x =>
+					new[] { "Base", "Level 100", "Level 120", "Level 125" }.Contains(x.SelectNodes(".//td")[0].InnerText
+						.Cleanup())).ToArray();
 
-				// Store the values for each TD (converted to int) into the stats object. The TDs are in the following order 
-				// Health, Firepower, Torpedo, Aviation, AntiAir, Reload, Evasion, Speed, Accuracy, Luck, AntiSub, OilConsumption
-				// Remove the first element (the first TD) as it is the header
-				IEnumerable<HtmlNode> tableDataNodes = statsTableDataNodes.Skip(1).ToArray();
-				stats.Health = int.Parse(tableDataNodes.ElementAt(0).InnerText.Cleanup());
-				stats.Firepower = int.Parse(tableDataNodes.ElementAt(1).InnerText.Cleanup());
-				stats.Torpedo = int.Parse(tableDataNodes.ElementAt(2).InnerText.Cleanup());
-				stats.Aviation = int.Parse(tableDataNodes.ElementAt(3).InnerText.Cleanup());
-				stats.AntiAir = int.Parse(tableDataNodes.ElementAt(4).InnerText.Cleanup());
-				stats.Reload = int.Parse(tableDataNodes.ElementAt(5).InnerText.Cleanup());
-				stats.Evasion = int.Parse(tableDataNodes.ElementAt(6).InnerText.Cleanup());
-				stats.Speed = int.Parse(tableDataNodes.ElementAt(7).InnerText.Cleanup());
-				stats.Accuracy = int.Parse(tableDataNodes.ElementAt(8).InnerText.Cleanup());
-				stats.Luck = int.Parse(tableDataNodes.ElementAt(9).InnerText.Cleanup());
-				stats.AntiSub = int.Parse(tableDataNodes.ElementAt(10).InnerText.Cleanup());
-				stats.OilConsumption = int.Parse(tableDataNodes.ElementAt(11).InnerText.Cleanup());
-				ship.BaseStats = stats;
+				for (int i = 0; i < statsTableRows.Length; i++)
+				{
+					string name = statsTableRows[i].SelectNodes(".//td")[0].InnerText.Cleanup();
+					ShipStats stats;
+					switch (i)
+					{
+						case 0: // Level 125
+							if (scopedContext.ShipStats.Any(x => x.Id == ship.Level125StatsId))
+								stats = await scopedContext.ShipStats.FirstAsync(x => x.Id == ship.Level125StatsId);
+							else stats = new ShipStats();
+							break;
+						case 1: // Level 120
+							if (scopedContext.ShipStats.Any(x => x.Id == ship.Level120StatsId))
+								stats = await scopedContext.ShipStats.FirstAsync(x => x.Id == ship.Level120StatsId);
+							else stats = new ShipStats();
+							break;
+						case 2: // Level 100
+							if (scopedContext.ShipStats.Any(x => x.Id == ship.Level100StatsId))
+								stats = await scopedContext.ShipStats.FirstAsync(x => x.Id == ship.Level100StatsId);
+							else stats = new ShipStats();
+							break;
+						case 3: // Base
+							if (scopedContext.ShipStats.Any(x => x.Id == ship.BaseStatsId))
+								stats = await scopedContext.ShipStats.FirstAsync(x => x.Id == ship.BaseStatsId);
+							else stats = new ShipStats();
+							break;
+						default:
+							stats = new ShipStats();
+							break;
+					}
+
+					stats.Armor = armor;
+
+					IEnumerable<HtmlNode> statsTableDataNodes = statsTableRows[i].SelectNodes(".//td");
+					// Store the values for each TD (converted to int) into the stats object. The TDs are in the following order 
+					// Health, Firepower, Torpedo, Aviation, AntiAir, Reload, Evasion, Speed, Accuracy, Luck, AntiSub, OilConsumption
+					// Remove the first element (the first TD) as it is the header
+					IEnumerable<HtmlNode> tableDataNodes = statsTableDataNodes.Skip(1).ToArray();
+					int modifier = 0;
+					if (statsTableDataNodes.Count() >= 14) modifier = 1; 
+						
+					stats.Health = int.Parse(tableDataNodes.ElementAt(0).InnerText.Cleanup());
+					stats.Firepower = int.Parse(tableDataNodes.ElementAt(1).InnerText.Cleanup());
+					stats.Torpedo = int.Parse(tableDataNodes.ElementAt(2).InnerText.Cleanup());
+					stats.Aviation = int.Parse(tableDataNodes.ElementAt(3).InnerText.Cleanup());
+					stats.AntiAir = int.Parse(tableDataNodes.ElementAt(4).InnerText.Cleanup());
+					stats.Reload = int.Parse(tableDataNodes.ElementAt(5).InnerText.Cleanup());
+					stats.Evasion = int.Parse(tableDataNodes.ElementAt(6).InnerText.Cleanup());
+					stats.Speed = int.Parse(tableDataNodes.ElementAt(7 + modifier).InnerText.Cleanup());
+					stats.Accuracy = int.Parse(tableDataNodes.ElementAt(8 + modifier).InnerText.Cleanup());
+					stats.Luck = int.Parse(tableDataNodes.ElementAt(9 + modifier).InnerText.Cleanup());
+					stats.AntiSub = int.Parse(tableDataNodes.ElementAt(10 + modifier).InnerText.Cleanup());
+					stats.OilConsumption = int.Parse(tableDataNodes.ElementAt(11 + modifier).InnerText.Cleanup());
+
+					switch (i)
+					{
+						case 0:
+							ship.Level125Stats = stats;
+							break;
+						case 1:
+							ship.Level120Stats = stats;
+							break;
+						case 2:
+							ship.Level100Stats = stats;
+							break;
+						case 3:
+							ship.BaseStats = stats;
+							break;
+					}
+				}
 
 				if (!shipWithIdExists)
 					await scopedContext.Ships.AddAsync(ship);

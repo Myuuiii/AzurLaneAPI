@@ -18,4 +18,7 @@ public class ShipDto
 	public string Subclass { get; set; }
 
 	public ShipStatsDto BaseStats { get; set; }
+	public ShipStatsDto Level100Stats { get; set; }
+	public ShipStatsDto Level120Stats { get; set; }
+	public ShipStatsDto Level125Stats { get; set; }
 }

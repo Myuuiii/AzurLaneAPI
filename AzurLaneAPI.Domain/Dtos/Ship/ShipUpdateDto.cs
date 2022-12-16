@@ -18,4 +18,7 @@ public class ShipUpdateDto
 	[Required] public Guid SubclassId { get; set; }
 
 	[Required] public ShipStatsCreateDto BaseStats { get; set; }
+	[Required] public ShipStatsCreateDto Level100Stats { get; set; }
+	[Required] public ShipStatsCreateDto Level120Stats { get; set; }
+	[Required] public ShipStatsCreateDto Level125Stats { get; set; }
 }
