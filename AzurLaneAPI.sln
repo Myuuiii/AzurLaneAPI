@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzurLaneAPI.Domain", "AzurL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzurLaneAPI.API", "AzurLaneAPI.API\AzurLaneAPI.API.csproj", "{83B2EE3F-DF3A-41FD-9D8B-7FA17CBCB868}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzurLaneAPI.Scraper", "AzurLaneAPI.Scraper\AzurLaneAPI.Scraper.csproj", "{0B00BB72-D816-41D1-804F-00ADFD382E02}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{83B2EE3F-DF3A-41FD-9D8B-7FA17CBCB868}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83B2EE3F-DF3A-41FD-9D8B-7FA17CBCB868}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83B2EE3F-DF3A-41FD-9D8B-7FA17CBCB868}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B00BB72-D816-41D1-804F-00ADFD382E02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B00BB72-D816-41D1-804F-00ADFD382E02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B00BB72-D816-41D1-804F-00ADFD382E02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B00BB72-D816-41D1-804F-00ADFD382E02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -73,6 +73,15 @@ namespace AzurLaneAPI.Domain.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<Guid>("Level100StatsId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("Level120StatsId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("Level125StatsId")
+                        .HasColumnType("char(36)");
+
                     b.Property<int>("Rarity")
                         .HasColumnType("int");
 
@@ -87,6 +96,12 @@ namespace AzurLaneAPI.Domain.Migrations
                     b.HasIndex("BaseStatsId");
 
                     b.HasIndex("FactionId");
+
+                    b.HasIndex("Level100StatsId");
+
+                    b.HasIndex("Level120StatsId");
+
+                    b.HasIndex("Level125StatsId");
 
                     b.HasIndex("SubclassId");
 
@@ -420,6 +435,24 @@ namespace AzurLaneAPI.Domain.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("AzurLaneAPI.Domain.Entities.ShipStats", "Level100Stats")
+                        .WithMany()
+                        .HasForeignKey("Level100StatsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AzurLaneAPI.Domain.Entities.ShipStats", "Level120Stats")
+                        .WithMany()
+                        .HasForeignKey("Level120StatsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AzurLaneAPI.Domain.Entities.ShipStats", "Level125Stats")
+                        .WithMany()
+                        .HasForeignKey("Level125StatsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("AzurLaneAPI.Domain.Entities.ShipTypeSubclass", "Subclass")
                         .WithMany()
                         .HasForeignKey("SubclassId")
@@ -435,6 +468,12 @@ namespace AzurLaneAPI.Domain.Migrations
                     b.Navigation("BaseStats");
 
                     b.Navigation("Faction");
+
+                    b.Navigation("Level100Stats");
+
+                    b.Navigation("Level120Stats");
+
+                    b.Navigation("Level125Stats");
 
                     b.Navigation("Subclass");
 

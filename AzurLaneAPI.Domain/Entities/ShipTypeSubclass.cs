@@ -6,5 +6,6 @@ public class ShipTypeSubclass
 	public string Name { get; set; }
 	public string Description { get; set; }
 
+	public Guid ShipTypeId { get; set; }
 	public virtual ShipType ShipType { get; set; }
 }

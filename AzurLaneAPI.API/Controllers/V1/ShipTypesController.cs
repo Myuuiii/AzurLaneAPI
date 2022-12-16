@@ -73,7 +73,7 @@ public class ShipTypesController : V1BaseController
 		if (!await _shipTypeRepository.Exists(id))
 			return NotFound();
 
-		if (await _shipTypeRepository.ExistsWithNameAsync(shipType.Name))
+		if (await _shipTypeRepository.ExistsWithNameAsync(shipType.Name)) 
 		{
 			ShipType possiblyConflictingShipType = await _shipTypeRepository.GetByNameAsync(shipType.Name);
 			if (possiblyConflictingShipType.Id != id)

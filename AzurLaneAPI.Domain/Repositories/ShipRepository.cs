@@ -15,6 +15,9 @@ public class ShipRepository : Repository<Ship, string>, IShipRepository
 		return await Context.Ships
 			.Include(x => x.Faction)
 			.Include(x => x.BaseStats)
+			.Include(x => x.Level100Stats)
+			.Include(x => x.Level120Stats)
+			.Include(x => x.Level125Stats)
 			.Include(x => x.Type)
 			.Include(x => x.Subclass)
 			.ToListAsync();
@@ -25,6 +28,9 @@ public class ShipRepository : Repository<Ship, string>, IShipRepository
 		return await Context.Ships
 			.Include(x => x.Faction)
 			.Include(x => x.BaseStats)
+			.Include(x => x.Level100Stats)
+			.Include(x => x.Level120Stats)
+			.Include(x => x.Level125Stats)
 			.Include(x => x.Type)
 			.Include(x => x.Subclass)
 			.FirstAsync(x => x.Id == id);
@@ -41,6 +47,9 @@ public class ShipRepository : Repository<Ship, string>, IShipRepository
 		return await Context.Ships
 			.Include(x => x.Faction)
 			.Include(x => x.BaseStats)
+			.Include(x => x.Level100Stats)
+			.Include(x => x.Level120Stats)
+			.Include(x => x.Level125Stats)
 			.Include(x => x.Type)
 			.Include(x => x.Subclass)
 			.FirstAsync(x => x.EnglishName == name || x.JapaneseName == name || x.ChineseName == name);

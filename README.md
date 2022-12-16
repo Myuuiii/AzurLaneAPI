@@ -49,6 +49,36 @@
   - [x] Ship Type Subclasses
   - [x] Factions
 
+### Scraping
+
+- [ ] Ship Data
+  - [x] Names
+    - [x] English
+    - [x] Chinese
+    - [x] Japanese
+  - [x] Construction Time
+  - [x] Rarity
+  - [ ] Classification (`ShipType`)
+  - [ ] Faction
+  - [ ] Class (`Subclass`)
+  - [ ] Statistics
+    - [ ] Base Stats
+    - [ ] Level 100 Stats
+    - [ ] Level 120 Stats
+    - [ ] Level 125 Stats
+  - [ ] Thumbnail Image
+- [ ] Ship Types
+  - [x] Name
+  - [x] Description
+  - [ ] Subclasses
+    - [x] Name
+    - [ ] Description
+- [ ] Factions
+  - [ ] Name
+  - [ ] Description
+  - [ ] Image Url
+  - [ ] Prefix
+
 ### Rendering
 
 - [ ] Ship HTML Template Render
