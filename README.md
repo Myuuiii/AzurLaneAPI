@@ -18,6 +18,7 @@
   - [x] Create
   - [x] Update
   - [x] Delete
+  - [x] Get Minimal Ship Information
 - [x] ShipTypes CRUD
   - [x] Get All
   - [x] Get Single by Id
