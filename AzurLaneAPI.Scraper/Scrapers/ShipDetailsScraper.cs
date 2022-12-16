@@ -8,7 +8,7 @@ namespace AzurLaneAPI.Scraper.Scrapers;
 
 public static class ShipDetailsScraper
 {
-	public const bool SkipExisting = true;
+	public const bool SkipExisting = false;
 
 	public const int LongestStatRow = 14;
 	public static int[] TableLevels = { 1, 100, 120, 125 };
@@ -70,12 +70,18 @@ public static class ShipDetailsScraper
 				// Select fist child that has the class "ship-card-content"
 				HtmlNode shipCardContentNode = shipCardNode.SelectSingleNode(".//div[@class=\"ship-card-content\"]");
 
+				#region SHIP NAMES
+
 				// Card Headline (containing English, Japanese and Chinese name of ship) -> // TODO: Test for all ships
 				HtmlNode cardHeadingNode = shipCardContentNode.SelectSingleNode(".//div[@class=\"card-headline\"]");
 				HtmlNode[] cardHeadingNodes = cardHeadingNode.ChildNodes.Where(x => x.OriginalName == "span").ToArray();
 				ship.EnglishName = string.Join(' ', cardHeadingNodes[0].InnerText.Cleanup().Split(" ").Skip(1));
 				ship.ChineseName = cardHeadingNodes[1].InnerText.Cleanup().Replace("CN: ", "");
 				ship.JapaneseName = cardHeadingNodes[2].InnerText.Cleanup().Replace("JP: ", "");
+
+				#endregion
+
+				#region SHIP INFO
 
 				// Card Info -> Table // TODO: Contains 7 rows (Construction, Rarity, Classification, Faction, Subclass, VA, Illustrator)
 				HtmlNodeCollection? dataNodes =
@@ -129,6 +135,10 @@ public static class ShipDetailsScraper
 							break;
 					}
 				}
+
+				#endregion
+
+				#region SHIP STATS
 
 				// Card Stats -> Table 
 				// has classes "ship-stats" and  "wikitable"
@@ -220,6 +230,18 @@ public static class ShipDetailsScraper
 							break;
 					}
 				}
+
+				#endregion
+
+				#region SHIP THUMBNAIL IMAGE
+
+				// select the first image node you can find from the shipcard div
+				HtmlNode shipCardImageNode = shipCardNode.SelectNodes(".//img").First();
+				// get the src attribute
+				string shipCardImageSrc = shipCardImageNode.Attributes["src"].Value;
+				ship.ThumbnailImageUrl = shipCardImageSrc;
+
+				#endregion
 
 				if (!shipWithIdExists)
 					await scopedContext.Ships.AddAsync(ship);

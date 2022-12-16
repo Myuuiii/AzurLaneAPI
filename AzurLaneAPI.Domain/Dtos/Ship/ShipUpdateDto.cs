@@ -10,6 +10,8 @@ public class ShipUpdateDto
 	[Required] public string JapaneseName { get; set; }
 	[Required] public string ChineseName { get; set; }
 
+	[Required, Url] public string ThumbnailImageUrl { get; set; }
+
 	[Required] public string ConstructionTime { get; set; }
 	[Required] public Rarity Rarity { get; set; }
 

@@ -10,6 +10,8 @@ public class ShipDto
 	public string JapaneseName { get; set; }
 	public string ChineseName { get; set; }
 
+	public string ThumbnailImageUrl { get; set; }
+
 	public string ConstructionTime { get; set; }
 	public string Rarity { get; set; }
 
