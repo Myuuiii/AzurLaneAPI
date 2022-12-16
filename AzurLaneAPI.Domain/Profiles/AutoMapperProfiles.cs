@@ -33,6 +33,8 @@ public class AutoMapperProfiles : Profile
 		CreateMap<ShipCreateDto, Ship>();
 		CreateMap<ShipUpdateDto, Ship>();
 
+		CreateMap<Ship, MinimalShipDataDto>().ReverseMap();
+
 		// Ship Stats 
 		CreateMap<ShipStats, ShipStatsDto>();
 		CreateMap<ShipStatsCreateDto, ShipStats>();

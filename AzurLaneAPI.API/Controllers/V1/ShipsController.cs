@@ -28,10 +28,8 @@ public class ShipsController : V1BaseController
 
 	[AllowAnonymous]
 	[HttpGet(Routes.V1.Ships.GetAll)]
-	public async Task<ActionResult<IEnumerable<ShipDto>>> GetAll()
-	{
-		return Ok(Mapper.Map<IEnumerable<ShipDto>>(await _shipRepository.GetAsync()));
-	}
+	public async Task<ActionResult<IEnumerable<ShipDto>>> GetAll() =>
+		Ok(Mapper.Map<IEnumerable<ShipDto>>(await _shipRepository.GetAsync()));
 
 	[AllowAnonymous]
 	[HttpGet(Routes.V1.Ships.GetSingleById)]
@@ -52,6 +50,11 @@ public class ShipsController : V1BaseController
 
 		return Ok(Mapper.Map<ShipDto>(await _shipRepository.GetByNameAsync(name)));
 	}
+
+	[AllowAnonymous]
+	[HttpGet(Routes.V1.Ships.Minimal)]
+	public async Task<ActionResult<IEnumerable<MinimalShipDataDto>>> GetMinimalShips() =>
+		Ok(await _shipRepository.GetMinimalAsync());
 
 	[Authorize(Policy = IdentityNames.Policies.RequireContributorRole)]
 	[HttpPost(Routes.V1.Ships.Create)]
