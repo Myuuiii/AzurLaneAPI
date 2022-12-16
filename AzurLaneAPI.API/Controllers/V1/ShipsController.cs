@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AzurLaneAPI.Domain.APIQueryParameters;
 using AzurLaneAPI.Domain.Data;
 using AzurLaneAPI.Domain.Dtos.Ship;
 using AzurLaneAPI.Domain.Entities;
@@ -28,8 +29,8 @@ public class ShipsController : V1BaseController
 
 	[AllowAnonymous]
 	[HttpGet(Routes.V1.Ships.GetAll)]
-	public async Task<ActionResult<IEnumerable<ShipDto>>> GetAll() =>
-		Ok(Mapper.Map<IEnumerable<ShipDto>>(await _shipRepository.GetAsync()));
+	public async Task<ActionResult<IEnumerable<ShipDto>>> GetAll([FromQuery] PaginationParameters pageParams) =>
+		Ok(Mapper.Map<IEnumerable<ShipDto>>(await _shipRepository.GetAsync(pageParams)));
 
 	[AllowAnonymous]
 	[HttpGet(Routes.V1.Ships.GetSingleById)]
@@ -53,8 +54,9 @@ public class ShipsController : V1BaseController
 
 	[AllowAnonymous]
 	[HttpGet(Routes.V1.Ships.Minimal)]
-	public async Task<ActionResult<IEnumerable<MinimalShipDataDto>>> GetMinimalShips() =>
-		Ok(await _shipRepository.GetMinimalAsync());
+	public async Task<ActionResult<IEnumerable<MinimalShipDataDto>>> GetMinimalShips(
+		[FromQuery] PaginationParameters pageParams) =>
+		Ok(await _shipRepository.GetMinimalAsync(pageParams));
 
 	[Authorize(Policy = IdentityNames.Policies.RequireContributorRole)]
 	[HttpPost(Routes.V1.Ships.Create)]
