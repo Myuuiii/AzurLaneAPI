@@ -1,4 +1,4 @@
-﻿namespace AzurLaneAPI.Domain.Entities;
+﻿namespace AzurLaneAPI.Domain.Enums;
 
 public enum Rarity
 {

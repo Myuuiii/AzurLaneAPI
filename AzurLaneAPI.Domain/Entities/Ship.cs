@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using AzurLaneAPI.Domain.Enums;
 
 namespace AzurLaneAPI.Domain.Entities;
 

@@ -14,10 +14,10 @@ public static class Seeder
 
 		List<ApiRole> roles = new()
 		{
-			new ApiRole { Name = IdentityNames.Roles.MEMBER },
-			new ApiRole { Name = IdentityNames.Roles.CONTRIBUTOR },
-			new ApiRole { Name = IdentityNames.Roles.MODERATOR },
-			new ApiRole { Name = IdentityNames.Roles.ADMIN }
+			new ApiRole { Name = IdentityNames.Roles.Member },
+			new ApiRole { Name = IdentityNames.Roles.Contributor },
+			new ApiRole { Name = IdentityNames.Roles.Moderator },
+			new ApiRole { Name = IdentityNames.Roles.Admin }
 		};
 
 		foreach (ApiRole role in roles)

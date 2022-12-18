@@ -4,10 +4,10 @@ public static class IdentityNames
 {
 	public static class Roles
 	{
-		public const string ADMIN = "Admin";
-		public const string MODERATOR = "Moderator";
-		public const string CONTRIBUTOR = "Contributor";
-		public const string MEMBER = "Member";
+		public const string Admin = "Admin";
+		public const string Moderator = "Moderator";
+		public const string Contributor = "Contributor";
+		public const string Member = "Member";
 	}
 
 	public static class Policies

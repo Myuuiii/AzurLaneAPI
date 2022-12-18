@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using AzurLaneAPI.Domain.Dtos.ShipStats;
-using AzurLaneAPI.Domain.Entities;
+using AzurLaneAPI.Domain.Enums;
 
 namespace AzurLaneAPI.Domain.Dtos.Ship;
 

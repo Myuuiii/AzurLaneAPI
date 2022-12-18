@@ -12,7 +12,7 @@ public static class ClassScraper
 
 	public static async Task GetShipClassesAsync()
 	{
-		DataContext context = StaticData._context;
+		DataContext context = StaticData.Context;
 
 		HtmlDocument overviewDoc = new();
 		overviewDoc.LoadHtml(
@@ -20,20 +20,7 @@ public static class ClassScraper
 
 		IEnumerable<HtmlNode> headerNodes = overviewDoc.DocumentNode.SelectNodes("//h2/span[@class='mw-headline']");
 
-		foreach (HtmlNode node in headerNodes)
-		{
-			string nodeText = node.InnerText.Cleanup();
-			if (await context.ShipTypes.AnyAsync(x => x.Name == nodeText))
-				continue;
-
-			ShipType newType = new()
-			{
-				Name = nodeText,
-				Description = "" // TODO: Fetch this later
-			};
-			await context.ShipTypes.AddAsync(newType);
-		}
-
+		await CreateShipTypes(headerNodes, context);
 		await context.SaveChangesAsync();
 
 		foreach (ShipType shipType in context.ShipTypes)
@@ -84,7 +71,7 @@ public static class ClassScraper
 				ShipTypeSubclass newSubclass = new()
 				{
 					Name = subcategoryName,
-					Description = "", // TODO: Fetch this later
+					Description = "",
 					ShipType = shipType
 				};
 
@@ -92,6 +79,23 @@ public static class ClassScraper
 			}
 
 			await scopedDbContext.SaveChangesAsync();
+		}
+	}
+
+	private static async Task CreateShipTypes(IEnumerable<HtmlNode> headerNodes, DataContext context)
+	{
+		foreach (HtmlNode node in headerNodes)
+		{
+			string nodeText = node.InnerText.Cleanup();
+			if (await context.ShipTypes.AnyAsync(x => x.Name == nodeText))
+				continue;
+
+			ShipType newType = new()
+			{
+				Name = nodeText,
+				Description = ""
+			};
+			await context.ShipTypes.AddAsync(newType);
 		}
 	}
 
@@ -104,7 +108,7 @@ public static class ClassScraper
 			{
 				Id = Guid.NewGuid(),
 				Name = "A",
-				Description = "", // TODO: Fetch this later
+				Description = "",
 				ShipTypeId = shipType.Id
 			};
 			await scopedDbContext.ShipTypeSubclasses.AddAsync(aSubclass);
@@ -117,7 +121,7 @@ public static class ClassScraper
 			{
 				Id = Guid.NewGuid(),
 				Name = "B",
-				Description = "", // TODO: Fetch this later
+				Description = "",
 				ShipTypeId = shipType.Id
 			};
 			await scopedDbContext.ShipTypeSubclasses.AddAsync(aSubclass);

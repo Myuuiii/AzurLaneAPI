@@ -31,7 +31,7 @@ public static class FactionsScraper
 						await scopedContext.Factions.FirstAsync(x => x.Name == cells[0].InnerText.Cleanup());
 					existingFaction.Name = cells[0].InnerText.Cleanup();
 					existingFaction.Prefix = cells[1].InnerText.Cleanup();
-					existingFaction.Description = string.Empty; // TODO: Fetch this later
+					existingFaction.Description = string.Empty;
 					existingFaction.IconUrl =
 						cells.Last().Descendants().First(x => x.Name == "img").Attributes["src"].Value;
 					scopedContext.Update(existingFaction);
@@ -42,7 +42,7 @@ public static class FactionsScraper
 					{
 						Name = cells[0].InnerText.Cleanup(),
 						Prefix = cells[1].InnerText.Cleanup(),
-						Description = string.Empty, // TODO: Fetch this later
+						Description = string.Empty,
 						IconUrl = cells.Last().Descendants().First(x => x.Name == "img").Attributes["src"].Value
 					};
 					await scopedContext.Factions.AddAsync(faction);

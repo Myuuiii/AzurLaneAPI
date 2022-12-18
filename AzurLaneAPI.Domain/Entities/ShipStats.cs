@@ -1,4 +1,6 @@
-﻿namespace AzurLaneAPI.Domain.Entities;
+﻿using AzurLaneAPI.Domain.Enums;
+
+namespace AzurLaneAPI.Domain.Entities;
 
 public class ShipStats
 {

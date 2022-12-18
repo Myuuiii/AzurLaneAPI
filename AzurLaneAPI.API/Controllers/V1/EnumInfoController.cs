@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using AzurLaneAPI.Domain.Data;
-using AzurLaneAPI.Domain.Entities;
+using AzurLaneAPI.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

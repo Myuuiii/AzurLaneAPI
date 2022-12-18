@@ -1,4 +1,4 @@
-﻿using AzurLaneAPI.Domain.Entities;
+﻿using AzurLaneAPI.Domain.Enums;
 
 namespace AzurLaneAPI.Domain.Dtos.ShipStats;
 

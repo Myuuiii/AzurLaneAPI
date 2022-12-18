@@ -35,13 +35,13 @@ public static class ApiIdentityService
 		services.AddAuthorization(options =>
 		{
 			options.AddPolicy(IdentityNames.Policies.RequireAdminRole,
-				policy => { policy.RequireRole(IdentityNames.Roles.ADMIN); });
+				policy => { policy.RequireRole(IdentityNames.Roles.Admin); });
 			options.AddPolicy(IdentityNames.Policies.RequireModeratorRole,
-				policy => { policy.RequireRole(IdentityNames.Roles.MODERATOR); });
+				policy => { policy.RequireRole(IdentityNames.Roles.Moderator); });
 			options.AddPolicy(IdentityNames.Policies.RequireContributorRole,
-				policy => { policy.RequireRole(IdentityNames.Roles.CONTRIBUTOR); });
+				policy => { policy.RequireRole(IdentityNames.Roles.Contributor); });
 			options.AddPolicy(IdentityNames.Policies.RequireMemberRole,
-				policy => { policy.RequireRole(IdentityNames.Roles.MEMBER); });
+				policy => { policy.RequireRole(IdentityNames.Roles.Member); });
 		});
 
 		services.AddScoped<ITokenService, TokenService>();

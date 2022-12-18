@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using AzurLaneAPI.API.Controllers.V1;
 using AzurLaneAPI.API.Extensions;
 using AzurLaneAPI.API.Services;
 using AzurLaneAPI.Domain.Data;
@@ -11,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AzurLaneAPI.API.Controllers;
+namespace AzurLaneAPI.API.Controllers.V1;
 
 [Route(Routes.V1.Auth.Controller)]
 public class AuthController : V1BaseController
@@ -64,7 +63,7 @@ public class AuthController : V1BaseController
 		IdentityResult result = await _userManager.CreateAsync(user, register.Password);
 		if (!result.Succeeded) return BadRequest(result.Errors);
 
-		IdentityResult roleResult = await _userManager.AddToRoleAsync(user, IdentityNames.Roles.MEMBER);
+		IdentityResult roleResult = await _userManager.AddToRoleAsync(user, IdentityNames.Roles.Member);
 		if (!roleResult.Succeeded) return BadRequest(result.Errors);
 
 		await _signupCodeRepository.UseCodeAsync(register.SignupCode, register.UserName);

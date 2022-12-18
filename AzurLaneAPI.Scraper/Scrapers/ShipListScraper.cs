@@ -8,7 +8,7 @@ public static class ShipListScraper
 	/// <summary>
 	///     Retrieve all the ids, names and urls for the ships (retrofit table excluded)
 	/// </summary>
-	/// <returns></returns>
+	/// <returns><see cref="ShipLinkContainer[]"/> or null if no body nodes were found in the document</returns>
 	public static async Task<ShipLinkContainer[]> GetShipList()
 	{
 		HtmlDocument doc = new();
@@ -18,7 +18,7 @@ public static class ShipListScraper
 		// Retrieve all the table body nodes of the tables that contain ships
 		HtmlNodeCollection? tableBodyNodes = doc.DocumentNode.SelectNodes("//table[@class='wikitable sortable']/tbody");
 		if (tableBodyNodes.Count == 0)
-			throw new Exception("No table found");
+			return null;
 
 		// List that will be returned containing all the sets of ship ids, names and urls
 		List<ShipLinkContainer> linkContainers = new();
