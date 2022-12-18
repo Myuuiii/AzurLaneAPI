@@ -65,11 +65,6 @@ public class ShipsController : V1BaseController
 		if (!ModelState.IsValid)
 			return BadRequest(ModelState);
 
-		if (await _shipRepository.ExistsWithNameAsync(ship.EnglishName) ||
-		    await _shipRepository.ExistsWithNameAsync(ship.JapaneseName) ||
-		    await _shipRepository.ExistsWithNameAsync(ship.ChineseName))
-			return Conflict("Ship with that name already exists");
-
 		if (!await _shipTypeRepository.Exists(ship.TypeId))
 			return NotFound("Ship type not found");
 		ShipType shipType = await _shipTypeRepository.GetAsync(ship.TypeId);
@@ -102,16 +97,7 @@ public class ShipsController : V1BaseController
 
 		if (!await _shipRepository.Exists(id))
 			return NotFound();
-
-		if (await _shipRepository.ExistsWithNameAsync(ship.EnglishName) ||
-		    await _shipRepository.ExistsWithNameAsync(ship.JapaneseName) ||
-		    await _shipRepository.ExistsWithNameAsync(ship.ChineseName))
-		{
-			Ship possiblyDuplicateNameShip = await _shipRepository.GetByNameAsync(ship.EnglishName);
-			if (possiblyDuplicateNameShip.Id != id)
-				return Conflict("Ship with that name already exists");
-		}
-
+		
 		if (!await _shipTypeRepository.Exists(ship.TypeId))
 			return NotFound("Ship type not found");
 		ShipType shipType = await _shipTypeRepository.GetAsync(ship.TypeId);
@@ -122,6 +108,7 @@ public class ShipsController : V1BaseController
 
 		if (!await _shipTypeSubclassRepository.ExistsForShipTypeAsync(shipType.Id, ship.SubclassId))
 			return NotFound("Subclass not found within ship type");
+		
 		ShipTypeSubclass subclass = await _shipTypeSubclassRepository.GetAsync(ship.SubclassId);
 
 		Ship existingShip = await _shipRepository.GetAsync(id);
