@@ -56,32 +56,48 @@ public static class ClassScraper
 
 			if (subcategoriesParentNode == null) continue; // No subcategories
 
-			// Get all ul/li/a elements (subcategories)
-			IEnumerable<HtmlNode> subcategoryNodes = subcategoriesParentNode.SelectNodes(".//ul/li/a");
-
-			foreach (HtmlNode item in subcategoryNodes)
-			{
-				string subcategoryName = item.InnerText.Cleanup().Replace(" class", string.Empty);
-
-				if (subcategoryName == "A and B") await CreateAAndBCategoryFromJointItem(shipType);
-
-				if (await scopedDbContext.ShipTypeSubclasses.AnyAsync(x => x.Name == subcategoryName))
-					continue;
-
-				ShipTypeSubclass newSubclass = new()
-				{
-					Name = subcategoryName,
-					Description = "",
-					ShipType = shipType
-				};
-
-				scopedDbContext.ShipTypeSubclasses.Add(newSubclass);
-			}
+			await CreateSubcategories(subcategoriesParentNode, shipType, scopedDbContext);
 
 			await scopedDbContext.SaveChangesAsync();
 		}
 	}
 
+	/// <summary>
+	/// Create subcategories for a ship type
+	/// </summary>
+	/// <param name="subcategoriesParentNode"></param>
+	/// <param name="shipType"></param>
+	/// <param name="scopedDbContext"></param>
+	private static async Task CreateSubcategories(HtmlNode subcategoriesParentNode, ShipType shipType,
+		DataContext scopedDbContext)
+	{
+		IEnumerable<HtmlNode> subcategoryNodes = subcategoriesParentNode.SelectNodes(".//ul/li/a");
+
+		foreach (HtmlNode item in subcategoryNodes)
+		{
+			string subcategoryName = item.InnerText.Cleanup().Replace(" class", string.Empty);
+
+			if (subcategoryName == "A and B") await CreateAAndBCategoryFromJointItem(shipType);
+
+			if (await scopedDbContext.ShipTypeSubclasses.AnyAsync(x => x.Name == subcategoryName))
+				continue;
+
+			ShipTypeSubclass newSubclass = new()
+			{
+				Name = subcategoryName,
+				Description = "",
+				ShipType = shipType
+			};
+
+			scopedDbContext.ShipTypeSubclasses.Add(newSubclass);
+		}
+	}
+
+	/// <summary>
+	/// Fetch all the ship classes from the wiki and add them to the database if they don't exist yet
+	/// </summary>
+	/// <param name="headerNodes"></param>
+	/// <param name="context"></param>
 	private static async Task CreateShipTypes(IEnumerable<HtmlNode> headerNodes, DataContext context)
 	{
 		foreach (HtmlNode node in headerNodes)
@@ -99,6 +115,10 @@ public static class ClassScraper
 		}
 	}
 
+	/// <summary>
+	/// Since the A and B class are combined on the overview page, we create a new subclass for them ourselves
+	/// </summary>
+	/// <param name="shipType"></param>
 	private static async Task CreateAAndBCategoryFromJointItem(ShipType shipType)
 	{
 		DataContext scopedDbContext = new();
