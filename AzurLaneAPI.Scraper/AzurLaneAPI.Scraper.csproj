@@ -5,15 +5,16 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <OutputType>Exe</OutputType>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\AzurLaneAPI.Domain\AzurLaneAPI.Domain.csproj"/>
+        <ProjectReference Include="..\AzurLaneAPI.Domain\AzurLaneAPI.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="HtmlAgilityPack" Version="1.11.46"/>
-        <PackageReference Include="Humanizer.Core" Version="2.14.1"/>
+        <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
+        <PackageReference Include="Humanizer.Core" Version="2.14.1" />
     </ItemGroup>
 
 </Project>
