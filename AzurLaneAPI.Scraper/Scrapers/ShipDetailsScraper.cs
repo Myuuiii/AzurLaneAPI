@@ -18,15 +18,15 @@ public static class ShipDetailsScraper
 		DataContext scopedContext = new();
 		List<Ship> ships = new();
 
-		shipLinkContainers = new[] // Quickly test a single ship
-		{
-			new ShipLinkContainer
-			{
-				Id = "338",
-				Name = "Jintsuu",
-				Url = "https://azurlane.koumakan.jp/wiki/Jintsuu"
-			}
-		};
+		// shipLinkContainers = new[] // Quickly test a single ship
+		// {
+		// 	new ShipLinkContainer
+		// 	{
+		// 		Id = "338",
+		// 		Name = "Jintsuu",
+		// 		Url = "https://azurlane.koumakan.jp/wiki/Jintsuu"
+		// 	}
+		// };
 
 		List<ShipType> shipTypes = await StaticData.Context.ShipTypes.ToListAsync();
 		List<ShipTypeSubclass> subclasses = await StaticData.Context.ShipTypeSubclasses.ToListAsync();
