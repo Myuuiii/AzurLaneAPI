@@ -3,5 +3,5 @@
 public static class Extensions
 {
 	public static string Cleanup(this string input) =>
-		input.Replace("\n", "").Replace("\t", "").Replace("Play ", "").Trim();
+		input.Replace("\n", "").Replace("\t", "").Replace("Play ", "").Trim().Replace("&#39;", "'");
 }
