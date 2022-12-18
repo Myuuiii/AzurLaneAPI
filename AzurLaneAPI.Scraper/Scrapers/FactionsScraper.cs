@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AzurLaneAPI.Scraper.Scrapers;
 
-public class FactionsScraper
+public static class FactionsScraper
 {
 	public static async Task ScrapeFactionsAsync()
 	{

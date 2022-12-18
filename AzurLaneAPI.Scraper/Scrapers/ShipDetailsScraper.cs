@@ -11,7 +11,7 @@ public static class ShipDetailsScraper
 	public const bool SkipExisting = false;
 
 	public const int LongestStatRow = 14;
-	public static int[] TableLevels = { 1, 100, 120, 125 };
+	public static readonly int[] TableLevels = { 1, 100, 120, 125 };
 
 	public static async Task<IEnumerable<Ship>> GetShipDetailsAsync(ShipLinkContainer[] shipLinkContainers)
 	{
@@ -107,9 +107,9 @@ public static class ShipDetailsScraper
 							ship.FactionId = factions.FirstOrDefault(x => x.Name.Contains(data)).Id;
 							break;
 						case 4:
-							if (scopedContext.ShipTypeSubclasses.Any(x => x.Name.Contains(data)))
+							if (subclasses.Any(x => x.Name.Contains(data)))
 							{
-								ship.SubclassId = scopedContext.ShipTypeSubclasses.First(x => x.Name.Contains(data)).Id;
+								ship.SubclassId = subclasses.First(x => x.Name.Contains(data)).Id;
 							}
 							else
 							{
@@ -151,7 +151,7 @@ public static class ShipDetailsScraper
 				// Of the TR that has LongestStatRow items, grab the 9th td's text content and convert it to the enum value (Armor)
 				// This value is to be used for all stats as it does not change with level
 				Enum.TryParse(
-					statsTableRows.First(x => x.SelectNodes(".//td").Count() == LongestStatRow).SelectNodes(".//td")[8]
+					statsTableRows.First(x => x.SelectNodes(".//td").Count == LongestStatRow).SelectNodes(".//td")[8]
 						.InnerText.Cleanup(), out Armor armor);
 
 				// In the list of rows, there are 4 rows we need to keep, the first td contains a name, if this name is 
@@ -162,7 +162,6 @@ public static class ShipDetailsScraper
 
 				for (int i = 0; i < statsTableRows.Length; i++)
 				{
-					string name = statsTableRows[i].SelectNodes(".//td")[0].InnerText.Cleanup();
 					ShipStats stats;
 					switch (i)
 					{

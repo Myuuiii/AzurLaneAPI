@@ -6,15 +6,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AzurLaneAPI.Scraper.Scrapers;
 
-public class ClassScraper
+public static class ClassScraper
 {
+	private const string ShipByTypeUrl = "https://azurlane.koumakan.jp/wiki/List_of_Ships_by_Type";
+
 	public static async Task GetShipClassesAsync()
 	{
 		DataContext context = StaticData._context;
 
 		HtmlDocument overviewDoc = new();
 		overviewDoc.LoadHtml(
-			await StaticData.Client.GetStringAsync("https://azurlane.koumakan.jp/wiki/List_of_Ships_by_Type"));
+			await StaticData.Client.GetStringAsync(ShipByTypeUrl));
 
 		IEnumerable<HtmlNode> headerNodes = overviewDoc.DocumentNode.SelectNodes("//h2/span[@class='mw-headline']");
 

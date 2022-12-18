@@ -7,20 +7,20 @@ namespace AzurLaneAPI.API;
 
 public static class Seeder
 {
-	public static async Task SeedAsync(DataContext context, RoleManager<APIRole> roleManager)
+	public static async Task SeedAsync(DataContext context, RoleManager<ApiRole> roleManager)
 	{
 		if (await context.Roles.AnyAsync())
 			return; // Database has data
 
-		List<APIRole> roles = new()
+		List<ApiRole> roles = new()
 		{
-			new APIRole { Name = IdentityNames.Roles.MEMBER },
-			new APIRole { Name = IdentityNames.Roles.CONTRIBUTOR },
-			new APIRole { Name = IdentityNames.Roles.MODERATOR },
-			new APIRole { Name = IdentityNames.Roles.ADMIN }
+			new ApiRole { Name = IdentityNames.Roles.MEMBER },
+			new ApiRole { Name = IdentityNames.Roles.CONTRIBUTOR },
+			new ApiRole { Name = IdentityNames.Roles.MODERATOR },
+			new ApiRole { Name = IdentityNames.Roles.ADMIN }
 		};
 
-		foreach (APIRole role in roles)
+		foreach (ApiRole role in roles)
 			await roleManager.CreateAsync(role);
 	}
 }

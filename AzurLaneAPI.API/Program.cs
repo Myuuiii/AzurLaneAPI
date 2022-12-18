@@ -23,7 +23,7 @@ await using (ServiceProvider serviceProvider = builder.Services.BuildServiceProv
 			DataContext context = scopeServiceProvider.GetRequiredService<DataContext>();
 			context.Database.Migrate();
 
-			RoleManager<APIRole> roleManager = scopeServiceProvider.GetRequiredService<RoleManager<APIRole>>();
+			RoleManager<ApiRole> roleManager = scopeServiceProvider.GetRequiredService<RoleManager<ApiRole>>();
 			await Seeder.SeedAsync(context, roleManager);
 		}
 		catch (Exception)

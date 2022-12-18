@@ -2,9 +2,9 @@
 
 namespace AzurLaneAPI.Scraper;
 
-public class StaticData
+public static class StaticData
 {
-	public static DataContext _context = new();
+	public static readonly DataContext _context = new();
 	public static readonly HttpClient Client = new();
-	public static string UrlPrefix = "https://azurlane.koumakan.jp";
+	public const string UrlPrefix = "https://azurlane.koumakan.jp";
 }

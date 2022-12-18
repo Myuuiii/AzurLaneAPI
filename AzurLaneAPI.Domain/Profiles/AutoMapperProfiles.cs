@@ -51,8 +51,8 @@ public class AutoMapperProfiles : Profile
 		CreateMap<ShipTypeSubclassUpdateDto, ShipTypeSubclass>();
 
 		// Auth
-		CreateMap<RegisterDto, APIUser>();
-		CreateMap<LoginDto, APIUser>();
-		CreateMap<APIUser, APIUserDto>();
+		CreateMap<RegisterDto, ApiUser>();
+		CreateMap<LoginDto, ApiUser>();
+		CreateMap<ApiUser, ApiUserDto>();
 	}
 }

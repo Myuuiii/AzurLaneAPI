@@ -2,6 +2,6 @@
 
 namespace AzurLaneAPI.Domain.Identity;
 
-public class APIRole : IdentityRole<Guid>
+public class ApiRole : IdentityRole<Guid>
 {
 }

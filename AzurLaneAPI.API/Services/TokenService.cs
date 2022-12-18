@@ -9,22 +9,22 @@ namespace AzurLaneAPI.API.Services;
 
 public interface ITokenService
 {
-	Task<string> GenerateTokenAsync(APIUser user);
+	Task<string> GenerateTokenAsync(ApiUser user);
 }
 
 public sealed class TokenService : ITokenService
 {
 	private readonly SymmetricSecurityKey _signingKey;
 	private readonly string _signingKeyToken = EnvReader.GetSigningKey();
-	private readonly UserManager<APIUser> _userManger;
+	private readonly UserManager<ApiUser> _userManger;
 
-	public TokenService(UserManager<APIUser> userManger)
+	public TokenService(UserManager<ApiUser> userManger)
 	{
 		_userManger = userManger;
 		_signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_signingKeyToken));
 	}
 
-	public async Task<string> GenerateTokenAsync(APIUser user)
+	public async Task<string> GenerateTokenAsync(ApiUser user)
 	{
 		List<Claim> claims = new()
 		{

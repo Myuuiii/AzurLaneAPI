@@ -11,13 +11,13 @@ public static class ApiIdentityService
 {
 	public static IServiceCollection AddIdentityService(this IServiceCollection services)
 	{
-		services.AddIdentityCore<APIUser>(options =>
+		services.AddIdentityCore<ApiUser>(options =>
 			{
 				options.Password.RequireNonAlphanumeric = false;
 				options.User.RequireUniqueEmail = true;
 			})
-			.AddRoles<APIRole>()
-			.AddRoleManager<RoleManager<APIRole>>()
+			.AddRoles<ApiRole>()
+			.AddRoleManager<RoleManager<ApiRole>>()
 			.AddEntityFrameworkStores<DataContext>();
 
 		services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>

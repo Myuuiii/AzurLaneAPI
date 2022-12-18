@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AzurLaneAPI.Domain.Repositories;
 
-public class UserRepository : Repository<APIUser, Guid>, IUserRepository
+public class UserRepository : Repository<ApiUser, Guid>, IUserRepository
 {
 	public UserRepository(DataContext context) : base(context)
 	{
@@ -15,7 +15,7 @@ public class UserRepository : Repository<APIUser, Guid>, IUserRepository
 		return await Context.Users.AnyAsync(x => x.UserName == name);
 	}
 
-	public async Task<APIUser> GetByUsernameAsync(string username)
+	public async Task<ApiUser> GetByUsernameAsync(string username)
 	{
 		return await Context.Users.FirstAsync(x => x.UserName == username);
 	}
