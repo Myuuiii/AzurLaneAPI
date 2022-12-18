@@ -9,4 +9,8 @@ public static class EnvReader
 	public static string GetSigningKey() =>
 		Environment.GetEnvironmentVariable("SIGNING_KEY") ??
 		throw new Exception("Signing key Environment Variable was not set");
+	
+	public static string GetAdminPassword() => 
+		Environment.GetEnvironmentVariable("ADMIN_PASSWORD") ??
+		throw new Exception("Admin password Environment Variable was not set");
 }

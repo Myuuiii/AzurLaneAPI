@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AzurLaneAPI.Domain.Data;
 
-public class DataContext : IdentityDbContext<ApiUser, ApiRole, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>,
+public class DataContext : IdentityDbContext<ApiUser, ApiRole, Guid, IdentityUserClaim<Guid>, ApiUserRole,
 	IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
 {
 	public DataContext()

@@ -10,7 +10,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "SIGNING_KEY": "Azur Lane API - Testing Signing Key - Do Not Use In Production",
-        "CONNECTION_STRING": "Server=localhost;Database=azurlaneapi;User=root"
+        "CONNECTION_STRING": "Server=localhost;Database=azurlaneapi;User=root",
+        "ADMIN_PASSWORD": "Pa$$w0Rd"
       }
     }
   }
