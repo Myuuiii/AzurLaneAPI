@@ -4,6 +4,13 @@ public static class V1
 {
 	public const string Base = "api/v1/";
 
+	public static class Admin
+	{
+		public const string Controller = Base + "admin/";
+		public const string GetUsersWithRoles = "users-with-roles";
+		public const string UpdateRolesForUser = "update-roles-for-user/{username}";
+	}
+
 	public static class Auth
 	{
 		public const string Controller = Base + "auth/";

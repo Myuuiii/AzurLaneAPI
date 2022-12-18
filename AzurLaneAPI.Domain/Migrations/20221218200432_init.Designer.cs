@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AzurLaneAPI.Domain.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221216112528_Fresh")]
-    partial class Fresh
+    [Migration("20221218200432_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -90,6 +90,10 @@ namespace AzurLaneAPI.Domain.Migrations
 
                     b.Property<Guid>("SubclassId")
                         .HasColumnType("char(36)");
+
+                    b.Property<string>("ThumbnailImageUrl")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<Guid>("TypeId")
                         .HasColumnType("char(36)");
@@ -206,7 +210,7 @@ namespace AzurLaneAPI.Domain.Migrations
                     b.ToTable("ShipTypeSubclasses");
                 });
 
-            modelBuilder.Entity("AzurLaneAPI.Domain.Identity.APIRole", b =>
+            modelBuilder.Entity("AzurLaneAPI.Domain.Identity.ApiRole", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -233,7 +237,7 @@ namespace AzurLaneAPI.Domain.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("AzurLaneAPI.Domain.Identity.APIUser", b =>
+            modelBuilder.Entity("AzurLaneAPI.Domain.Identity.ApiUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -296,6 +300,21 @@ namespace AzurLaneAPI.Domain.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("AzurLaneAPI.Domain.Identity.ApiUserRole", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("AzurLaneAPI.Domain.Identity.SignupCode", b =>
@@ -390,21 +409,6 @@ namespace AzurLaneAPI.Domain.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles", (string)null);
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -494,9 +498,28 @@ namespace AzurLaneAPI.Domain.Migrations
                     b.Navigation("ShipType");
                 });
 
+            modelBuilder.Entity("AzurLaneAPI.Domain.Identity.ApiUserRole", b =>
+                {
+                    b.HasOne("AzurLaneAPI.Domain.Identity.ApiRole", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AzurLaneAPI.Domain.Identity.ApiUser", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("AzurLaneAPI.Domain.Identity.APIRole", null)
+                    b.HasOne("AzurLaneAPI.Domain.Identity.ApiRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -505,7 +528,7 @@ namespace AzurLaneAPI.Domain.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("AzurLaneAPI.Domain.Identity.APIUser", null)
+                    b.HasOne("AzurLaneAPI.Domain.Identity.ApiUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -514,22 +537,7 @@ namespace AzurLaneAPI.Domain.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("AzurLaneAPI.Domain.Identity.APIUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
-                {
-                    b.HasOne("AzurLaneAPI.Domain.Identity.APIRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AzurLaneAPI.Domain.Identity.APIUser", null)
+                    b.HasOne("AzurLaneAPI.Domain.Identity.ApiUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -538,7 +546,7 @@ namespace AzurLaneAPI.Domain.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("AzurLaneAPI.Domain.Identity.APIUser", null)
+                    b.HasOne("AzurLaneAPI.Domain.Identity.ApiUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -548,6 +556,16 @@ namespace AzurLaneAPI.Domain.Migrations
             modelBuilder.Entity("AzurLaneAPI.Domain.Entities.ShipType", b =>
                 {
                     b.Navigation("Subclasses");
+                });
+
+            modelBuilder.Entity("AzurLaneAPI.Domain.Identity.ApiRole", b =>
+                {
+                    b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("AzurLaneAPI.Domain.Identity.ApiUser", b =>
+                {
+                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }

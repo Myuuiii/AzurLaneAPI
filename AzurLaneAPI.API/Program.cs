@@ -1,3 +1,4 @@
+using AutoMapper;
 using AzurLaneAPI.API;
 using AzurLaneAPI.API.Services;
 using AzurLaneAPI.Domain.Data;
@@ -24,7 +25,9 @@ await using (ServiceProvider serviceProvider = builder.Services.BuildServiceProv
 			context.Database.Migrate();
 
 			RoleManager<ApiRole> roleManager = scopeServiceProvider.GetRequiredService<RoleManager<ApiRole>>();
-			await Seeder.SeedAsync(context, roleManager);
+			UserManager<ApiUser> userManager = scopeServiceProvider.GetRequiredService<UserManager<ApiUser>>();
+			IMapper mapper = scopeServiceProvider.GetRequiredService<IMapper>();
+			await Seeder.SeedAsync(context, roleManager, userManager, mapper);
 		}
 		catch (Exception)
 		{

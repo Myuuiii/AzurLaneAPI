@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AzurLaneAPI.Domain.Data;
 
-public class DataContext : IdentityDbContext<ApiUser, ApiRole, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>,
+public class DataContext : IdentityDbContext<ApiUser, ApiRole, Guid, IdentityUserClaim<Guid>, ApiUserRole,
 	IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
 {
 	public DataContext()
@@ -33,5 +33,22 @@ public class DataContext : IdentityDbContext<ApiUser, ApiRole, Guid, IdentityUse
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 	{
 		optionsBuilder.UseMySql(ConnectionString, ServerVersion.AutoDetect(ConnectionString));
+	}
+
+	protected override void OnModelCreating(ModelBuilder builder)
+	{
+		base.OnModelCreating(builder);
+		
+		builder.Entity<ApiUser>()
+			.HasMany(ur => ur.UserRoles)
+			.WithOne(u => u.User)
+			.HasForeignKey((ur => ur.UserId))
+			.IsRequired();
+		
+		builder.Entity<ApiRole>()
+			.HasMany(ur => ur.UserRoles)
+			.WithOne(u => u.Role)
+			.HasForeignKey((ur => ur.RoleId))
+			.IsRequired();
 	}
 }

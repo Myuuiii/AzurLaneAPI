@@ -127,6 +127,7 @@ The `docker-compose.yml` file will look for a file called `.env` for all environ
 CONNECTION_STRING=Server=azurlaneapi-db;Database=azurlaneapi;User=root
 ASPNETCORE_Environment=Development
 SIGNING_KEY=MySuperSecretSigningKey
+ADMIN_PASSWORD=SuperSecretPa$$w0Rd
 ```
 
 
