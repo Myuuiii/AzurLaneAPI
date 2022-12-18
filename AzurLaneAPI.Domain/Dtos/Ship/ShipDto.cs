@@ -16,8 +16,11 @@ public class ShipDto
 	public string Rarity { get; set; }
 
 	public string Type { get; set; }
+	public Guid TypeId { get; set; }
 	public string Faction { get; set; }
+	public Guid FactionId { get; set; }
 	public string Subclass { get; set; }
+	public Guid SubclassId { get; set; }
 
 	public ShipStatsDto BaseStats { get; set; }
 	public ShipStatsDto Level100Stats { get; set; }
