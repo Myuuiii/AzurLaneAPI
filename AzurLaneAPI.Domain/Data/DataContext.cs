@@ -34,4 +34,21 @@ public class DataContext : IdentityDbContext<ApiUser, ApiRole, Guid, IdentityUse
 	{
 		optionsBuilder.UseMySql(ConnectionString, ServerVersion.AutoDetect(ConnectionString));
 	}
+
+	protected override void OnModelCreating(ModelBuilder builder)
+	{
+		base.OnModelCreating(builder);
+		
+		builder.Entity<ApiUser>()
+			.HasMany(ur => ur.UserRoles)
+			.WithOne(u => u.User)
+			.HasForeignKey((ur => ur.UserId))
+			.IsRequired();
+		
+		builder.Entity<ApiRole>()
+			.HasMany(ur => ur.UserRoles)
+			.WithOne(u => u.Role)
+			.HasForeignKey((ur => ur.RoleId))
+			.IsRequired();
+	}
 }

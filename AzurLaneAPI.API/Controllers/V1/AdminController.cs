@@ -8,19 +8,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AzurLaneAPI.API.Controllers.V1;
 
+[Route(Routes.V1.Admin.Controller)]
 public class AdminController : V1BaseController
 {
-	private RoleManager<ApiRole> _roleManager;
-	private UserManager<ApiUser> _userManager;
+	private readonly UserManager<ApiUser> _userManager;
 
 	public AdminController(DataContext ctx, IMapper mapper, UserManager<ApiUser> userManager, RoleManager<ApiRole> roleManager) : base(ctx, mapper)
 	{
 		_userManager = userManager;
-		_roleManager = roleManager;
 	}
 	
-	// [Authorize(Policy = IdentityNames.Policies.RequireAdminRole)]
-	[HttpGet("users-with-roles")]
+	[Authorize(Policy = IdentityNames.Policies.RequireAdminRole)]
+	[HttpGet(Routes.V1.Admin.GetUsersWithRoles)]
 	public async Task<ActionResult> GetUsersWithRoles()
 	{
 		var users = await _userManager.Users
@@ -36,8 +35,8 @@ public class AdminController : V1BaseController
 		return Ok(users);
 	}
 
-	// [Authorize(Policy = IdentityNames.Policies.RequireAdminRole)]
-	[HttpPut("edit-roles/{username}")]
+	[Authorize(Policy = IdentityNames.Policies.RequireAdminRole)]
+	[HttpGet(Routes.V1.Admin.UpdateRolesForUser)]
 	public async Task<ActionResult> EditRoles(string username, [FromQuery] string roles)
 	{
 		if (string.IsNullOrEmpty(roles)) return BadRequest("You must select at least one role");

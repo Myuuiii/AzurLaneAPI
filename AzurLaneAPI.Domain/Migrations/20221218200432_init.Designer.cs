@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AzurLaneAPI.Domain.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221218195039_IdentityExtensions")]
-    partial class IdentityExtensions
+    [Migration("20221218200432_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -310,19 +310,9 @@ namespace AzurLaneAPI.Domain.Migrations
                     b.Property<Guid>("RoleId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("RoleId1")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("UserId1")
-                        .HasColumnType("char(36)");
-
                     b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");
-
-                    b.HasIndex("RoleId1");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
@@ -510,27 +500,15 @@ namespace AzurLaneAPI.Domain.Migrations
 
             modelBuilder.Entity("AzurLaneAPI.Domain.Identity.ApiUserRole", b =>
                 {
-                    b.HasOne("AzurLaneAPI.Domain.Identity.ApiRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("AzurLaneAPI.Domain.Identity.ApiRole", "Role")
                         .WithMany("UserRoles")
-                        .HasForeignKey("RoleId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AzurLaneAPI.Domain.Identity.ApiUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("AzurLaneAPI.Domain.Identity.ApiUser", "User")
                         .WithMany("UserRoles")
-                        .HasForeignKey("UserId1")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
