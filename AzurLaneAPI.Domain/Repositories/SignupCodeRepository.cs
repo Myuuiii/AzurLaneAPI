@@ -14,8 +14,8 @@ public class SignupCodeRepository : Repository<SignupCode, int>, ISignupCodeRepo
 	public async Task<bool> IsValidAsync(string code)
 	{
 		return await Context.SignupCodes.AnyAsync(x => !x.Used &&
-			x.Code == code &&
-			x.Expiration > DateTime.UtcNow);
+		                                               x.Code == code &&
+		                                               x.Expiration > DateTime.UtcNow);
 	}
 
 	public async Task<bool> UseCodeAsync(string code, string userName)

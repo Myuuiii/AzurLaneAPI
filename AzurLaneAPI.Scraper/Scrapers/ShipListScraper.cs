@@ -8,7 +8,7 @@ public static class ShipListScraper
 	/// <summary>
 	///     Retrieve all the ids, names and urls for the ships (retrofit table excluded)
 	/// </summary>
-	/// <returns><see cref="ShipLinkContainer[]"/> or null if no body nodes were found in the document</returns>
+	/// <returns><see cref="ShipLinkContainer[]" /> or null if no body nodes were found in the document</returns>
 	public static async Task<ShipLinkContainer[]> GetShipList()
 	{
 		HtmlDocument doc = new();

@@ -63,7 +63,7 @@ public static class ClassScraper
 	}
 
 	/// <summary>
-	/// Create subcategories for a ship type
+	///     Create subcategories for a ship type
 	/// </summary>
 	/// <param name="subcategoriesParentNode"></param>
 	/// <param name="shipType"></param>
@@ -94,7 +94,7 @@ public static class ClassScraper
 	}
 
 	/// <summary>
-	/// Fetch all the ship classes from the wiki and add them to the database if they don't exist yet
+	///     Fetch all the ship classes from the wiki and add them to the database if they don't exist yet
 	/// </summary>
 	/// <param name="headerNodes"></param>
 	/// <param name="context"></param>
@@ -116,7 +116,7 @@ public static class ClassScraper
 	}
 
 	/// <summary>
-	/// Since the A and B class are combined on the overview page, we create a new subclass for them ourselves
+	///     Since the A and B class are combined on the overview page, we create a new subclass for them ourselves
 	/// </summary>
 	/// <param name="shipType"></param>
 	private static async Task CreateAAndBCategoryFromJointItem(ShipType shipType)

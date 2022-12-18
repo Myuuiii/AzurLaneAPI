@@ -10,8 +10,13 @@ namespace AzurLaneAPI.Scraper.Scrapers;
 public static class ShipDetailsScraper
 {
 	private const int LongestStatRow = 14;
-	private static readonly bool SkipExisting = false;
+	private const int LongestStatRowForSubmarines = 18;
+	private static readonly bool SkipExisting = true;
 	private static readonly string[] TableRowTitles = { "Base", "Level 100", "Level 120", "Level 125" };
+
+	private static readonly TimeSpan PerShipDelay = new(0, 0, 0, 0);
+	private static readonly TimeSpan PerChunkDelay = new(0, 0, 0, 3);
+	private static int _itemsProcessedForChunk = 0;
 
 	public static async Task<IEnumerable<Ship>> GetShipDetailsAsync(IEnumerable<ShipLinkContainer> shipLinkContainers)
 	{
@@ -34,6 +39,8 @@ public static class ShipDetailsScraper
 
 		foreach (IEnumerable<ShipLinkContainer> containerChunk in shipLinkContainers.Chunk(10))
 		{
+			_itemsProcessedForChunk = 0;
+
 			IEnumerable<ShipLinkContainer> linkContainers =
 				containerChunk as ShipLinkContainer[] ?? containerChunk.ToArray();
 			Console.WriteLine("Processing chunk containing ships: " +
@@ -46,6 +53,8 @@ public static class ShipDetailsScraper
 					Console.WriteLine($"Skipping {shipContainer.Name} as it already exists in the database.");
 					continue;
 				}
+
+				_itemsProcessedForChunk++;
 
 				Ship ship;
 				if (shipWithIdExists)
@@ -81,12 +90,13 @@ public static class ShipDetailsScraper
 					scopedContext.Ships.Update(ship);
 				await scopedContext.SaveChangesAsync();
 
-				Console.WriteLine("Success! Delaying next request by 1 second");
-				await Task.Delay(1000); // 1 second delay to prevent spamming the server
+				Console.WriteLine($"Success! Delaying next request by {PerShipDelay:g}");
+				await Task.Delay(PerShipDelay);
 			}
 
-			Console.WriteLine("Chunk Success! Delaying next chunk by 3 seconds");
-			// await Task.Delay(3000); // Longer delay to prevent spamming the server
+			if (_itemsProcessedForChunk <= 0) continue;
+			Console.WriteLine($"Chunk Success! Delaying next chunk by {PerChunkDelay:g}");
+			await Task.Delay(PerChunkDelay);
 		}
 
 		return ships;
@@ -109,9 +119,14 @@ public static class ShipDetailsScraper
 
 		// Of the TR that has LongestStatRow items, grab the 9th td's text content and convert it to the enum value (Armor)
 		// This value is to be used for all stats as it does not change with level
-		Enum.TryParse(
-			statsTableRows.First(x => x.SelectNodes(".//td").Count == LongestStatRow).SelectNodes(".//td")[8]
-				.InnerText.Cleanup(), out Armor armor);
+		var sel = statsTableRows.First(x =>
+			x.SelectNodes(".//td").Count is LongestStatRow or >LongestStatRowForSubmarines);
+		var armorNode = sel.SelectNodes(".//td");
+		var precursor = armorNode[8].InnerText.Cleanup();
+		if (!Enum.TryParse(precursor, out Armor armor))
+		{
+			Console.WriteLine("FAILED TO RETRIEVE ARMOR");
+		}
 
 		// In the list of rows, there are 4 rows we need to keep, the first td contains a name, if this name is 
 		// "Base" "Level 100" "Level 120" or "Level 125" we need to keep the row
@@ -246,7 +261,7 @@ public static class ShipDetailsScraper
 					ship.TypeId = shipTypes.First(x => x.Name.Contains(data)).Id;
 					break;
 				case 3:
-					if (shipTypes.Any(x => x.Name.Contains(data)))
+					if (factions.Any(x => x.Name.Contains(data)))
 						ship.FactionId = factions.First(x => x.Name.Contains(data)).Id;
 					break;
 				case 4:
