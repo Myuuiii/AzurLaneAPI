@@ -7,6 +7,7 @@ public static class ApiApplicationService
 		services.AddControllers();
 		services.AddEndpointsApiExplorer();
 		services.AddSwaggerGen();
+		services.AddCors();
 		return services;
 	}
 }
