@@ -6,4 +6,5 @@ public class MinimalShipDataDto
 	public string EnglishName { get; set; }
 	public string JapaneseName { get; set; }
 	public string ChineseName { get; set; }
+	public string ThumbnailImageUrl { get; set; }
 }
