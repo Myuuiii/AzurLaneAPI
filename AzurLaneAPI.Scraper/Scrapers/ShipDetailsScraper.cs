@@ -82,8 +82,10 @@ public static class ShipDetailsScraper
 				HtmlNode shipCardNode = doc.DocumentNode.Descendants().FirstOrDefault(x => x.HasClass("ship-card"));
 				// Select fist child that has the class "ship-card-content"
 				HtmlNode shipCardContentNode = shipCardNode.SelectSingleNode(".//div[@class=\"ship-card-content\"]");
+				// Get a span node with the mw-page-title-main class (contains the ship name)
+				HtmlNode pageTitleNameNode = doc.DocumentNode.SelectSingleNode("//span[@class=\"mw-page-title-main\"]");
 
-				GetShipNamesFromNode(shipCardContentNode, ship);
+				GetShipNamesFromNode(shipCardContentNode, pageTitleNameNode, ship);
 				await LoadShipCardInfo(shipCardContentNode, ship, shipTypes, factions, subclasses, scopedContext);
 				await GetShipStatistics(doc, scopedContext, ship);
 				GetShipThumbnailImage(shipCardNode, ship);
@@ -222,15 +224,12 @@ public static class ShipDetailsScraper
 	/// </summary>
 	/// <param name="shipCardContentNode"></param>
 	/// <param name="ship"></param>
-	private static void GetShipNamesFromNode(HtmlNode shipCardContentNode, Ship ship)
+	private static void GetShipNamesFromNode(HtmlNode shipCardContentNode, HtmlNode pageTitleNameNode, Ship ship)
 	{
 		HtmlNode cardHeadingNode = shipCardContentNode.SelectSingleNode(".//div[@class=\"card-headline\"]");
 		HtmlNode[] cardHeadingNodes = cardHeadingNode.ChildNodes.Where(x => x.OriginalName == "span").ToArray();
 
-		string shipEnglishName = string.Join(' ', cardHeadingNodes[0].InnerText.Cleanup().Split(" ").Skip(1));
-		if (shipEnglishName is "" or "META")
-			shipEnglishName = string.Join(' ', cardHeadingNodes[0].InnerText.Cleanup().Split(" "));
-		ship.EnglishName = shipEnglishName;
+		ship.EnglishName = pageTitleNameNode.InnerText.Cleanup();
 		ship.ChineseName = cardHeadingNodes[1].InnerText.Cleanup().Replace("CN: ", "");
 		ship.JapaneseName = cardHeadingNodes[2].InnerText.Cleanup().Replace("JP: ", "");
 	}
