@@ -11,7 +11,7 @@ public static class ShipDetailsScraper
 {
 	private const int LongestStatRow = 14;
 	private const int LongestStatRowForSubmarines = 18;
-	private static readonly bool SkipExisting = true;
+	private static readonly bool SkipExisting = false;
 	private static readonly string[] TableRowTitles = { "Base", "Level 100", "Level 120", "Level 125" };
 
 	private static readonly TimeSpan PerShipDelay = new(0, 0, 0, 0);
@@ -27,9 +27,9 @@ public static class ShipDetailsScraper
 		// {
 		// 	new ShipLinkContainer
 		// 	{
-		// 		Id = "338",
-		// 		Name = "Jintsuu",
-		// 		Url = "https://azurlane.koumakan.jp/wiki/Jintsuu"
+		// 		Id = "10063",
+		// 		Name = "Kasumi (Venus Vacation)",
+		// 		Url = "https://azurlane.koumakan.jp/wiki/Kasumi_(Venus_Vacation)"
 		// 	}
 		// };
 
@@ -222,7 +222,11 @@ public static class ShipDetailsScraper
 	{
 		HtmlNode cardHeadingNode = shipCardContentNode.SelectSingleNode(".//div[@class=\"card-headline\"]");
 		HtmlNode[] cardHeadingNodes = cardHeadingNode.ChildNodes.Where(x => x.OriginalName == "span").ToArray();
-		ship.EnglishName = string.Join(' ', cardHeadingNodes[0].InnerText.Cleanup().Split(" ").Skip(1));
+
+		var shipEnglishName = string.Join(' ', cardHeadingNodes[0].InnerText.Cleanup().Split(" ").Skip(1));
+		if (shipEnglishName == string.Empty)
+			shipEnglishName = string.Join(' ', cardHeadingNodes[0].InnerText.Cleanup().Split(" "));
+		ship.EnglishName = shipEnglishName;
 		ship.ChineseName = cardHeadingNodes[1].InnerText.Cleanup().Replace("CN: ", "");
 		ship.JapaneseName = cardHeadingNodes[2].InnerText.Cleanup().Replace("JP: ", "");
 	}
