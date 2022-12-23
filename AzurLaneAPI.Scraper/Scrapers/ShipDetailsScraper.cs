@@ -12,7 +12,11 @@ public static class ShipDetailsScraper
 	private const int LongestStatRow = 14;
 	private const int LongestStatRowForSubmarines = 18;
 	private static readonly bool SkipExisting = false;
-	private static readonly string[] TableRowTitles = { "Base", "Level 100", "Level 120", "Level 125" };
+
+	private static readonly string[] TableRowTitles =
+	{
+		"Base", "Level 100", "Level 120", "Level 125"
+	};
 
 	private static readonly TimeSpan PerShipDelay = new(0, 0, 0, 0);
 	private static readonly TimeSpan PerChunkDelay = new(0, 0, 0, 3);
@@ -27,9 +31,9 @@ public static class ShipDetailsScraper
 		// {
 		// 	new ShipLinkContainer
 		// 	{
-		// 		Id = "10063",
-		// 		Name = "Kasumi (Venus Vacation)",
-		// 		Url = "https://azurlane.koumakan.jp/wiki/Kasumi_(Venus_Vacation)"
+		// 		Id = "30010",
+		// 		Name = "Yamashiro META",
+		// 		Url = "https://azurlane.koumakan.jp/wiki/Yamashiro_META"
 		// 	}
 		// };
 
@@ -120,7 +124,7 @@ public static class ShipDetailsScraper
 		// Of the TR that has LongestStatRow items, grab the 9th td's text content and convert it to the enum value (Armor)
 		// This value is to be used for all stats as it does not change with level
 		var sel = statsTableRows.First(x =>
-			x.SelectNodes(".//td").Count is LongestStatRow or >LongestStatRowForSubmarines);
+			x.SelectNodes(".//td").Count is LongestStatRow or > LongestStatRowForSubmarines);
 		var armorNode = sel.SelectNodes(".//td");
 		var precursor = armorNode[8].InnerText.Cleanup();
 		if (!Enum.TryParse(precursor, out Armor armor))
@@ -223,8 +227,8 @@ public static class ShipDetailsScraper
 		HtmlNode cardHeadingNode = shipCardContentNode.SelectSingleNode(".//div[@class=\"card-headline\"]");
 		HtmlNode[] cardHeadingNodes = cardHeadingNode.ChildNodes.Where(x => x.OriginalName == "span").ToArray();
 
-		var shipEnglishName = string.Join(' ', cardHeadingNodes[0].InnerText.Cleanup().Split(" ").Skip(1));
-		if (shipEnglishName == string.Empty)
+		string shipEnglishName = string.Join(' ', cardHeadingNodes[0].InnerText.Cleanup().Split(" ").Skip(1));
+		if (shipEnglishName is "" or "META")
 			shipEnglishName = string.Join(' ', cardHeadingNodes[0].InnerText.Cleanup().Split(" "));
 		ship.EnglishName = shipEnglishName;
 		ship.ChineseName = cardHeadingNodes[1].InnerText.Cleanup().Replace("CN: ", "");
