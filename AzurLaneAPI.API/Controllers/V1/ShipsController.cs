@@ -85,7 +85,10 @@ public class ShipsController : V1BaseController
 		await _shipRepository.AddAsync(shipEntity);
 		await Context.SaveChangesAsync();
 
-		return CreatedAtAction(nameof(GetSingleById), new { id = shipEntity.Id }, shipEntity.Id);
+		return CreatedAtAction(nameof(GetSingleById), new
+		{
+			id = shipEntity.Id
+		}, shipEntity.Id);
 	}
 
 	[Authorize(Policy = IdentityNames.Policies.RequireContributorRole)]
@@ -97,7 +100,7 @@ public class ShipsController : V1BaseController
 
 		if (!await _shipRepository.Exists(id))
 			return NotFound();
-		
+
 		if (!await _shipTypeRepository.Exists(ship.TypeId))
 			return NotFound("Ship type not found");
 		ShipType shipType = await _shipTypeRepository.GetAsync(ship.TypeId);
@@ -108,7 +111,7 @@ public class ShipsController : V1BaseController
 
 		if (!await _shipTypeSubclassRepository.ExistsForShipTypeAsync(shipType.Id, ship.SubclassId))
 			return NotFound("Subclass not found within ship type");
-		
+
 		ShipTypeSubclass subclass = await _shipTypeSubclassRepository.GetAsync(ship.SubclassId);
 
 		Ship existingShip = await _shipRepository.GetAsync(id);
@@ -120,7 +123,10 @@ public class ShipsController : V1BaseController
 		_shipRepository.Update(existingShip);
 		await Context.SaveChangesAsync();
 
-		return AcceptedAtAction(nameof(GetSingleById), new { id }, id);
+		return AcceptedAtAction(nameof(GetSingleById), new
+		{
+			id
+		}, id);
 	}
 
 	[Authorize(Policy = IdentityNames.Policies.RequireContributorRole)]
@@ -136,4 +142,7 @@ public class ShipsController : V1BaseController
 
 		return NoContent();
 	}
+
+	[HttpGet(Routes.V1.Ships.Thumbnails)]
+	public async Task<ActionResult> Thumbnails() => Ok(Context.Ships.Select(x => x.ThumbnailImageUrl).ToArray());
 }

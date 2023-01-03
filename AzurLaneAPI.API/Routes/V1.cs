@@ -38,6 +38,8 @@ public static class V1
 		public const string Delete = "{id}";
 
 		public const string Minimal = "minimal";
+		
+		public const string Thumbnails = "images/thumbbails";
 	}
 
 	public static class Factions
