@@ -15,6 +15,7 @@
     <ItemGroup>
         <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
         <PackageReference Include="Humanizer.Core" Version="2.14.1" />
+        <PackageReference Include="Minio" Version="4.0.7" />
     </ItemGroup>
 
 </Project>
